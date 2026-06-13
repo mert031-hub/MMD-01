@@ -45,7 +45,7 @@ export default function Philosophy() {
           top: "50%",
           transform: "translateY(-50%)",
           fontFamily: "var(--font-display)",
-          fontSize: "clamp(260px, 32vw, 520px)",
+          fontSize: "clamp(240px, 28vw, 460px)",
           fontWeight: 700,
           color: "rgba(255,251,243,0.018)",
           lineHeight: 1,
@@ -67,7 +67,7 @@ export default function Philosophy() {
             display: "flex",
             alignItems: "center",
             gap: 20,
-            marginBottom: 80,
+            marginBottom: 56,
           }}
         >
           <motion.div
@@ -94,43 +94,48 @@ export default function Philosophy() {
         </div>
 
         {/* Quote block */}
-        <div style={{ position: "relative", marginBottom: 96 }}>
-          {/* Decorative large opening quotation mark */}
-          <div
+        <div style={{ position: "relative", marginBottom: 72 }}>
+          {/* Decorative large opening quotation mark — animated */}
+          <motion.div
             aria-hidden="true"
+            initial={shouldReduce ? {} : { opacity: 0, scale: 0.75 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.7, ease: EASE_OUT }}
             style={{
               position: "absolute",
-              top: "-28px",
+              top: "-24px",
               left: "-6px",
               fontFamily: "var(--font-display)",
-              fontSize: "clamp(96px, 13vw, 200px)",
+              fontSize: "clamp(80px, 11vw, 172px)",
               fontStyle: "italic",
               fontWeight: 700,
               color: "rgba(255,108,12,0.13)",
               lineHeight: 1,
               userSelect: "none",
               pointerEvents: "none",
+              transformOrigin: "left top",
             }}
           >
             &ldquo;
-          </div>
+          </motion.div>
 
           <div style={{ overflow: "hidden" }}>
             <motion.blockquote
               initial={shouldReduce ? {} : { y: "65%", opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.9, ease: EASE_OUT }}
+              transition={{ duration: 0.85, ease: EASE_OUT }}
               style={{
                 fontFamily: "var(--font-display)",
-                fontSize: "clamp(28px, 3.8vw, 64px)",
+                fontSize: "clamp(22px, 2.8vw, 48px)",
                 fontStyle: "italic",
                 fontWeight: 600,
-                lineHeight: 1.1,
+                lineHeight: 1.15,
                 letterSpacing: "-0.02em",
                 color: "rgba(255,251,243,0.97)",
-                maxWidth: 860,
-                margin: "0 0 32px 0",
+                maxWidth: 800,
+                margin: "0 0 28px 0",
                 padding: 0,
                 border: "none",
                 position: "relative",
@@ -141,10 +146,10 @@ export default function Philosophy() {
           </div>
 
           <motion.span
-            initial={shouldReduce ? {} : { opacity: 0 }}
-            whileInView={{ opacity: 1 }}
+            initial={shouldReduce ? {} : { opacity: 0, y: 6 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.55, ease: EASE_OUT }}
+            transition={{ duration: 0.5, delay: 0.6, ease: EASE_OUT }}
             style={{
               fontFamily: "var(--font-body)",
               fontSize: 11,
@@ -158,21 +163,21 @@ export default function Philosophy() {
           </motion.span>
         </div>
 
-        {/* Beliefs — editorial manifesto rows */}
+        {/* Beliefs — compact editorial rows with reveal */}
         <div>
           {beliefs.map((belief, i) => (
             <motion.div
               key={i}
-              initial={shouldReduce ? {} : { opacity: 0, x: -28 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.65, delay: i * 0.13, ease: EASE_OUT }}
+              initial={shouldReduce ? {} : { opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.55, delay: i * 0.11, ease: EASE_OUT }}
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
               className="phil-row"
               style={{
-                paddingTop: 44,
-                paddingBottom: 44,
+                paddingTop: 32,
+                paddingBottom: 32,
                 borderTop: "1px solid rgba(255,251,243,0.10)",
                 position: "relative",
                 cursor: "default",
@@ -198,7 +203,7 @@ export default function Philosophy() {
                 <span
                   style={{
                     fontFamily: "var(--font-display)",
-                    fontSize: "clamp(36px, 4vw, 58px)",
+                    fontSize: "clamp(26px, 2.8vw, 42px)",
                     fontWeight: 700,
                     letterSpacing: "-0.04em",
                     lineHeight: 1,
@@ -209,13 +214,13 @@ export default function Philosophy() {
                     transition: "color 220ms ease",
                     userSelect: "none",
                     alignSelf: "start",
-                    paddingTop: 4,
+                    paddingTop: 3,
                   }}
                 >
                   {belief.number}
                 </span>
 
-                {/* Belief text + support */}
+                {/* Belief text + support reveal */}
                 <div
                   style={{
                     transition: "transform 250ms cubic-bezier(0,0,0.2,1)",
@@ -228,58 +233,73 @@ export default function Philosophy() {
                   <p
                     style={{
                       fontFamily: "var(--font-display)",
-                      fontSize: "clamp(19px, 2.4vw, 38px)",
+                      fontSize: "clamp(15px, 1.7vw, 26px)",
                       fontStyle: "italic",
                       fontWeight: 500,
-                      lineHeight: 1.22,
+                      lineHeight: 1.25,
                       letterSpacing: "-0.015em",
                       color:
                         hovered === i
                           ? "rgba(255,251,243,0.97)"
-                          : "rgba(255,251,243,0.68)",
-                      margin: "0 0 16px 0",
+                          : "rgba(255,251,243,0.72)",
+                      margin: 0,
                       transition: "color 220ms ease",
                     }}
                   >
                     {belief.text}
                   </p>
 
-                  {/* Divider */}
+                  {/* Support text — revealed on hover, always visible on mobile */}
                   <div
+                    className="phil-support"
                     style={{
-                      width: hovered === i ? 32 : 20,
-                      height: 1,
-                      backgroundColor: "var(--color-action)",
-                      opacity: hovered === i ? 0.8 : 0.35,
-                      marginBottom: 16,
-                      transition: "width 280ms ease, opacity 220ms ease",
-                    }}
-                  />
-
-                  <p
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: "clamp(12px, 1.05vw, 14px)",
-                      lineHeight: 1.7,
-                      color:
-                        hovered === i
-                          ? "rgba(255,251,243,0.60)"
-                          : "rgba(255,251,243,0.38)",
-                      margin: 0,
-                      maxWidth: 520,
-                      transition: "color 220ms ease",
+                      maxHeight:
+                        hovered === i && !shouldReduce ? 120 : 0,
+                      opacity: hovered === i ? 1 : 0,
+                      overflow: "hidden",
+                      transition:
+                        "max-height 380ms cubic-bezier(0,0,0.2,1), opacity 280ms ease",
                     }}
                   >
-                    {belief.support}
-                  </p>
+                    <div style={{ paddingTop: 14 }}>
+                      <div
+                        style={{
+                          width: 22,
+                          height: 1,
+                          backgroundColor: "var(--color-action)",
+                          opacity: 0.55,
+                          marginBottom: 10,
+                        }}
+                      />
+                      <p
+                        style={{
+                          fontFamily: "var(--font-body)",
+                          fontSize: "clamp(12px, 1vw, 13px)",
+                          lineHeight: 1.7,
+                          color: "rgba(255,251,243,0.55)",
+                          margin: 0,
+                          maxWidth: 480,
+                        }}
+                      >
+                        {belief.support}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </motion.div>
           ))}
 
-          {/* Bottom border */}
-          <div
-            style={{ borderTop: "1px solid rgba(255,251,243,0.10)" }}
+          {/* Bottom border — animated reveal */}
+          <motion.div
+            initial={shouldReduce ? {} : { scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true, margin: "-20px" }}
+            transition={{ duration: 0.7, delay: 0.3, ease: EASE_OUT }}
+            style={{
+              borderTop: "1px solid rgba(255,251,243,0.10)",
+              transformOrigin: "left",
+            }}
           />
         </div>
       </div>
@@ -294,19 +314,25 @@ export default function Philosophy() {
         }
         .phil-inner {
           display: grid;
-          grid-template-columns: 100px 1fr;
-          gap: 0 56px;
-          align-items: center;
+          grid-template-columns: 80px 1fr;
+          gap: 0 44px;
+          align-items: start;
           padding-left: 0;
           transition: padding-left 280ms cubic-bezier(0,0,0.2,1);
         }
         .phil-row:hover .phil-inner {
-          padding-left: 20px !important;
+          padding-left: 18px !important;
+        }
+        @media (max-width: 768px) {
+          .phil-support {
+            max-height: 160px !important;
+            opacity: 0.55 !important;
+          }
         }
         @media (max-width: 640px) {
           .phil-inner {
-            grid-template-columns: 52px 1fr;
-            gap: 0 20px;
+            grid-template-columns: 44px 1fr;
+            gap: 0 16px;
           }
         }
       `}</style>
