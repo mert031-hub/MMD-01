@@ -454,13 +454,6 @@ export default function Hero() {
     transition: { delay, duration: 0.5, ease: EASE_OUT },
   });
 
-  const lineReveal = (delay: number) => ({
-    initial: shouldReduce
-      ? {}
-      : { clipPath: "inset(0 0 100% 0)", opacity: 0 },
-    animate: { clipPath: "inset(0 0 0% 0)", opacity: 1 },
-    transition: { delay, duration: 0.7, ease: EASE_OUT },
-  });
 
   return (
     <section
@@ -496,26 +489,47 @@ export default function Hero() {
             </motion.p>
 
             <h1 aria-label={lines.join(" ")} style={{ marginBottom: 28 }}>
-              {lines.map((line, i) => (
+              {lines.map((line, lineIdx) => (
                 <span
-                  key={i}
+                  key={lineIdx}
                   aria-hidden="true"
-                  style={{ display: "block", overflow: "hidden" }}
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    columnGap: "0.26em",
+                  }}
                 >
-                  <motion.span
-                    {...lineReveal(0.3 + i * 0.18)}
-                    style={{
-                      display: "block",
-                      fontFamily: "var(--font-display)",
-                      fontSize: "clamp(36px, 4.8vw, 76px)",
-                      fontWeight: 700,
-                      lineHeight: 1.08,
-                      letterSpacing: "-0.025em",
-                      color: "var(--color-authority)",
-                    }}
-                  >
-                    {line}
-                  </motion.span>
+                  {line.split(" ").map((word, wordIdx) => (
+                    <span
+                      key={wordIdx}
+                      style={{
+                        display: "block",
+                        overflow: "hidden",
+                        lineHeight: 1.08,
+                      }}
+                    >
+                      <motion.span
+                        initial={shouldReduce ? {} : { y: "110%", opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{
+                          delay: 0.28 + lineIdx * 0.14 + wordIdx * 0.055,
+                          duration: 0.62,
+                          ease: EASE_OUT,
+                        }}
+                        style={{
+                          display: "block",
+                          fontFamily: "var(--font-display)",
+                          fontSize: "clamp(36px, 4.8vw, 76px)",
+                          fontWeight: 700,
+                          lineHeight: 1.08,
+                          letterSpacing: "-0.025em",
+                          color: "var(--color-authority)",
+                        }}
+                      >
+                        {word}
+                      </motion.span>
+                    </span>
+                  ))}
                 </span>
               ))}
             </h1>

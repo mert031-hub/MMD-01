@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
 import { Link, usePathname } from "@/i18n/navigation";
 
 const NAV_LINKS = [
@@ -52,6 +52,9 @@ export default function Navigation() {
   const t = useTranslations("nav");
   const locale = useLocale();
   const pathname = usePathname();
+
+  const { scrollYProgress } = useScroll();
+  const navProgress = useSpring(scrollYProgress, { stiffness: 200, damping: 40, restDelta: 0.001 });
 
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -342,6 +345,22 @@ export default function Navigation() {
             </button>
           </div>
         </nav>
+        <motion.div
+          aria-hidden="true"
+          animate={{ opacity: scrolled ? 0.55 : 0 }}
+          transition={{ duration: 0.35, ease: EASE_OUT }}
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 1,
+            backgroundColor: "#ff6c0c",
+            transformOrigin: "left",
+            scaleX: navProgress,
+            pointerEvents: "none",
+          }}
+        />
       </header>
 
       {/* ─── MOBILE MENU OVERLAY ──────────────────────── */}
