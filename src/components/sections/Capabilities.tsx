@@ -43,10 +43,10 @@ function CapabilityItem({
 
   return (
     <motion.div
-      initial={shouldReduce ? {} : { opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={shouldReduce ? {} : { opacity: 0, x: -12 }}
+      whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.45, delay, ease: EASE_OUT }}
+      transition={{ duration: 0.5, delay, ease: EASE_OUT }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
@@ -67,7 +67,7 @@ function CapabilityItem({
           color: hovered ? "var(--color-action)" : "var(--color-text-tertiary)",
           paddingTop: 3,
           display: "block",
-          transition: "color 150ms ease",
+          transition: "color 200ms ease",
           userSelect: "none",
         }}
       >
@@ -75,16 +75,21 @@ function CapabilityItem({
       </span>
 
       {/* Content */}
-      <div>
+      <div
+        style={{
+          transform: hovered && !shouldReduce ? "translateX(4px)" : "translateX(0)",
+          transition: "transform 200ms ease",
+        }}
+      >
         <p
           style={{
             fontFamily: "var(--font-body)",
             fontWeight: 600,
             fontSize: "clamp(15px, 1.2vw, 18px)",
             lineHeight: 1.3,
-            color: "var(--color-authority)",
+            color: hovered ? "var(--color-action)" : "var(--color-authority)",
             marginBottom: 6,
-            transition: "color 150ms ease",
+            transition: "color 200ms ease",
           }}
         >
           {title}
@@ -110,7 +115,6 @@ export default function Capabilities() {
   const t = useTranslations("capabilities");
   const shouldReduce = useReducedMotion() ?? false;
 
-  /* Split into two columns: 4 left, 3 right */
   const leftKeys = CAPABILITY_KEYS.slice(0, 4);
   const rightKeys = CAPABILITY_KEYS.slice(4);
 
@@ -128,7 +132,6 @@ export default function Capabilities() {
           descriptor={t("sectionDescriptor")}
         />
 
-        {/* Two-column grid */}
         <div
           className="capabilities-grid"
           style={{
@@ -137,7 +140,7 @@ export default function Capabilities() {
             gap: "0 80px",
           }}
         >
-          {/* Left column */}
+          {/* Left column — items 1-4, stagger 0–0.21s */}
           <div>
             {leftKeys.map((key, i) => {
               const item = t.raw(`items.${key}`) as {
@@ -151,16 +154,15 @@ export default function Capabilities() {
                   number={item.number}
                   title={item.title}
                   descriptor={item.descriptor}
-                  delay={i * 0.06}
+                  delay={i * 0.07}
                   shouldReduce={shouldReduce}
                 />
               );
             })}
-            {/* Bottom border for last item in left column */}
             <div style={{ borderTop: "1px solid var(--color-border)" }} />
           </div>
 
-          {/* Right column */}
+          {/* Right column — items 5-7, offset stagger */}
           <div>
             {rightKeys.map((key, i) => {
               const item = t.raw(`items.${key}`) as {
@@ -174,12 +176,11 @@ export default function Capabilities() {
                   number={item.number}
                   title={item.title}
                   descriptor={item.descriptor}
-                  delay={(i + 4) * 0.06}
+                  delay={(i + 2) * 0.07}
                   shouldReduce={shouldReduce}
                 />
               );
             })}
-            {/* Bottom border for last item in right column */}
             <div style={{ borderTop: "1px solid var(--color-border)" }} />
           </div>
         </div>

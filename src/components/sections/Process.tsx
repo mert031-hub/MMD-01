@@ -44,26 +44,62 @@ export default function Process() {
             return (
               <motion.div
                 key={key}
-                initial={shouldReduce ? {} : { opacity: 0, y: 20 }}
+                initial={shouldReduce ? {} : { opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.5, delay: i * 0.08, ease: EASE_OUT }}
+                transition={{
+                  duration: 0.55,
+                  delay: i * 0.12,
+                  ease: EASE_OUT,
+                }}
                 style={{
-                  borderTop: "1px solid var(--color-border)",
+                  position: "relative",
                   paddingTop: 28,
                   paddingBottom: 8,
                 }}
               >
-                <span
-                  className="text-label"
-                  style={{
-                    color: "var(--color-action)",
-                    display: "block",
-                    marginBottom: 16,
+                {/* Animated top border line */}
+                <motion.div
+                  initial={shouldReduce ? {} : { scaleX: 0 }}
+                  whileInView={{ scaleX: 1 }}
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{
+                    duration: 0.55,
+                    delay: i * 0.12,
+                    ease: EASE_OUT,
                   }}
-                >
-                  {stage.number}
-                </span>
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: 1,
+                    backgroundColor: "var(--color-border)",
+                    transformOrigin: "left",
+                  }}
+                />
+
+                {/* Number — clip-path reveal */}
+                <div style={{ overflow: "hidden", marginBottom: 16 }}>
+                  <motion.span
+                    initial={shouldReduce ? {} : { y: "110%" }}
+                    whileInView={{ y: 0 }}
+                    viewport={{ once: true, margin: "-60px" }}
+                    transition={{
+                      duration: 0.4,
+                      delay: i * 0.12 + 0.1,
+                      ease: EASE_OUT,
+                    }}
+                    className="text-label"
+                    style={{
+                      color: "var(--color-action)",
+                      display: "block",
+                    }}
+                  >
+                    {stage.number}
+                  </motion.span>
+                </div>
+
                 <h3
                   style={{
                     fontFamily: "var(--font-display)",

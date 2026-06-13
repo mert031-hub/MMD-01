@@ -343,7 +343,6 @@ export default function Hero() {
 
   const lines = [t("heading1"), t("heading2"), t("heading3")];
 
-  /* Animation helpers */
   const fadeUp = (delay: number) => ({
     initial: shouldReduce ? {} : { opacity: 0, y: 16 },
     animate: { opacity: 1, y: 0 },
@@ -359,9 +358,9 @@ export default function Hero() {
   });
 
   const mockupReveal = {
-    initial: shouldReduce ? {} : { opacity: 0, y: 32 },
-    animate: { opacity: 1, y: 0 },
-    transition: { delay: 1.1, duration: 0.7, ease: EASE_OUT },
+    initial: shouldReduce ? {} : { opacity: 0, y: 32, scale: 0.97 },
+    animate: { opacity: 1, y: 0, scale: 1 },
+    transition: { delay: 1.1, duration: 0.8, ease: EASE_OUT },
   };
 
   return (
@@ -472,7 +471,7 @@ export default function Hero() {
                   alignItems: "center",
                   gap: 8,
                   transition:
-                    "background-color 150ms ease, transform 150ms ease",
+                    "background-color 200ms ease, transform 200ms ease",
                   whiteSpace: "nowrap",
                 }}
                 onMouseEnter={(e) => {
@@ -493,6 +492,7 @@ export default function Hero() {
                   viewBox="0 0 13 13"
                   fill="none"
                   aria-hidden="true"
+                  className="hero-cta-arrow"
                 >
                   <path
                     d="M2 6.5h9M7.5 2.5l4 4-4 4"
@@ -518,7 +518,7 @@ export default function Hero() {
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 6,
-                  transition: "color 150ms ease",
+                  transition: "color 200ms ease",
                 }}
                 onMouseEnter={(e) =>
                   (e.currentTarget.style.color = "var(--color-action)")
@@ -550,9 +550,14 @@ export default function Hero() {
           <div
             className="hero-right"
             aria-hidden="true"
-            style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}
+            style={{
+              position: "relative",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
           >
-            {/* MM background composition */}
+            {/* MM background — very subtle opacity breathing */}
             <div
               style={{
                 position: "absolute",
@@ -564,13 +569,27 @@ export default function Hero() {
                 pointerEvents: "none",
               }}
             >
-              <span
+              <motion.span
+                animate={
+                  shouldReduce
+                    ? {}
+                    : { opacity: [0.04, 0.065, 0.04] }
+                }
+                transition={
+                  shouldReduce
+                    ? {}
+                    : {
+                        duration: 5,
+                        ease: "easeInOut",
+                        repeat: Infinity,
+                        repeatType: "loop",
+                      }
+                }
                 style={{
                   fontFamily: "var(--font-display)",
                   fontSize: "clamp(180px, 22vw, 320px)",
                   fontWeight: 700,
                   color: "var(--color-authority)",
-                  opacity: 0.045,
                   letterSpacing: "-0.06em",
                   lineHeight: 0.85,
                   userSelect: "none",
@@ -578,15 +597,36 @@ export default function Hero() {
                 }}
               >
                 MM
-              </span>
+              </motion.span>
             </div>
 
             {/* Floating mockup */}
             <motion.div
               {...mockupReveal}
-              style={{ position: "relative", zIndex: 1, width: "100%", display: "flex", justifyContent: "center" }}
+              style={{
+                position: "relative",
+                zIndex: 1,
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+              }}
             >
-              <ProjectMockup />
+              {/* Subtle continuous float */}
+              <motion.div
+                animate={shouldReduce ? {} : { y: [0, -7, 0] }}
+                transition={
+                  shouldReduce
+                    ? {}
+                    : {
+                        duration: 4.5,
+                        ease: "easeInOut",
+                        repeat: Infinity,
+                        repeatType: "loop",
+                      }
+                }
+              >
+                <ProjectMockup />
+              </motion.div>
             </motion.div>
           </div>
         </div>
@@ -596,7 +636,6 @@ export default function Hero() {
       <motion.div {...fadeUp(1.4)}>
         <ScrollIndicator label={t("scrollLabel")} shouldReduce={shouldReduce} />
       </motion.div>
-
     </section>
   );
 }

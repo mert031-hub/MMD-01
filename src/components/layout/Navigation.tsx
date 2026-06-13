@@ -192,6 +192,7 @@ export default function Navigation() {
               <Link
                 key={key}
                 href={href}
+                className={`nav-link${isActive(href) ? " nav-active" : ""}`}
                 style={{
                   fontFamily: "var(--font-body)",
                   fontWeight: 600,
@@ -201,7 +202,7 @@ export default function Navigation() {
                     ? "var(--color-action)"
                     : "var(--color-text-primary)",
                   textDecoration: "none",
-                  transition: "color 150ms ease",
+                  transition: "color 200ms ease",
                   position: "relative",
                 }}
                 onMouseEnter={(e) =>
@@ -499,7 +500,7 @@ export default function Navigation() {
         )}
       </AnimatePresence>
 
-      {/* Responsive utility styles */}
+      {/* Responsive + nav-link underline animation */}
       <style>{`
         @media (min-width: 768px) {
           .hidden-mobile { display: flex !important; }
@@ -508,6 +509,28 @@ export default function Navigation() {
         @media (max-width: 767px) {
           .hidden-mobile { display: none !important; }
           .show-mobile { display: flex !important; }
+        }
+
+        /* Expanding underline on desktop nav links */
+        .nav-link {
+          position: relative;
+        }
+        .nav-link::after {
+          content: '';
+          position: absolute;
+          bottom: -2px;
+          left: 0;
+          width: 100%;
+          height: 1px;
+          background-color: var(--color-action);
+          transform: scaleX(0);
+          transform-origin: right;
+          transition: transform 260ms cubic-bezier(0,0,0.2,1);
+        }
+        .nav-link:hover::after,
+        .nav-link.nav-active::after {
+          transform: scaleX(1);
+          transform-origin: left;
         }
       `}</style>
     </>

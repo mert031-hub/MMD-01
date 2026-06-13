@@ -778,17 +778,17 @@ function TranslatedProjectSpread({
   const transformation = t(`work.projects.${projectId}.transformation` as Parameters<typeof t>[0]);
   const viewProjectLabel = t("work.viewProject");
   const textMotion = {
-    initial: shouldReduce ? {} : { opacity: 0, x: reversed ? 24 : -24 },
+    initial: shouldReduce ? {} : { opacity: 0, x: reversed ? 20 : -20 },
     whileInView: { opacity: 1, x: 0 },
     viewport: { once: true as const, margin: "-80px" },
-    transition: { duration: 0.6, ease: EASE_OUT },
+    transition: { duration: 0.65, ease: EASE_OUT },
   };
 
   const mockupMotion = {
-    initial: shouldReduce ? {} : { opacity: 0, x: reversed ? -24 : 24 },
-    whileInView: { opacity: 1, x: 0 },
+    initial: shouldReduce ? {} : { opacity: 0, scale: 0.96 },
+    whileInView: { opacity: 1, scale: 1 },
     viewport: { once: true as const, margin: "-80px" },
-    transition: { duration: 0.6, delay: 0.1, ease: EASE_OUT },
+    transition: { duration: 0.7, delay: 0.08, ease: EASE_OUT },
   };
 
   const textBlock = (
@@ -842,6 +842,7 @@ function TranslatedProjectSpread({
       <Link
         href={project.href}
         aria-label={`${viewProjectLabel}: ${name}`}
+        className="project-view-link"
         style={{
           fontFamily: "var(--font-body)",
           fontWeight: 600,
@@ -852,18 +853,20 @@ function TranslatedProjectSpread({
           alignItems: "center",
           gap: 6,
           letterSpacing: "-0.01em",
-          transition: "color 150ms ease, border-color 150ms ease",
+          transition: "color 200ms ease, border-color 200ms ease",
           alignSelf: "flex-start",
           paddingBottom: 2,
           borderBottom: "1px solid rgba(6,7,113,0.2)",
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.color = "var(--color-action)";
-          (e.currentTarget.style as CSSStyleDeclaration).borderBottomColor = "var(--color-action)";
+          (e.currentTarget.style as CSSStyleDeclaration).borderBottomColor =
+            "var(--color-action)";
         }}
         onMouseLeave={(e) => {
           e.currentTarget.style.color = "var(--color-authority)";
-          (e.currentTarget.style as CSSStyleDeclaration).borderBottomColor = "rgba(6,7,113,0.2)";
+          (e.currentTarget.style as CSSStyleDeclaration).borderBottomColor =
+            "rgba(6,7,113,0.2)";
         }}
       >
         {viewProjectLabel}
@@ -873,6 +876,7 @@ function TranslatedProjectSpread({
           viewBox="0 0 12 12"
           fill="none"
           aria-hidden="true"
+          className="project-view-arrow"
         >
           <path
             d="M2 6h8M6.5 2.5l3.5 3.5-3.5 3.5"
@@ -888,7 +892,14 @@ function TranslatedProjectSpread({
 
   const mockupBlock = (
     <motion.div {...mockupMotion} style={{ width: "100%" }}>
-      <ProjectVisual projectId={project.id} />
+      {/* Hover scale lives on inner div — doesn't fight whileInView */}
+      <motion.div
+        whileHover={shouldReduce ? {} : { scale: 1.02 }}
+        transition={{ duration: 0.4, ease: EASE_OUT }}
+        style={{ width: "100%" }}
+      >
+        <ProjectVisual projectId={project.id} />
+      </motion.div>
     </motion.div>
   );
 
@@ -1013,6 +1024,15 @@ export default function WorkPreview() {
           </Link>
         </motion.div>
       </div>
+
+      <style>{`
+        .project-view-arrow {
+          transition: transform 220ms cubic-bezier(0,0,0.2,1);
+        }
+        .project-view-link:hover .project-view-arrow {
+          transform: translateX(5px);
+        }
+      `}</style>
     </section>
   );
 }

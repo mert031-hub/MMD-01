@@ -10,18 +10,9 @@ export default function Philosophy() {
   const shouldReduce = useReducedMotion() ?? false;
 
   const beliefs = [
-    {
-      number: t("belief1Number"),
-      text: t("belief1"),
-    },
-    {
-      number: t("belief2Number"),
-      text: t("belief2"),
-    },
-    {
-      number: t("belief3Number"),
-      text: t("belief3"),
-    },
+    { number: t("belief1Number"), text: t("belief1") },
+    { number: t("belief2Number"), text: t("belief2") },
+    { number: t("belief3Number"), text: t("belief3") },
   ] as const;
 
   return (
@@ -34,7 +25,7 @@ export default function Philosophy() {
         overflow: "hidden",
       }}
     >
-      {/* Subtle background texture — large low-opacity numeral */}
+      {/* Background texture — MM */}
       <div
         aria-hidden="true"
         style={{
@@ -55,29 +46,34 @@ export default function Philosophy() {
         MM
       </div>
 
-      <div className="container-site section-padding" style={{ position: "relative" }}>
-        {/* Main quote */}
-        <motion.blockquote
-          initial={shouldReduce ? {} : { opacity: 0, y: 32 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.7, ease: EASE_OUT }}
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "clamp(28px, 3.6vw, 60px)",
-            fontStyle: "italic",
-            fontWeight: 500,
-            lineHeight: 1.15,
-            letterSpacing: "-0.015em",
-            color: "var(--color-text-inverse)",
-            maxWidth: 820,
-            margin: "0 0 72px",
-            padding: 0,
-            border: "none",
-          }}
-        >
-          &ldquo;{t("quote")}&rdquo;
-        </motion.blockquote>
+      <div
+        className="container-site section-padding"
+        style={{ position: "relative" }}
+      >
+        {/* Main quote — dramatic entrance */}
+        <div style={{ overflow: "hidden", marginBottom: 72 }}>
+          <motion.blockquote
+            initial={shouldReduce ? {} : { y: "60%", opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.9, ease: EASE_OUT }}
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(28px, 3.6vw, 60px)",
+              fontStyle: "italic",
+              fontWeight: 500,
+              lineHeight: 1.15,
+              letterSpacing: "-0.015em",
+              color: "var(--color-text-inverse)",
+              maxWidth: 820,
+              margin: 0,
+              padding: 0,
+              border: "none",
+            }}
+          >
+            &ldquo;{t("quote")}&rdquo;
+          </motion.blockquote>
+        </div>
 
         {/* Beliefs */}
         <div
@@ -91,10 +87,14 @@ export default function Philosophy() {
           {beliefs.map((belief, i) => (
             <motion.div
               key={i}
-              initial={shouldReduce ? {} : { opacity: 0, y: 20 }}
+              initial={shouldReduce ? {} : { opacity: 0, y: 28 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.5, delay: i * 0.1, ease: EASE_OUT }}
+              transition={{
+                duration: 0.6,
+                delay: i * 0.15,
+                ease: EASE_OUT,
+              }}
               style={{
                 display: "grid",
                 gridTemplateColumns: "40px 1fr",

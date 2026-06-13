@@ -12,21 +12,36 @@ export default function ClosingCTA() {
   const shouldReduce = useReducedMotion() ?? false;
 
   const fadeUp = (delay: number) => ({
-    initial: shouldReduce ? {} : { opacity: 0, y: 20 },
+    initial: shouldReduce ? {} : { opacity: 0, y: 24 },
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true as const, margin: "-60px" },
-    transition: { duration: 0.55, delay, ease: EASE_OUT },
+    transition: { duration: 0.6, delay, ease: EASE_OUT },
   });
 
   return (
     <section
       id="iletisim"
       aria-label="İletişime geç"
-      style={{ backgroundColor: "var(--color-authority)", position: "relative", overflow: "hidden" }}
+      style={{
+        backgroundColor: "var(--color-authority)",
+        position: "relative",
+        overflow: "hidden",
+      }}
     >
-      {/* Background texture */}
-      <div
+      {/* Background texture — breathing MM */}
+      <motion.div
         aria-hidden="true"
+        animate={shouldReduce ? {} : { opacity: [0.028, 0.048, 0.028] }}
+        transition={
+          shouldReduce
+            ? {}
+            : {
+                duration: 6,
+                ease: "easeInOut",
+                repeat: Infinity,
+                repeatType: "loop",
+              }
+        }
         style={{
           position: "absolute",
           left: "-4%",
@@ -34,7 +49,7 @@ export default function ClosingCTA() {
           fontFamily: "var(--font-display)",
           fontSize: "clamp(200px, 28vw, 440px)",
           fontWeight: 700,
-          color: "rgba(255,251,243,0.03)",
+          color: "rgba(255,251,243,1)",
           lineHeight: 1,
           userSelect: "none",
           pointerEvents: "none",
@@ -42,32 +57,37 @@ export default function ClosingCTA() {
         }}
       >
         MM
-      </div>
+      </motion.div>
 
       <div
         className="container-site section-padding"
         style={{ position: "relative", textAlign: "center" }}
       >
-        {/* Heading */}
-        <motion.h2
-          {...fadeUp(0)}
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "clamp(28px, 3.8vw, 64px)",
-            fontWeight: 600,
-            lineHeight: 1.1,
-            letterSpacing: "-0.02em",
-            color: "var(--color-text-inverse)",
-            maxWidth: 760,
-            margin: "0 auto 20px",
-          }}
-        >
-          {t("heading")}
-        </motion.h2>
+        {/* Heading — clip-path reveal for drama */}
+        <div style={{ overflow: "hidden", marginBottom: 20 }}>
+          <motion.h2
+            initial={shouldReduce ? {} : { y: "80%", opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.85, ease: EASE_OUT }}
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(28px, 3.8vw, 64px)",
+              fontWeight: 600,
+              lineHeight: 1.1,
+              letterSpacing: "-0.02em",
+              color: "var(--color-text-inverse)",
+              maxWidth: 760,
+              margin: "0 auto",
+            }}
+          >
+            {t("heading")}
+          </motion.h2>
+        </div>
 
         {/* Supporting */}
         <motion.p
-          {...fadeUp(0.1)}
+          {...fadeUp(0.18)}
           style={{
             fontFamily: "var(--font-body)",
             fontSize: "clamp(15px, 1.4vw, 18px)",
@@ -82,7 +102,7 @@ export default function ClosingCTA() {
 
         {/* CTAs */}
         <motion.div
-          {...fadeUp(0.2)}
+          {...fadeUp(0.3)}
           style={{
             display: "flex",
             alignItems: "center",
@@ -111,19 +131,20 @@ export default function ClosingCTA() {
               display: "inline-flex",
               alignItems: "center",
               gap: 10,
-              transition: "background-color 150ms ease, transform 150ms ease",
+              transition: "background-color 200ms ease, transform 200ms ease, box-shadow 200ms ease",
               whiteSpace: "nowrap",
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.backgroundColor = "#1dba59";
-              e.currentTarget.style.transform = "translateY(-2px)";
+              e.currentTarget.style.transform = "translateY(-3px)";
+              e.currentTarget.style.boxShadow = "0 8px 24px rgba(37,211,102,0.35)";
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.backgroundColor = "#25D366";
               e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = "none";
             }}
           >
-            {/* WhatsApp icon */}
             <svg
               width="18"
               height="18"
@@ -150,7 +171,7 @@ export default function ClosingCTA() {
               display: "inline-flex",
               alignItems: "center",
               gap: 7,
-              transition: "color 150ms ease",
+              transition: "color 200ms ease",
               whiteSpace: "nowrap",
             }}
             onMouseEnter={(e) =>
@@ -180,7 +201,7 @@ export default function ClosingCTA() {
 
         {/* Reassurance note */}
         <motion.p
-          {...fadeUp(0.3)}
+          {...fadeUp(0.42)}
           className="text-label"
           style={{
             color: "rgba(255,251,243,0.35)",
