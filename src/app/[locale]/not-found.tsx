@@ -99,7 +99,7 @@ export default async function NotFound() {
           fontFamily: "var(--font-body)",
           fontSize: "clamp(15px, 1.3vw, 17px)",
           lineHeight: 1.7,
-          color: "rgba(255,251,243,0.48)",
+          color: "rgba(255,251,243,0.55)",
           marginBottom: 52,
           maxWidth: 440,
           position: "relative",
