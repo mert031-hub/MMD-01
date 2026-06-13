@@ -63,6 +63,18 @@ export default function ClosingCTA() {
         className="container-site section-padding"
         style={{ position: "relative", textAlign: "center" }}
       >
+        {/* Orange accent line — editorial opening mark */}
+        <motion.div
+          {...fadeUp(0)}
+          style={{
+            width: 48,
+            height: 2,
+            backgroundColor: "var(--color-action)",
+            margin: "0 auto 40px",
+            opacity: 0.8,
+          }}
+        />
+
         {/* Heading — clip-path reveal for drama */}
         <div style={{ overflow: "hidden", marginBottom: 20 }}>
           <motion.h2
@@ -209,6 +221,22 @@ export default function ClosingCTA() {
           }}
         >
           {t("freeConsult")}
+        </motion.p>
+
+        {/* Studio signature — closing editorial mark */}
+        <motion.p
+          {...fadeUp(0.56)}
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: "0.22em",
+            textTransform: "uppercase",
+            color: "rgba(255,251,243,0.18)",
+            marginTop: 56,
+          }}
+        >
+          MMDESIGN — İstanbul
         </motion.p>
       </div>
     </section>

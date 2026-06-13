@@ -65,7 +65,6 @@ export default function Navigation() {
     return () => window.removeEventListener("scroll", check);
   }, []);
 
-  /* Keyboard: Escape closes menu */
   useEffect(() => {
     if (!menuOpen) return;
     const handleKey = (e: KeyboardEvent) => {
@@ -78,7 +77,6 @@ export default function Navigation() {
     return () => document.removeEventListener("keydown", handleKey);
   }, [menuOpen]);
 
-  /* Lock body scroll when menu is open */
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => {
@@ -86,7 +84,6 @@ export default function Navigation() {
     };
   }, [menuOpen]);
 
-  /* Focus first focusable element when menu opens */
   useEffect(() => {
     if (menuOpen) {
       const firstFocusable = menuRef.current?.querySelector<HTMLElement>(
@@ -96,7 +93,6 @@ export default function Navigation() {
     }
   }, [menuOpen]);
 
-  /* Simple focus trap */
   const handleMenuKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key !== "Tab") return;
     const focusable = menuRef.current?.querySelectorAll<HTMLElement>(
@@ -136,12 +132,16 @@ export default function Navigation() {
           right: 0,
           zIndex: 100,
           height: 72,
-          backgroundColor: scrolled ? "var(--color-bg-primary)" : "transparent",
+          backgroundColor: scrolled
+            ? "rgba(255,251,243,0.82)"
+            : "transparent",
+          WebkitBackdropFilter: scrolled ? "blur(16px) saturate(160%)" : "none",
+          backdropFilter: scrolled ? "blur(16px) saturate(160%)" : "none",
           borderBottom: scrolled
-            ? "1px solid var(--color-border)"
+            ? "1px solid rgba(6,7,113,0.07)"
             : "1px solid transparent",
           transition:
-            "background-color 300ms cubic-bezier(0.4,0,0.2,1), border-color 300ms cubic-bezier(0.4,0,0.2,1)",
+            "background-color 350ms cubic-bezier(0.4,0,0.2,1), border-color 350ms cubic-bezier(0.4,0,0.2,1)",
         }}
       >
         <nav
@@ -154,7 +154,7 @@ export default function Navigation() {
           }}
           aria-label={locale === "tr" ? "Ana navigasyon" : "Main navigation"}
         >
-          {/* ─── LOGO ─────────────────────────────────────── */}
+          {/* ─── LOGO ─────────────────────────────────────────── */}
           <Link
             href="/"
             aria-label={
@@ -170,15 +170,13 @@ export default function Navigation() {
               transition: "opacity 150ms ease",
               flexShrink: 0,
             }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.opacity = "0.75")
-            }
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.6")}
             onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
           >
             MMDESIGN
           </Link>
 
-          {/* ─── DESKTOP NAV LINKS ────────────────────────── */}
+          {/* ─── DESKTOP NAV LINKS ────────────────────────────── */}
           <div
             aria-hidden="true"
             style={{
@@ -196,8 +194,9 @@ export default function Navigation() {
                 style={{
                   fontFamily: "var(--font-body)",
                   fontWeight: 600,
-                  fontSize: 13,
-                  letterSpacing: "-0.01em",
+                  fontSize: 11,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
                   color: isActive(href)
                     ? "var(--color-action)"
                     : "var(--color-text-primary)",
@@ -219,17 +218,13 @@ export default function Navigation() {
             ))}
           </div>
 
-          {/* ─── RIGHT CLUSTER ────────────────────────────── */}
+          {/* ─── RIGHT CLUSTER ────────────────────────────────── */}
           <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
             {/* Language Toggle */}
             <Link
               href={pathname}
               locale={alternateLocale}
-              aria-label={
-                locale === "tr"
-                  ? "Switch to English"
-                  : "Türkçeye geç"
-              }
+              aria-label={locale === "tr" ? "Switch to English" : "Türkçeye geç"}
               className="hidden-mobile"
               style={{
                 fontFamily: "var(--font-body)",
@@ -252,38 +247,38 @@ export default function Navigation() {
               {localeLabel}
             </Link>
 
-            {/* CTA Button */}
+            {/* CTA Button — sweep effect */}
             <Link
               href="/#iletisim"
-              className="hidden-mobile"
+              className="hidden-mobile btn-sweep"
               style={{
                 fontFamily: "var(--font-body)",
                 fontWeight: 700,
-                fontSize: 12,
-                letterSpacing: "0.06em",
+                fontSize: 11,
+                letterSpacing: "0.08em",
                 textTransform: "uppercase",
                 color: "#fffbf3",
                 backgroundColor: "var(--color-action)",
                 padding: "10px 22px",
                 borderRadius: 0,
                 textDecoration: "none",
-                transition:
-                  "background-color 150ms ease, transform 150ms ease",
                 display: "inline-flex",
                 alignItems: "center",
+                gap: 7,
                 whiteSpace: "nowrap",
+                transition: "transform 150ms ease",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor =
-                  "var(--color-action-hover)";
                 e.currentTarget.style.transform = "translateY(-1px)";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "var(--color-action)";
                 e.currentTarget.style.transform = "translateY(0)";
               }}
             >
               {t("cta")}
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                <path d="M2 5h6M5.5 2.5L8 5l-2.5 2.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </Link>
 
             {/* Hamburger — mobile only */}
@@ -376,7 +371,6 @@ export default function Navigation() {
               overflowY: "auto",
             }}
           >
-            {/* Menu Links */}
             <nav
               aria-label={
                 locale === "tr" ? "Mobil navigasyon" : "Mobile navigation"
@@ -425,7 +419,6 @@ export default function Navigation() {
               ))}
             </nav>
 
-            {/* Bottom: CTA + Language */}
             <motion.div
               variants={bottomVariants}
               initial="closed"
@@ -456,12 +449,10 @@ export default function Navigation() {
                   transition: "background-color 150ms ease",
                 }}
                 onMouseEnter={(e) =>
-                  (e.currentTarget.style.backgroundColor =
-                    "var(--color-action-hover)")
+                  (e.currentTarget.style.backgroundColor = "var(--color-action-hover)")
                 }
                 onMouseLeave={(e) =>
-                  (e.currentTarget.style.backgroundColor =
-                    "var(--color-action)")
+                  (e.currentTarget.style.backgroundColor = "var(--color-action)")
                 }
               >
                 {t("cta")}
@@ -471,9 +462,7 @@ export default function Navigation() {
                 href={pathname}
                 locale={alternateLocale}
                 onClick={() => setMenuOpen(false)}
-                aria-label={
-                  locale === "tr" ? "Switch to English" : "Türkçeye geç"
-                }
+                aria-label={locale === "tr" ? "Switch to English" : "Türkçeye geç"}
                 style={{
                   fontFamily: "var(--font-body)",
                   fontWeight: 600,
@@ -500,7 +489,6 @@ export default function Navigation() {
         )}
       </AnimatePresence>
 
-      {/* Responsive + nav-link underline animation */}
       <style>{`
         @media (min-width: 768px) {
           .hidden-mobile { display: flex !important; }
@@ -511,26 +499,29 @@ export default function Navigation() {
           .show-mobile { display: flex !important; }
         }
 
-        /* Expanding underline on desktop nav links */
+        /* Premium underline — slides left-to-right on hover, stays for active */
         .nav-link {
           position: relative;
         }
         .nav-link::after {
           content: '';
           position: absolute;
-          bottom: -2px;
+          bottom: -3px;
           left: 0;
           width: 100%;
-          height: 1px;
+          height: 1.5px;
           background-color: var(--color-action);
           transform: scaleX(0);
           transform-origin: right;
-          transition: transform 260ms cubic-bezier(0,0,0.2,1);
+          transition: transform 280ms cubic-bezier(0,0,0.2,1);
         }
         .nav-link:hover::after,
         .nav-link.nav-active::after {
           transform: scaleX(1);
           transform-origin: left;
+        }
+        .nav-link.nav-active {
+          color: var(--color-action) !important;
         }
       `}</style>
     </>

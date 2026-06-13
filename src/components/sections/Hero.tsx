@@ -1,6 +1,12 @@
 "use client";
 
-import { useReducedMotion, motion } from "framer-motion";
+import {
+  useReducedMotion,
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
 
@@ -15,14 +21,14 @@ function EngineeringCard() {
         width: "100%",
         borderRadius: 8,
         overflow: "hidden",
-        boxShadow: "0 16px 48px rgba(6,7,113,0.28), 0 4px 12px rgba(6,7,113,0.12)",
+        boxShadow:
+          "0 16px 48px rgba(6,7,113,0.28), 0 4px 12px rgba(6,7,113,0.12)",
         border: "1px solid rgba(255,108,12,0.15)",
         userSelect: "none",
         pointerEvents: "none",
         backgroundColor: "#07091f",
       }}
     >
-      {/* Nav */}
       <div
         style={{
           height: 36,
@@ -67,7 +73,6 @@ function EngineeringCard() {
         </div>
       </div>
 
-      {/* Hero content */}
       <div
         style={{
           padding: "22px 18px 18px",
@@ -75,7 +80,6 @@ function EngineeringCard() {
           overflow: "hidden",
         }}
       >
-        {/* Subtle grid lines */}
         {[0, 1, 2, 3].map((i) => (
           <div
             key={i}
@@ -129,12 +133,7 @@ function EngineeringCard() {
           }}
         />
         <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 3,
-            position: "relative",
-          }}
+          style={{ display: "flex", flexDirection: "column", gap: 3, position: "relative" }}
         >
           {[80, 65, 50].map((w, i) => (
             <div
@@ -150,7 +149,6 @@ function EngineeringCard() {
         </div>
       </div>
 
-      {/* Category strip */}
       <div
         style={{
           backgroundColor: "#05061a",
@@ -171,7 +169,9 @@ function EngineeringCard() {
               letterSpacing: "0.08em",
               textTransform: "uppercase",
               color: i === 0 ? "rgba(255,108,12,0.8)" : "rgba(255,251,243,0.25)",
-              border: `1px solid ${i === 0 ? "rgba(255,108,12,0.3)" : "rgba(255,251,243,0.08)"}`,
+              border: `1px solid ${
+                i === 0 ? "rgba(255,108,12,0.3)" : "rgba(255,251,243,0.08)"
+              }`,
               padding: "2px 6px",
               borderRadius: 2,
             }}
@@ -201,7 +201,6 @@ function HotelCard() {
         backgroundColor: "#ffffff",
       }}
     >
-      {/* Nav */}
       <div
         style={{
           height: 40,
@@ -254,11 +253,11 @@ function HotelCard() {
         </div>
       </div>
 
-      {/* Full image hero */}
       <div
         style={{
           height: 148,
-          background: "linear-gradient(155deg, #c8ad89 0%, #9e7d55 40%, #6b4f2a 100%)",
+          background:
+            "linear-gradient(155deg, #c8ad89 0%, #9e7d55 40%, #6b4f2a 100%)",
           position: "relative",
           overflow: "hidden",
           display: "flex",
@@ -274,7 +273,6 @@ function HotelCard() {
               "linear-gradient(to top, rgba(6,7,113,0.6) 0%, transparent 55%)",
           }}
         />
-        {/* Arch detail */}
         <div
           style={{
             position: "absolute",
@@ -308,7 +306,6 @@ function HotelCard() {
         </div>
       </div>
 
-      {/* Room cards */}
       <div
         style={{
           display: "grid",
@@ -318,13 +315,7 @@ function HotelCard() {
         }}
       >
         {["Standart", "Deluxe", "Suite"].map((room, i) => (
-          <div
-            key={i}
-            style={{
-              backgroundColor: "#fffbf3",
-              padding: "10px 12px",
-            }}
-          >
+          <div key={i} style={{ backgroundColor: "#fffbf3", padding: "10px 12px" }}>
             <div
               style={{
                 width: "100%",
@@ -433,6 +424,28 @@ export default function Hero() {
   const locale = useLocale();
   const shouldReduce = useReducedMotion() ?? false;
 
+  /* Mouse parallax — spring-eased, depth-layered */
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const springX = useSpring(mouseX, { stiffness: 45, damping: 16 });
+  const springY = useSpring(mouseY, { stiffness: 45, damping: 16 });
+  const card1X = useTransform(springX, [-1, 1], shouldReduce ? [0, 0] : [-10, 10]);
+  const card1Y = useTransform(springY, [-1, 1], shouldReduce ? [0, 0] : [-7, 7]);
+  const card2X = useTransform(springX, [-1, 1], shouldReduce ? [0, 0] : [14, -14]);
+  const card2Y = useTransform(springY, [-1, 1], shouldReduce ? [0, 0] : [9, -9]);
+  const mmDriftX = useTransform(springX, [-1, 1], shouldReduce ? [0, 0] : [5, -5]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    mouseX.set((e.clientX - rect.left - rect.width / 2) / (rect.width / 2));
+    mouseY.set((e.clientY - rect.top - rect.height / 2) / (rect.height / 2));
+  };
+
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
+
   const lines = [t("heading1"), t("heading2"), t("heading3")];
 
   const fadeUp = (delay: number) => ({
@@ -461,7 +474,6 @@ export default function Hero() {
         flexDirection: "column",
       }}
     >
-      {/* Main grid */}
       <div
         className="container-site hero-inner"
         style={{
@@ -475,7 +487,6 @@ export default function Hero() {
         <div className="hero-grid" style={{ width: "100%" }}>
           {/* ─── LEFT COLUMN ──────────────────────── */}
           <div className="hero-left">
-            {/* Label */}
             <motion.p
               {...fadeUp(0.1)}
               className="text-label"
@@ -484,7 +495,6 @@ export default function Hero() {
               {t("label")}
             </motion.p>
 
-            {/* Heading */}
             <h1 aria-label={lines.join(" ")} style={{ marginBottom: 28 }}>
               {lines.map((line, i) => (
                 <span
@@ -510,7 +520,6 @@ export default function Hero() {
               ))}
             </h1>
 
-            {/* Supporting text */}
             <motion.p
               {...fadeUp(0.95)}
               style={{
@@ -525,7 +534,6 @@ export default function Hero() {
               {t("supporting")}
             </motion.p>
 
-            {/* CTAs */}
             <motion.div
               {...fadeUp(1.1)}
               style={{
@@ -535,10 +543,11 @@ export default function Hero() {
                 flexWrap: "wrap",
               }}
             >
-              {/* Primary */}
+              {/* Primary CTA — sweep effect */}
               <Link
                 href="/#iletisim"
                 aria-label={t("primaryCta")}
+                className="btn-sweep"
                 style={{
                   fontFamily: "var(--font-body)",
                   fontWeight: 700,
@@ -553,18 +562,13 @@ export default function Hero() {
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 8,
-                  transition:
-                    "background-color 200ms ease, transform 200ms ease",
                   whiteSpace: "nowrap",
+                  transition: "transform 150ms ease",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor =
-                    "var(--color-action-hover)";
                   e.currentTarget.style.transform = "translateY(-2px)";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor =
-                    "var(--color-action)";
                   e.currentTarget.style.transform = "translateY(0)";
                 }}
               >
@@ -628,7 +632,7 @@ export default function Hero() {
             </motion.div>
           </div>
 
-          {/* ─── RIGHT COLUMN — Layered composition ── */}
+          {/* ─── RIGHT COLUMN — Parallax composition ── */}
           <div
             className="hero-right"
             aria-hidden="true"
@@ -638,16 +642,21 @@ export default function Hero() {
               alignItems: "center",
               justifyContent: "center",
             }}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
           >
-            {/* Composition wrapper */}
+            {/* Composition wrapper — editorial dot grid background */}
             <div
               style={{
                 position: "relative",
                 width: "100%",
                 height: 460,
+                backgroundImage:
+                  "radial-gradient(circle, rgba(6,7,113,0.04) 1px, transparent 1px)",
+                backgroundSize: "28px 28px",
               }}
             >
-              {/* Giant MM watermark — cropped, breathing */}
+              {/* Giant MM watermark — breathing + subtle parallax drift */}
               <div
                 style={{
                   position: "absolute",
@@ -661,9 +670,7 @@ export default function Hero() {
               >
                 <motion.span
                   animate={
-                    shouldReduce
-                      ? {}
-                      : { opacity: [0.045, 0.07, 0.045] }
+                    shouldReduce ? {} : { opacity: [0.045, 0.07, 0.045] }
                   }
                   transition={
                     shouldReduce
@@ -676,6 +683,7 @@ export default function Hero() {
                         }
                   }
                   style={{
+                    x: mmDriftX,
                     fontFamily: "var(--font-display)",
                     fontSize: "clamp(200px, 26vw, 360px)",
                     fontWeight: 700,
@@ -690,69 +698,85 @@ export default function Hero() {
                 </motion.span>
               </div>
 
-              {/* Secondary card — Engineering, top-left, behind */}
+              {/* Secondary card — Engineering, top-left, behind
+                  Parallax layer → entrance layer → float layer */}
               <motion.div
-                initial={shouldReduce ? {} : { opacity: 0, scale: 0.92, y: 16 }}
-                animate={{ opacity: 0.88, scale: 1, y: 0 }}
-                transition={{ delay: 0.85, duration: 0.9, ease: EASE_OUT }}
                 style={{
+                  x: card1X,
+                  y: card1Y,
                   position: "absolute",
                   top: "6%",
                   left: "0%",
                   width: "56%",
                   zIndex: 1,
-                  transform: "rotate(2.8deg)",
+                  rotate: 2.8,
                 }}
               >
                 <motion.div
-                  animate={shouldReduce ? {} : { y: [0, -5, 0] }}
-                  transition={
-                    shouldReduce
-                      ? {}
-                      : {
-                          duration: 5.8,
-                          ease: "easeInOut",
-                          repeat: Infinity,
-                          repeatType: "loop",
-                        }
+                  initial={
+                    shouldReduce ? {} : { opacity: 0, scale: 0.92, y: 16 }
                   }
+                  animate={{ opacity: 0.88, scale: 1, y: 0 }}
+                  transition={{ delay: 0.85, duration: 0.9, ease: EASE_OUT }}
                 >
-                  <EngineeringCard />
+                  <motion.div
+                    animate={shouldReduce ? {} : { y: [0, -5, 0] }}
+                    transition={
+                      shouldReduce
+                        ? {}
+                        : {
+                            duration: 5.8,
+                            ease: "easeInOut",
+                            repeat: Infinity,
+                            repeatType: "loop",
+                          }
+                    }
+                  >
+                    <EngineeringCard />
+                  </motion.div>
                 </motion.div>
               </motion.div>
 
-              {/* Main card — Hotel, center-right, front */}
+              {/* Main card — Hotel, center-right, front
+                  Parallax layer → entrance layer → float layer */}
               <motion.div
-                initial={shouldReduce ? {} : { opacity: 0, y: 32, scale: 0.97 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ delay: 1.1, duration: 0.8, ease: EASE_OUT }}
                 style={{
+                  x: card2X,
+                  y: card2Y,
                   position: "absolute",
                   bottom: "4%",
                   right: "0%",
                   width: "78%",
                   zIndex: 2,
-                  transform: "rotate(-2deg)",
+                  rotate: -2,
                 }}
               >
                 <motion.div
-                  animate={shouldReduce ? {} : { y: [0, -7, 0] }}
-                  transition={
-                    shouldReduce
-                      ? {}
-                      : {
-                          duration: 4.5,
-                          ease: "easeInOut",
-                          repeat: Infinity,
-                          repeatType: "loop",
-                        }
+                  initial={
+                    shouldReduce ? {} : { opacity: 0, y: 32, scale: 0.97 }
                   }
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ delay: 1.1, duration: 0.8, ease: EASE_OUT }}
                 >
-                  <HotelCard />
+                  <motion.div
+                    animate={shouldReduce ? {} : { y: [0, -7, 0] }}
+                    transition={
+                      shouldReduce
+                        ? {}
+                        : {
+                            duration: 4.5,
+                            ease: "easeInOut",
+                            repeat: Infinity,
+                            repeatType: "loop",
+                          }
+                    }
+                  >
+                    <HotelCard />
+                  </motion.div>
                 </motion.div>
               </motion.div>
 
-              {/* MM brand mark — subtle corner signature */}
+              {/* MM brand signature — subtle corner */}
               <motion.div
                 initial={shouldReduce ? {} : { opacity: 0 }}
                 animate={{ opacity: 1 }}

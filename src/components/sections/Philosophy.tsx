@@ -23,13 +23,27 @@ export default function Philosophy() {
       aria-label="Stüdyo felsefesi"
       style={{
         backgroundColor: "var(--color-authority)",
+        backgroundImage:
+          "radial-gradient(circle, rgba(255,251,243,0.04) 1px, transparent 1px)",
+        backgroundSize: "28px 28px",
         position: "relative",
         overflow: "hidden",
       }}
     >
-      {/* Background texture — MM, very subtle */}
-      <div
+      {/* Background texture — MM, very subtle, slow drift */}
+      <motion.div
         aria-hidden="true"
+        animate={shouldReduce ? {} : { x: [0, 14, 0] }}
+        transition={
+          shouldReduce
+            ? {}
+            : {
+                duration: 20,
+                ease: "easeInOut",
+                repeat: Infinity,
+                repeatType: "loop",
+              }
+        }
         style={{
           position: "absolute",
           right: "-4%",
@@ -46,7 +60,7 @@ export default function Philosophy() {
         }}
       >
         MM
-      </div>
+      </motion.div>
 
       <div
         className="container-site section-padding"

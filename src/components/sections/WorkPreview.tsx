@@ -805,10 +805,15 @@ function TranslatedProjectSpread({
   };
 
   const mockupMotion = {
-    initial: shouldReduce ? {} : { opacity: 0, scale: 0.96 },
-    whileInView: { opacity: 1, scale: 1 },
+    initial: shouldReduce
+      ? {}
+      : {
+          opacity: 0,
+          clipPath: reversed ? "inset(0 0 0 8%)" : "inset(0 8% 0 0)",
+        },
+    whileInView: { opacity: 1, clipPath: "inset(0 0% 0 0%)" },
     viewport: { once: true as const, margin: "-80px" },
-    transition: { duration: 0.7, delay: 0.08, ease: EASE_OUT },
+    transition: { duration: 0.85, delay: 0.06, ease: EASE_OUT },
   };
 
   const textBlock = (
@@ -820,6 +825,20 @@ function TranslatedProjectSpread({
         justifyContent: "center",
       }}
     >
+      {/* Editorial project index */}
+      <p
+        style={{
+          fontFamily: "var(--font-display)",
+          fontSize: 10,
+          fontWeight: 700,
+          letterSpacing: "0.2em",
+          textTransform: "uppercase",
+          color: "var(--color-text-tertiary)",
+          marginBottom: 12,
+        }}
+      >
+        {String(index + 1).padStart(2, "0")}
+      </p>
       <p
         className="text-label"
         style={{ color: "var(--color-action)", marginBottom: 16 }}
@@ -954,7 +973,7 @@ function TranslatedProjectSpread({
   const mockupBlock = (
     <motion.div {...mockupMotion} style={{ width: "100%" }}>
       <motion.div
-        whileHover={shouldReduce ? {} : { scale: 1.02 }}
+        whileHover={shouldReduce ? {} : { scale: 1.015, y: -6 }}
         transition={{ duration: 0.4, ease: EASE_OUT }}
         style={{ width: "100%" }}
       >
