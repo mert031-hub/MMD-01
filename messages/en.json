@@ -103,23 +103,23 @@
     "stages": {
       "discovery": {
         "number": "01",
-        "title": "Discovery",
-        "description": "We start with your business, not your brief. Together we understand your goals, industry, and audience."
-      },
-      "strategy": {
-        "number": "02",
-        "title": "Strategy",
-        "description": "Before design begins, we align on what success looks like. No guessing games."
+        "title": "Discover",
+        "description": "We learn your business, your goals, and what success looks like before anything else."
       },
       "design": {
+        "number": "02",
+        "title": "Design",
+        "description": "We build a digital identity unique to your brand. One direction, refined together."
+      },
+      "build": {
         "number": "03",
-        "title": "Design & Build",
-        "description": "One direction, refined together. Revisions aren't surprises — they're part of the process."
+        "title": "Build",
+        "description": "Design becomes code. Fast, accessible, and built to perform."
       },
       "launch": {
         "number": "04",
-        "title": "Launch & Beyond",
-        "description": "We deliver. Then we make sure it works. Launch isn't the end — it's the beginning."
+        "title": "Launch",
+        "description": "We deliver, then make sure it works. Launch is the beginning, not the end."
       }
     }
   },

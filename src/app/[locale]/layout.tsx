@@ -5,6 +5,8 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import Navigation from "@/components/layout/Navigation";
+import Footer from "@/components/layout/Footer";
+import WhatsAppButton from "@/components/layout/WhatsAppButton";
 import "../globals.css";
 
 const fraunces = Fraunces({
@@ -109,6 +111,8 @@ export default async function LocaleLayout({ children, params }: Props) {
           <main id="main-content" tabIndex={-1}>
             {children}
           </main>
+          <Footer />
+          <WhatsAppButton />
         </NextIntlClientProvider>
       </body>
     </html>

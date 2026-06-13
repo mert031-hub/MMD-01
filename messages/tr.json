@@ -103,23 +103,23 @@
     "stages": {
       "discovery": {
         "number": "01",
-        "title": "Tanışma",
-        "description": "Brief ile değil, işinizle başlıyoruz. Hedeflerinizi, sektörünüzü ve hedef kitlenizi birlikte anlıyoruz."
-      },
-      "strategy": {
-        "number": "02",
-        "title": "Strateji",
-        "description": "Tasarım başlamadan önce başarının neye benzediği üzerine mutabık kalıyoruz. Tahmin yürütme yok."
+        "title": "Keşfet",
+        "description": "İşinizi, hedefinizi ve neyin başarı sayıldığını birlikte anlıyoruz."
       },
       "design": {
+        "number": "02",
+        "title": "Tasarla",
+        "description": "Markanıza özgü bir dijital kimlik oluşturuyoruz. Tek yön, birlikte rafine edilir."
+      },
+      "build": {
         "number": "03",
-        "title": "Tasarım & Geliştirme",
-        "description": "Tek bir yön, birlikte rafine edilir. Revizyonlar sürpriz olmaz; sürecin bir parçasıdır."
+        "title": "İnşa Et",
+        "description": "Tasarımı koda dönüştürüyoruz. Hızlı, erişilebilir, performanslı."
       },
       "launch": {
         "number": "04",
-        "title": "Lansman & Ötesi",
-        "description": "Teslim ediyoruz. Sonra çalıştığından emin oluyoruz. Lansman son değil, başlangıçtır."
+        "title": "Lansmanla",
+        "description": "Teslim ediyoruz ve çalıştığından emin oluyoruz. Lansman son değil, başlangıçtır."
       }
     }
   },
