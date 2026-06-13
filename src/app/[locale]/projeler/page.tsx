@@ -22,12 +22,22 @@ export default async function WorkIndexPage({ params }: Props) {
 
   return (
     <>
+      <div style={{ height: 72 }} aria-hidden="true" />
+
       {/* Page header */}
       <section
         className="section-padding"
         style={{ backgroundColor: "var(--color-bg-primary)", paddingBottom: 0 }}
       >
         <div className="container-site">
+          <div
+            style={{
+              width: 40,
+              height: 2,
+              backgroundColor: "var(--color-action)",
+              marginBottom: 32,
+            }}
+          />
           <p
             className="text-label"
             style={{ color: "var(--color-action)", marginBottom: 24 }}
@@ -36,7 +46,7 @@ export default async function WorkIndexPage({ params }: Props) {
           </p>
           <h1
             className="text-display-xl"
-            style={{ color: "var(--color-text-primary)", maxWidth: 720 }}
+            style={{ color: "var(--color-text-primary)", maxWidth: 720, marginBottom: 24 }}
           >
             {t("heading")}
           </h1>
@@ -44,8 +54,8 @@ export default async function WorkIndexPage({ params }: Props) {
             className="text-body-lg"
             style={{
               color: "var(--color-text-secondary)",
-              marginTop: 24,
               maxWidth: 520,
+              margin: 0,
             }}
           >
             {t("descriptor")}

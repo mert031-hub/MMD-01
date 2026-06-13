@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Link } from "@/i18n/navigation";
 
 type ProjectItem = {
@@ -23,11 +23,11 @@ const EASE_OUT = [0.0, 0.0, 0.2, 1] as const;
 const GRADIENT_PALETTES = [
   "linear-gradient(135deg, #03044a 0%, #060771 60%, #0a0ba3 100%)",
   "linear-gradient(135deg, #03044a 0%, #060771 50%, #bf1a1a 100%)",
-  "linear-gradient(135deg, #060771 0%, #03044a 70%, #ff6c0c22 100%)",
+  "linear-gradient(135deg, #060771 0%, #03044a 70%, #0a0ba3 100%)",
   "linear-gradient(135deg, #03044a 0%, #060771 60%, #0a0ba3 100%)",
   "linear-gradient(135deg, #060771 0%, #0a0ba3 50%, #03044a 100%)",
   "linear-gradient(135deg, #03044a 0%, #bf1a1a 40%, #060771 100%)",
-  "linear-gradient(135deg, #060771 0%, #03044a 60%, #ff6c0c22 100%)",
+  "linear-gradient(135deg, #060771 0%, #03044a 60%, #0a0ba3 100%)",
 ];
 
 function PreviewPanel({
@@ -37,7 +37,6 @@ function PreviewPanel({
   project: ProjectItem | null;
   index: number;
 }) {
-  const [imgError, setImgError] = useState(false);
   const gradient = GRADIENT_PALETTES[index % GRADIENT_PALETTES.length];
 
   return (
@@ -58,83 +57,93 @@ function PreviewPanel({
             initial={{ clipPath: "inset(0 0 100% 0)" }}
             animate={{ clipPath: "inset(0 0 0% 0)" }}
             exit={{ clipPath: "inset(100% 0 0% 0)" }}
-            transition={{ duration: 0.32, ease: EASE_OUT }}
+            transition={{ duration: 0.3, ease: EASE_OUT }}
             style={{
               position: "absolute",
               inset: 0,
               background: gradient,
+              backgroundImage: `${gradient}`,
             }}
           >
-            {!imgError ? (
-              /* eslint-disable-next-line @next/next/no-img-element */
-              <img
-                src={`/${project.desktopImage}`}
-                alt={`${project.name} preview`}
-                onError={() => setImgError(true)}
+            {/* Dot grid overlay */}
+            <div
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                inset: 0,
+                backgroundImage: "radial-gradient(circle, rgba(255,251,243,0.06) 1px, transparent 1px)",
+                backgroundSize: "24px 24px",
+              }}
+            />
+
+            {/* Content */}
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "flex-end",
+                padding: 32,
+                background: "linear-gradient(to top, rgba(3,4,74,0.7) 0%, transparent 55%)",
+              }}
+            >
+              <span
                 style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  objectPosition: "top center",
+                  fontFamily: "var(--font-body)",
+                  fontSize: 9,
+                  fontWeight: 600,
+                  letterSpacing: "0.14em",
+                  textTransform: "uppercase",
+                  color: "var(--color-action)",
                   display: "block",
-                }}
-              />
-            ) : (
-              /* Branded gradient placeholder */
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  background: gradient,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                  justifyContent: "flex-end",
-                  padding: 28,
+                  marginBottom: 12,
                 }}
               >
-                {/* Orange accent */}
-                <div
-                  style={{
-                    width: 32,
-                    height: 1.5,
-                    backgroundColor: "var(--color-action)",
-                    marginBottom: 16,
-                    opacity: 0.8,
-                  }}
-                />
-                <p
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "clamp(18px, 1.8vw, 24px)",
-                    fontWeight: 600,
-                    color: "rgba(255,251,243,0.9)",
-                    letterSpacing: "-0.01em",
-                    lineHeight: 1.2,
-                    margin: 0,
-                  }}
-                >
-                  {project.name}
-                </p>
-                <p
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: 10,
-                    fontWeight: 600,
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase",
-                    color: "rgba(255,251,243,0.35)",
-                    marginTop: 8,
-                    margin: "8px 0 0",
-                  }}
-                >
-                  {project.industryLabel}
-                </p>
-              </div>
-            )}
+                {project.industryLabel}
+              </span>
+
+              <p
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "clamp(20px, 2vw, 28px)",
+                  fontWeight: 600,
+                  color: "rgba(255,251,243,0.95)",
+                  letterSpacing: "-0.02em",
+                  lineHeight: 1.15,
+                  margin: "0 0 14px 0",
+                }}
+              >
+                {project.name}
+              </p>
+
+              <div
+                style={{
+                  width: 28,
+                  height: 1.5,
+                  backgroundColor: "var(--color-action)",
+                  marginBottom: 14,
+                  opacity: 0.8,
+                }}
+              />
+
+              <p
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "clamp(12px, 1.1vw, 14px)",
+                  fontStyle: "italic",
+                  fontWeight: 400,
+                  lineHeight: 1.5,
+                  color: "rgba(255,251,243,0.6)",
+                  margin: 0,
+                  maxWidth: 280,
+                }}
+              >
+                {project.transformation}
+              </p>
+            </div>
           </motion.div>
         ) : (
-          /* Empty state */
           <motion.div
             key="empty"
             initial={{ opacity: 0 }}
@@ -173,6 +182,7 @@ function PreviewPanel({
 export default function WorkIndexList({ projects }: Props) {
   const [activeSlug, setActiveSlug] = useState<string | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const shouldReduce = useReducedMotion() ?? false;
 
   const activeProject = projects.find((p) => p.slug === activeSlug) ?? null;
 
@@ -187,103 +197,110 @@ export default function WorkIndexList({ projects }: Props) {
           }}
         />
         {projects.map((project, i) => (
-          <Link
+          <motion.div
             key={project.slug}
-            href={`/projeler/${project.slug}`}
-            style={{
-              display: "block",
-              textDecoration: "none",
-              borderBottom: "1px solid var(--color-border)",
-              position: "relative",
-            }}
-            className="work-index-row"
-            onMouseEnter={() => {
-              setActiveSlug(project.slug);
-              setActiveIndex(i);
-            }}
-            onMouseLeave={() => setActiveSlug(null)}
+            initial={shouldReduce ? {} : { opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-20px" }}
+            transition={{ duration: 0.45, delay: i * 0.055, ease: EASE_OUT }}
           >
-            {/* Left accent bar — grows on hover */}
-            <span
-              className="work-index-accent"
-              aria-hidden="true"
+            <Link
+              href={`/projeler/${project.slug}`}
               style={{
-                position: "absolute",
-                left: 0,
-                top: 0,
-                bottom: 0,
-                width: 2,
-                backgroundColor: "#ff6c0c",
-                transformOrigin: "top",
+                display: "block",
+                textDecoration: "none",
+                borderBottom: "1px solid var(--color-border)",
+                position: "relative",
               }}
-            />
-
-            <div
-              style={{
-                display: "flex",
-                alignItems: "flex-start",
-                justifyContent: "space-between",
-                gap: 32,
-                paddingTop: 40,
-                paddingBottom: 40,
-                paddingLeft: 0,
-                flexWrap: "wrap",
-                transition: "padding-left 280ms cubic-bezier(0,0,0.2,1)",
+              className="work-index-row"
+              onMouseEnter={() => {
+                setActiveSlug(project.slug);
+                setActiveIndex(i);
               }}
-              className="work-index-inner"
+              onMouseLeave={() => setActiveSlug(null)}
             >
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <p
-                  className="text-label"
-                  style={{
-                    color: "var(--color-text-tertiary)",
-                    marginBottom: 16,
-                  }}
-                >
-                  {project.indexLabel}
-                </p>
-                <h2
-                  className="text-h2"
-                  style={{
-                    color: "var(--color-text-primary)",
-                    marginBottom: 12,
-                    fontFamily: "var(--font-display)",
-                    transition: "color 200ms ease",
-                  }}
-                >
-                  {project.name}
-                </h2>
-                <p
-                  className="text-body"
-                  style={{
-                    color: "var(--color-text-secondary)",
-                    maxWidth: 520,
-                  }}
-                >
-                  {project.transformation}
-                </p>
-              </div>
-
+              {/* Left accent bar — grows on hover */}
               <span
-                className="work-index-arrow"
+                className="work-index-accent"
                 aria-hidden="true"
                 style={{
-                  fontFamily: "var(--font-body)",
-                  fontWeight: 600,
-                  fontSize: 13,
-                  letterSpacing: "0.06em",
-                  textTransform: "uppercase",
-                  color: "var(--color-action)",
-                  whiteSpace: "nowrap",
-                  alignSelf: "center",
-                  transition: "transform 200ms ease",
-                  flexShrink: 0,
+                  position: "absolute",
+                  left: 0,
+                  top: 0,
+                  bottom: 0,
+                  width: 2,
+                  backgroundColor: "#ff6c0c",
+                  transformOrigin: "top",
                 }}
+              />
+
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  justifyContent: "space-between",
+                  gap: 32,
+                  paddingTop: 40,
+                  paddingBottom: 40,
+                  paddingLeft: 0,
+                  flexWrap: "wrap",
+                  transition: "padding-left 280ms cubic-bezier(0,0,0.2,1)",
+                }}
+                className="work-index-inner"
               >
-                {project.viewLabel} →
-              </span>
-            </div>
-          </Link>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p
+                    className="text-label"
+                    style={{
+                      color: "var(--color-text-tertiary)",
+                      marginBottom: 16,
+                    }}
+                  >
+                    {project.indexLabel}
+                  </p>
+                  <h2
+                    className="text-h2"
+                    style={{
+                      color: "var(--color-text-primary)",
+                      marginBottom: 12,
+                      fontFamily: "var(--font-display)",
+                      transition: "color 200ms ease",
+                    }}
+                  >
+                    {project.name}
+                  </h2>
+                  <p
+                    className="text-body"
+                    style={{
+                      color: "var(--color-text-secondary)",
+                      maxWidth: 520,
+                    }}
+                  >
+                    {project.transformation}
+                  </p>
+                </div>
+
+                <span
+                  className="work-index-arrow"
+                  aria-hidden="true"
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontWeight: 600,
+                    fontSize: 13,
+                    letterSpacing: "0.06em",
+                    textTransform: "uppercase",
+                    color: "var(--color-action)",
+                    whiteSpace: "nowrap",
+                    alignSelf: "center",
+                    transition: "transform 200ms ease",
+                    flexShrink: 0,
+                  }}
+                >
+                  {project.viewLabel} →
+                </span>
+              </div>
+            </Link>
+          </motion.div>
         ))}
       </div>
 
