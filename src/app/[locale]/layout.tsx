@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { routing } from "@/i18n/routing";
+import Navigation from "@/components/layout/Navigation";
 import "../globals.css";
 
 const fraunces = Fraunces({
@@ -104,7 +105,10 @@ export default async function LocaleLayout({ children, params }: Props) {
     >
       <body>
         <NextIntlClientProvider messages={messages}>
-          {children}
+          <Navigation />
+          <main id="main-content" tabIndex={-1}>
+            {children}
+          </main>
         </NextIntlClientProvider>
       </body>
     </html>
