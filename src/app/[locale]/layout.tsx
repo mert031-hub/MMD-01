@@ -7,6 +7,7 @@ import { routing } from "@/i18n/routing";
 import Navigation from "@/components/layout/Navigation";
 import Footer from "@/components/layout/Footer";
 import WhatsAppButton from "@/components/layout/WhatsAppButton";
+import BackToTop from "@/components/ui/BackToTop";
 import JsonLd from "@/components/ui/JsonLd";
 import LocalePersistence from "@/components/ui/LocalePersistence";
 import CustomCursor from "@/components/ui/CustomCursor";
@@ -140,6 +141,7 @@ export default async function LocaleLayout({ children, params }: Props) {
           </main>
           <Footer />
           <WhatsAppButton />
+          <BackToTop />
         </NextIntlClientProvider>
       </body>
     </html>

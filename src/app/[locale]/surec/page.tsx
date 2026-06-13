@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Process from "@/components/sections/Process";
+import ProcessDetail from "@/components/sections/ProcessDetail";
 import ClosingCTA from "@/components/sections/ClosingCTA";
 
 type Props = {
@@ -56,6 +57,7 @@ export default async function ProcessPage({ params }: Props) {
       </section>
 
       <Process />
+      <ProcessDetail isTr={isTr} />
       <ClosingCTA />
     </>
   );
