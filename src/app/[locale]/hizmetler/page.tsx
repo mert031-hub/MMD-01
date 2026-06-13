@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import ProblemSolution from "@/components/sections/ProblemSolution";
 import Capabilities from "@/components/sections/Capabilities";
 import ClosingCTA from "@/components/sections/ClosingCTA";
 
@@ -55,6 +56,7 @@ export default async function ServicesPage({ params }: Props) {
         </div>
       </section>
 
+      <ProblemSolution isTr={isTr} />
       <Capabilities />
       <ClosingCTA />
     </>

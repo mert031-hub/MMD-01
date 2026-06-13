@@ -11,6 +11,7 @@ import JsonLd from "@/components/ui/JsonLd";
 import LocalePersistence from "@/components/ui/LocalePersistence";
 import CustomCursor from "@/components/ui/CustomCursor";
 import PageTransition from "@/components/ui/PageTransition";
+import FirstVisitLoader from "@/components/ui/FirstVisitLoader";
 import "../globals.css";
 
 const fraunces = Fraunces({
@@ -131,6 +132,7 @@ export default async function LocaleLayout({ children, params }: Props) {
         <JsonLd data={organizationSchema} />
         <NextIntlClientProvider messages={messages}>
           <LocalePersistence />
+          <FirstVisitLoader />
           <CustomCursor />
           <Navigation />
           <main id="main-content" tabIndex={-1}>

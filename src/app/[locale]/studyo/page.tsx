@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import StudioStory from "@/components/sections/StudioStory";
 import Philosophy from "@/components/sections/Philosophy";
 import ClosingCTA from "@/components/sections/ClosingCTA";
 
@@ -55,6 +56,7 @@ export default async function StudioPage({ params }: Props) {
         </div>
       </section>
 
+      <StudioStory isTr={isTr} />
       <Philosophy />
       <ClosingCTA />
     </>
