@@ -152,5 +152,22 @@
   "whatsapp": {
     "label": "Contact via WhatsApp",
     "tooltip": "Message Us"
+  },
+  "workIndex": {
+    "metaTitle": "Work",
+    "metaDescription": "Projects transformed by MMDESIGN. Selected digital experiences from engineering, hospitality, and trade.",
+    "label": "Selected Work",
+    "heading": "Work we've transformed.",
+    "descriptor": "Every project is a transformation story. Different industries, the same rigor.",
+    "viewProject": "View Project"
+  },
+  "caseStudy": {
+    "backToWork": "All Work",
+    "challengeLabel": "Challenge",
+    "approachLabel": "Approach",
+    "deliverablesLabel": "Deliverables",
+    "ctaHeading": "Looking for a similar transformation?",
+    "ctaAction": "Start a Project",
+    "notFound": "Project not found."
   }
 }

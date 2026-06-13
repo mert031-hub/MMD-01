@@ -7,6 +7,7 @@ import { routing } from "@/i18n/routing";
 import Navigation from "@/components/layout/Navigation";
 import Footer from "@/components/layout/Footer";
 import WhatsAppButton from "@/components/layout/WhatsAppButton";
+import JsonLd from "@/components/ui/JsonLd";
 import "../globals.css";
 
 const fraunces = Fraunces({
@@ -59,7 +60,7 @@ export const metadata: Metadata = {
       "Web siteleri tasarlamıyoruz. İnsanların sizi tercih etmesini kolaylaştırıyoruz.",
     images: [
       {
-        url: "/og-image.png",
+        url: "/og",
         width: 1200,
         height: 630,
         alt: "MMDESIGN — Digital Experience Studio",
@@ -71,7 +72,7 @@ export const metadata: Metadata = {
     title: "MMDESIGN — Digital Experience Studio",
     description:
       "Web siteleri tasarlamıyoruz. İnsanların sizi tercih etmesini kolaylaştırıyoruz.",
-    images: ["/og-image.png"],
+    images: ["/og"],
   },
   robots: {
     index: true,
@@ -84,6 +85,24 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+};
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "MMDESIGN",
+  url: "https://mmdesign.com.tr",
+  logo: "https://mmdesign.com.tr/og",
+  description:
+    "Premium digital experience studio. We make it easier for people to choose you.",
+  contactPoint: {
+    "@type": "ContactPoint",
+    telephone: "+905349626627",
+    contactType: "customer service",
+    availableLanguage: ["Turkish", "English"],
+  },
+  areaServed: "TR",
+  knowsLanguage: ["tr", "en"],
 };
 
 type Props = {
@@ -106,6 +125,7 @@ export default async function LocaleLayout({ children, params }: Props) {
       className={`${fraunces.variable} ${plusJakartaSans.variable}`}
     >
       <body>
+        <JsonLd data={organizationSchema} />
         <NextIntlClientProvider messages={messages}>
           <Navigation />
           <main id="main-content" tabIndex={-1}>

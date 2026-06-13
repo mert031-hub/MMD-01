@@ -152,5 +152,22 @@
   "whatsapp": {
     "label": "WhatsApp ile iletişim",
     "tooltip": "Bize Yazın"
+  },
+  "workIndex": {
+    "metaTitle": "Projeler",
+    "metaDescription": "MMDESIGN'ın dönüştürdüğü projeler. Mühendislik, konaklama ve ticaret sektörlerinden seçili dijital deneyimler.",
+    "label": "Seçili Projeler",
+    "heading": "Dönüştürdüğümüz işler.",
+    "descriptor": "Her proje bir dönüşüm hikayesidir. Farklı sektörler, aynı titizlik.",
+    "viewProject": "Projeyi İncele"
+  },
+  "caseStudy": {
+    "backToWork": "Tüm Projeler",
+    "challengeLabel": "Durum",
+    "approachLabel": "Yaklaşım",
+    "deliverablesLabel": "Teslim Edilenler",
+    "ctaHeading": "Benzer bir dönüşüm mü arıyorsunuz?",
+    "ctaAction": "Projeyi Başlat",
+    "notFound": "Proje bulunamadı."
   }
 }
