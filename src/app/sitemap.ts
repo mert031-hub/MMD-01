@@ -1,42 +1,39 @@
 import type { MetadataRoute } from "next";
 
-const baseUrl = "https://mmdesign.com.tr";
+const BASE_URL = "https://mmdesign.com.tr";
+
+type SitemapRoute = {
+  path: string;
+  priority: number;
+  changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"];
+};
+
+const routes: SitemapRoute[] = [
+  { path: "/", priority: 1.0, changeFrequency: "weekly" },
+  { path: "/projeler", priority: 0.9, changeFrequency: "weekly" },
+  { path: "/projeler/pi-lot-engineering", priority: 0.8, changeFrequency: "monthly" },
+  { path: "/projeler/kaleiici-hotel", priority: 0.8, changeFrequency: "monthly" },
+  { path: "/projeler/kocyigit-trade", priority: 0.8, changeFrequency: "monthly" },
+  { path: "/studyo", priority: 0.7, changeFrequency: "monthly" },
+  { path: "/hizmetler", priority: 0.7, changeFrequency: "monthly" },
+  { path: "/surec", priority: 0.7, changeFrequency: "monthly" },
+];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const routes = [
-    { path: "/", priority: 1.0, changeFrequency: "weekly" as const },
-    { path: "/projeler", priority: 0.9, changeFrequency: "weekly" as const },
-    {
-      path: "/projeler/pi-lot-engineering",
-      priority: 0.8,
-      changeFrequency: "monthly" as const,
-    },
-    {
-      path: "/projeler/kaleiici-hotel",
-      priority: 0.8,
-      changeFrequency: "monthly" as const,
-    },
-    {
-      path: "/projeler/kocyigit-trade",
-      priority: 0.8,
-      changeFrequency: "monthly" as const,
-    },
-    { path: "/stüdyo", priority: 0.7, changeFrequency: "monthly" as const },
-    { path: "/hizmetler", priority: 0.7, changeFrequency: "monthly" as const },
-    { path: "/süreç", priority: 0.7, changeFrequency: "monthly" as const },
-    { path: "/iletişim", priority: 0.8, changeFrequency: "monthly" as const },
-  ];
+  const now = new Date();
 
-  const locales = ["tr", "en"] as const;
-
-  const entries = routes.flatMap(({ path, priority, changeFrequency }) =>
-    locales.map((locale) => ({
-      url: locale === "tr" ? `${baseUrl}${path}` : `${baseUrl}/en${path}`,
-      lastModified: new Date(),
+  return routes.flatMap(({ path, priority, changeFrequency }) => [
+    {
+      url: `${BASE_URL}${path}`,
+      lastModified: now,
       changeFrequency,
       priority,
-    }))
-  );
-
-  return entries;
+    },
+    {
+      url: path === "/" ? `${BASE_URL}/en` : `${BASE_URL}/en${path}`,
+      lastModified: now,
+      changeFrequency,
+      priority,
+    },
+  ]);
 }
