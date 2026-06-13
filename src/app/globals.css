@@ -337,3 +337,12 @@ video {
     gap: 32px !important;
   }
 }
+
+/* ─── CAPABILITIES ────────────────────────────────────────────── */
+
+@media (max-width: 767px) {
+  .capabilities-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+  }
+}
