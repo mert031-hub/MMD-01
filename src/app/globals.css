@@ -412,3 +412,11 @@ video {
   -webkit-backdrop-filter: blur(16px) saturate(160%);
   backdrop-filter: blur(16px) saturate(160%);
 }
+
+/* ─── CUSTOM CURSOR ──────────────────────────────────────────── */
+
+.cursor-active *,
+.cursor-active *::before,
+.cursor-active *::after {
+  cursor: none !important;
+}

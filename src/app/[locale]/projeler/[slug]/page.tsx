@@ -6,6 +6,7 @@ import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import JsonLd from "@/components/ui/JsonLd";
+import ReadingProgress from "@/components/ui/ReadingProgress";
 import { getProject, getAllSlugs, getAdjacentProjects } from "@/lib/projects";
 import { waUrl } from "@/lib/whatsapp";
 
@@ -110,6 +111,7 @@ export default async function CaseStudyPage({ params }: Props) {
 
   return (
     <>
+      <ReadingProgress />
       <JsonLd data={breadcrumb} />
 
       {/* Back link + project header */}
