@@ -52,6 +52,7 @@
     }
   },
   "philosophy": {
+    "label": "Our Philosophy",
     "quote": "A beautiful website that doesn't perform is just expensive decoration.",
     "belief1Number": "01",
     "belief1": "Design is strategy made visible. Not decoration.",

@@ -52,6 +52,7 @@
     }
   },
   "philosophy": {
+    "label": "Felsefemiz",
     "quote": "Güzel görünen her site işe yaramaz.",
     "belief1Number": "01",
     "belief1": "Tasarım, stratejinin görsel halidir. Dekorasyon değil.",
