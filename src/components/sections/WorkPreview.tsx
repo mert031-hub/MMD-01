@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -669,7 +671,7 @@ function TradeMockup() {
   );
 }
 
-/* ─── PROJECT SPREAD ─────────────────────────────────────────── */
+/* ─── PROJECT VISUALS ────────────────────────────────────────── */
 
 const MOCKUPS = {
   pilotEngineering: EngineeringMockup,
@@ -678,6 +680,51 @@ const MOCKUPS = {
 } as const;
 
 type ProjectKey = keyof typeof MOCKUPS;
+
+const DESKTOP_IMAGES: Record<ProjectKey, string> = {
+  pilotEngineering: "/projects/pi-lot/desktop.png",
+  kaleichiHotel: "/projects/kaleici-hotel/desktop.png",
+  kocyigitTrade: "/projects/kocyigit-trade/desktop.png",
+};
+
+function ProjectVisual({
+  projectId,
+}: {
+  projectId: ProjectKey;
+}) {
+  const [failed, setFailed] = useState(false);
+  const FallbackComponent = MOCKUPS[projectId];
+
+  if (failed) {
+    return <FallbackComponent />;
+  }
+
+  return (
+    <div
+      style={{
+        width: "100%",
+        borderRadius: 4,
+        overflow: "hidden",
+        border: "1px solid rgba(6,7,113,0.1)",
+        boxShadow:
+          "0 8px 40px rgba(6,7,113,0.12), 0 2px 8px rgba(6,7,113,0.06)",
+        position: "relative",
+        aspectRatio: "16 / 10",
+      }}
+    >
+      <Image
+        src={DESKTOP_IMAGES[projectId]}
+        alt=""
+        fill
+        sizes="(max-width: 900px) 100vw, 45vw"
+        style={{ objectFit: "cover", objectPosition: "top center" }}
+        onError={() => setFailed(true)}
+      />
+    </div>
+  );
+}
+
+/* ─── PROJECT SPREAD ─────────────────────────────────────────── */
 
 interface Project {
   id: ProjectKey;
@@ -724,14 +771,12 @@ function TranslatedProjectSpread({
 }) {
   const t = useTranslations();
   const reversed = index % 2 === 1;
-  const MockupComponent = MOCKUPS[project.id];
 
   const projectId = project.id;
   const industry = t(`work.projects.${projectId}.industry` as Parameters<typeof t>[0]);
   const name = t(`work.projects.${projectId}.name` as Parameters<typeof t>[0]);
   const transformation = t(`work.projects.${projectId}.transformation` as Parameters<typeof t>[0]);
   const viewProjectLabel = t("work.viewProject");
-
   const textMotion = {
     initial: shouldReduce ? {} : { opacity: 0, x: reversed ? 24 : -24 },
     whileInView: { opacity: 1, x: 0 },
@@ -843,7 +888,7 @@ function TranslatedProjectSpread({
 
   const mockupBlock = (
     <motion.div {...mockupMotion} style={{ width: "100%" }}>
-      <MockupComponent />
+      <ProjectVisual projectId={project.id} />
     </motion.div>
   );
 

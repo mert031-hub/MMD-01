@@ -6,6 +6,11 @@ export type Project = {
   challenge: { tr: string; en: string };
   approach: { tr: string; en: string };
   deliverables: { tr: string[]; en: string[] };
+  /** Public-folder paths (without leading slash) for screenshots, if available. */
+  images: {
+    desktop: string;
+    mobile?: string;
+  };
 };
 
 export const projects: Project[] = [
@@ -37,6 +42,10 @@ export const projects: Project[] = [
         "Technical content framework",
       ],
     },
+    images: {
+      desktop: "projects/pi-lot/desktop.png",
+      mobile: "projects/pi-lot/mobile.png",
+    },
   },
   {
     slug: "kaleiici-hotel",
@@ -66,6 +75,10 @@ export const projects: Project[] = [
         "Heritage storytelling framework",
       ],
     },
+    images: {
+      desktop: "projects/kaleici-hotel/desktop.png",
+      mobile: "projects/kaleici-hotel/mobile.png",
+    },
   },
   {
     slug: "kocyigit-trade",
@@ -94,6 +107,10 @@ export const projects: Project[] = [
         "Service and product architecture",
         "Corporate identity integration",
       ],
+    },
+    images: {
+      desktop: "projects/kocyigit-trade/desktop.png",
+      mobile: "projects/kocyigit-trade/mobile.png",
     },
   },
 ];

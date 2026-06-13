@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import fs from "fs";
+import path from "path";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import JsonLd from "@/components/ui/JsonLd";
 import { getProject, getAllSlugs } from "@/lib/projects";
@@ -54,6 +57,19 @@ export default async function CaseStudyPage({ params }: Props) {
     locale === "tr" ? project.approach.tr : project.approach.en;
   const deliverables =
     locale === "tr" ? project.deliverables.tr : project.deliverables.en;
+
+  const desktopImagePublicPath = project.images.desktop;
+  const desktopImageFsPath = path.join(
+    process.cwd(),
+    "public",
+    desktopImagePublicPath
+  );
+  const hasDesktopImage = fs.existsSync(desktopImageFsPath);
+
+  const mobileImagePublicPath = project.images.mobile;
+  const hasDesktopMobileImage =
+    mobileImagePublicPath !== undefined &&
+    fs.existsSync(path.join(process.cwd(), "public", mobileImagePublicPath));
 
   const pageUrl =
     locale === "tr"
@@ -154,6 +170,76 @@ export default async function CaseStudyPage({ params }: Props) {
           </p>
         </div>
       </section>
+
+      {/* Desktop screenshot — only renders when file exists in public/ */}
+      {hasDesktopImage && (
+        <section
+          style={{
+            backgroundColor: "var(--color-bg-inset)",
+            paddingTop: 0,
+            paddingBottom: 0,
+          }}
+        >
+          <div className="container-site" style={{ paddingTop: 0, paddingBottom: 0 }}>
+            <div
+              style={{
+                display: "flex",
+                gap: 24,
+                alignItems: "flex-start",
+                paddingTop: 64,
+                paddingBottom: 64,
+              }}
+            >
+              {/* Desktop screenshot */}
+              <div
+                style={{
+                  flex: 1,
+                  borderRadius: 4,
+                  overflow: "hidden",
+                  boxShadow:
+                    "0 12px 48px rgba(6,7,113,0.18), 0 2px 8px rgba(6,7,113,0.08)",
+                  position: "relative",
+                  aspectRatio: "16 / 10",
+                }}
+              >
+                <Image
+                  src={`/${desktopImagePublicPath}`}
+                  alt={`${project.name} desktop screenshot`}
+                  fill
+                  sizes="(max-width: 767px) 100vw, (max-width: 1280px) 80vw, 960px"
+                  style={{ objectFit: "cover", objectPosition: "top center" }}
+                  priority
+                />
+              </div>
+
+              {/* Mobile screenshot — optional */}
+              {hasDesktopMobileImage && (
+                <div
+                  style={{
+                    width: 120,
+                    flexShrink: 0,
+                    borderRadius: 8,
+                    overflow: "hidden",
+                    boxShadow:
+                      "0 8px 32px rgba(6,7,113,0.15), 0 2px 6px rgba(6,7,113,0.08)",
+                    position: "relative",
+                    aspectRatio: "9 / 19.5",
+                  }}
+                  className="case-mobile-shot"
+                >
+                  <Image
+                    src={`/${mobileImagePublicPath}`}
+                    alt={`${project.name} mobile screenshot`}
+                    fill
+                    sizes="120px"
+                    style={{ objectFit: "cover", objectPosition: "top center" }}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Challenge + Approach */}
       <section
@@ -330,6 +416,9 @@ export default async function CaseStudyPage({ params }: Props) {
           .case-grid {
             grid-template-columns: 1fr !important;
             gap: 48px !important;
+          }
+          .case-mobile-shot {
+            display: none !important;
           }
         }
       `}</style>
