@@ -135,11 +135,24 @@
   },
   "cta": {
     "heading": "You've found the right studio for a website that makes a difference.",
+    "heading1": "A website that",
+    "heading2": "makes a real difference",
+    "heading3": "is one message away.",
     "supporting": "Tell us about your project. We'll take it from there.",
     "whatsapp": "Message on WhatsApp",
     "phone": "0534 962 66 27",
-    "freeConsult": "Free initial consultation",
-    "availability": "Usually replying within the same day."
+    "freeConsult": "Free Initial Consultation",
+    "availability": "Usually replying within the same day.",
+    "trust1": "Strategy-First Approach",
+    "trust2": "Mobile-First Design",
+    "trust3": "SEO Foundations Included",
+    "trust4": "Fast Delivery Process",
+    "stat1label": "Projects Completed",
+    "stat2label": "Industries Served",
+    "stat3label": "Mobile Compatible",
+    "availabilityStatus": "Currently accepting new projects",
+    "responseTime": "< 24 hrs",
+    "responseLabel": "Average response time"
   },
   "footer": {
     "tagline": "Digital Experience Studio",

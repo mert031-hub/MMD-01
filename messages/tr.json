@@ -135,11 +135,24 @@
   },
   "cta": {
     "heading": "Fark yaratan bir website için doğru adrestesiniz.",
+    "heading1": "Fark yaratan",
+    "heading2": "bir dijital deneyim",
+    "heading3": "bir mesaj uzağınızda.",
     "supporting": "Fikrinizi paylaşın. Biz gerisi için buradayız.",
     "whatsapp": "WhatsApp'tan Yazın",
     "phone": "0534 962 66 27",
-    "freeConsult": "Ücretsiz ilk görüşme",
-    "availability": "Genellikle aynı gün içinde yanıtlıyoruz."
+    "freeConsult": "Ücretsiz İlk Görüşme",
+    "availability": "Genellikle aynı gün içinde yanıtlıyoruz.",
+    "trust1": "Strateji Odaklı Yaklaşım",
+    "trust2": "Mobil Öncelikli Tasarım",
+    "trust3": "SEO Temelleri Dahil",
+    "trust4": "Hızlı Teslim Süreci",
+    "stat1label": "Tamamlanan Proje",
+    "stat2label": "Sektör Deneyimi",
+    "stat3label": "Mobil Uyumluluk",
+    "availabilityStatus": "Şu anda yeni projeler kabul ediliyor",
+    "responseTime": "< 24 saat",
+    "responseLabel": "Ortalama yanıt süresi"
   },
   "footer": {
     "tagline": "Digital Experience Studio",
