@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -711,43 +709,9 @@ const MOCKUPS = {
 
 type ProjectKey = keyof typeof MOCKUPS;
 
-const DESKTOP_IMAGES: Record<ProjectKey, string> = {
-  pilotEngineering: "/projects/pi-lot/desktop.png",
-  kaleichiHotel: "/projects/kaleici-hotel/desktop.png",
-  kocyigitTrade: "/projects/kocyigit-trade/desktop.png",
-  karivaHotel: "/projects/kariva-hotel/desktop.png",
-};
-
 function ProjectVisual({ projectId }: { projectId: ProjectKey }) {
-  const [failed, setFailed] = useState(false);
-  const FallbackComponent = MOCKUPS[projectId];
-
-  if (failed) {
-    return <FallbackComponent />;
-  }
-
-  return (
-    <div
-      style={{
-        width: "100%",
-        borderRadius: 4,
-        overflow: "hidden",
-        border: "1px solid rgba(6,7,113,0.1)",
-        boxShadow: "0 8px 40px rgba(6,7,113,0.12), 0 2px 8px rgba(6,7,113,0.06)",
-        position: "relative",
-        aspectRatio: "16 / 10",
-      }}
-    >
-      <Image
-        src={DESKTOP_IMAGES[projectId]}
-        alt=""
-        fill
-        sizes="(max-width: 900px) 100vw, 45vw"
-        style={{ objectFit: "cover", objectPosition: "top center" }}
-        onError={() => setFailed(true)}
-      />
-    </div>
-  );
+  const Mockup = MOCKUPS[projectId];
+  return <Mockup />;
 }
 
 /* ─── PROJECT SPREAD ─────────────────────────────────────────── */

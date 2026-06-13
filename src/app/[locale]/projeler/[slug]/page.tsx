@@ -207,63 +207,187 @@ export default async function CaseStudyPage({ params }: Props) {
         </div>
       </section>
 
-      {/* Desktop screenshot — enhanced with browser chrome + lightbox */}
-      {hasDesktopImage && (
-        <section
-          style={{
-            backgroundColor: "var(--color-bg-inset)",
-            paddingTop: 0,
-            paddingBottom: 0,
-          }}
-        >
-          <div className="container-site" style={{ paddingTop: 0, paddingBottom: 0 }}>
-            <div
-              style={{
-                display: "flex",
-                gap: 24,
-                alignItems: "flex-start",
-                paddingTop: 64,
-                paddingBottom: 64,
-              }}
-            >
-              {/* Desktop screenshot with browser chrome */}
-              <div style={{ flex: 1 }}>
+      {/* Desktop screenshot or browser-chrome placeholder */}
+      <section
+        style={{
+          backgroundColor: "var(--color-bg-inset)",
+          paddingTop: 0,
+          paddingBottom: 0,
+        }}
+      >
+        <div className="container-site" style={{ paddingTop: 0, paddingBottom: 0 }}>
+          <div
+            style={{
+              display: "flex",
+              gap: 24,
+              alignItems: "flex-start",
+              paddingTop: 64,
+              paddingBottom: 64,
+            }}
+          >
+            <div style={{ flex: 1 }}>
+              {hasDesktopImage ? (
                 <ProjectScreenshot
                   src={`/${desktopImagePublicPath}`}
                   alt={`${project.name} desktop screenshot`}
                   liveUrl={project.liveUrl}
                   sizes="(max-width: 767px) 100vw, (max-width: 1280px) 80vw, 960px"
                 />
-              </div>
-
-              {/* Mobile screenshot — optional */}
-              {hasDesktopMobileImage && (
+              ) : (
                 <div
                   style={{
-                    width: 120,
-                    flexShrink: 0,
-                    borderRadius: 8,
+                    borderRadius: 6,
                     overflow: "hidden",
-                    boxShadow:
-                      "0 8px 32px rgba(6,7,113,0.15), 0 2px 6px rgba(6,7,113,0.08)",
-                    position: "relative",
-                    aspectRatio: "9 / 19.5",
+                    boxShadow: "0 16px 64px rgba(6,7,113,0.18), 0 2px 8px rgba(6,7,113,0.08)",
                   }}
-                  className="case-mobile-shot"
                 >
-                  <Image
-                    src={`/${mobileImagePublicPath}`}
-                    alt={`${project.name} mobile screenshot`}
-                    fill
-                    sizes="120px"
-                    style={{ objectFit: "cover", objectPosition: "top center" }}
-                  />
+                  {/* Browser chrome bar */}
+                  <div
+                    style={{
+                      backgroundColor: "#f0ece3",
+                      borderBottom: "1px solid rgba(6,7,113,0.08)",
+                      padding: "10px 14px",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 12,
+                    }}
+                  >
+                    <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+                      <div style={{ width: 10, height: 10, borderRadius: "50%", backgroundColor: "#ff5f57" }} />
+                      <div style={{ width: 10, height: 10, borderRadius: "50%", backgroundColor: "#ffbd2e" }} />
+                      <div style={{ width: 10, height: 10, borderRadius: "50%", backgroundColor: "#28ca41" }} />
+                    </div>
+                    {project.liveUrl && (
+                      <div
+                        style={{
+                          flex: 1,
+                          backgroundColor: "rgba(6,7,113,0.05)",
+                          borderRadius: 4,
+                          padding: "4px 10px",
+                          fontFamily: "var(--font-body)",
+                          fontSize: 11,
+                          color: "rgba(6,7,113,0.45)",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                          maxWidth: 320,
+                          margin: "0 auto",
+                        }}
+                      >
+                        {project.liveUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+                      </div>
+                    )}
+                    {project.liveUrl && (
+                      <a
+                        href={project.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`${project.name} — ${locale === "tr" ? "canlı siteyi aç" : "open live site"}`}
+                        style={{
+                          flexShrink: 0,
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 4,
+                          fontFamily: "var(--font-body)",
+                          fontSize: 9,
+                          fontWeight: 600,
+                          letterSpacing: "0.08em",
+                          textTransform: "uppercase",
+                          color: "rgba(6,7,113,0.4)",
+                          textDecoration: "none",
+                        }}
+                      >
+                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                          <path d="M2 2h6v6M8 2L2 8" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                        {locale === "tr" ? "Canlı" : "Live"}
+                      </a>
+                    )}
+                  </div>
+
+                  {/* Content area */}
+                  <div
+                    style={{
+                      aspectRatio: "16 / 10",
+                      backgroundColor: "#03044a",
+                      backgroundImage: "radial-gradient(circle, rgba(255,251,243,0.04) 1px, transparent 1px)",
+                      backgroundSize: "28px 28px",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: 20,
+                    }}
+                  >
+                    <p
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: "clamp(13px, 1.8vw, 18px)",
+                        fontWeight: 400,
+                        letterSpacing: "0.02em",
+                        color: "rgba(255,251,243,0.35)",
+                        margin: 0,
+                      }}
+                    >
+                      {project.liveUrl
+                        ? project.liveUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")
+                        : project.name}
+                    </p>
+                    <div style={{ width: 36, height: 1.5, backgroundColor: "#ff6c0c", opacity: 0.7 }} />
+                    {project.liveUrl && (
+                      <a
+                        href={project.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          fontFamily: "var(--font-body)",
+                          fontSize: 11,
+                          fontWeight: 600,
+                          letterSpacing: "0.1em",
+                          textTransform: "uppercase",
+                          color: "rgba(255,251,243,0.5)",
+                          textDecoration: "none",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 8,
+                        }}
+                      >
+                        {locale === "tr" ? "Canlı siteyi ziyaret et" : "Visit live site"}
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                          <path d="M2.5 2.5h7v7M9.5 2.5L2.5 9.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </a>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
+
+            {hasDesktopMobileImage && (
+              <div
+                style={{
+                  width: 120,
+                  flexShrink: 0,
+                  borderRadius: 8,
+                  overflow: "hidden",
+                  boxShadow: "0 8px 32px rgba(6,7,113,0.15), 0 2px 6px rgba(6,7,113,0.08)",
+                  position: "relative",
+                  aspectRatio: "9 / 19.5",
+                }}
+                className="case-mobile-shot"
+              >
+                <Image
+                  src={`/${mobileImagePublicPath}`}
+                  alt={`${project.name} mobile screenshot`}
+                  fill
+                  sizes="120px"
+                  style={{ objectFit: "cover", objectPosition: "top center" }}
+                />
+              </div>
+            )}
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       {/* Challenge + Approach */}
       <section
