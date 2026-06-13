@@ -317,3 +317,23 @@ video {
     padding-bottom: 96px !important;
   }
 }
+
+/* ─── MARQUEE ─────────────────────────────────────────────────── */
+
+@keyframes marquee-slide {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* ─── PROJECT SPREAD ─────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .project-spread-grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+}
