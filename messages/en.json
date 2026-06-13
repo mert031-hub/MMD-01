@@ -56,10 +56,13 @@
     "quote": "A beautiful website that doesn't perform is just expensive decoration.",
     "belief1Number": "01",
     "belief1": "Design is strategy made visible. Not decoration.",
+    "belief1Support": "Every color choice, every typographic decision, every layout serves a purpose. Aesthetics work when they are the result of strategy.",
     "belief2Number": "02",
     "belief2": "Every industry speaks a different digital language. Templates ignore this.",
+    "belief2Support": "A law firm and a boutique hotel don't speak the same language. Design that understands your industry's code turns strangers into clients.",
     "belief3Number": "03",
-    "belief3": "The best website is the one that makes it easy for clients to choose you."
+    "belief3": "The best website is the one that makes it easy for clients to choose you.",
+    "belief3Support": "Complex navigation, unclear messaging, slow load times — they all make decisions harder. We make decisions easier."
   },
   "capabilities": {
     "sectionNumber": "02",

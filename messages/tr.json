@@ -56,10 +56,13 @@
     "quote": "Güzel görünen her site işe yaramaz.",
     "belief1Number": "01",
     "belief1": "Tasarım, stratejinin görsel halidir. Dekorasyon değil.",
+    "belief1Support": "Her renk seçimi, her tipografi kararı, her yerleşim bir amaca hizmet eder. Estetik, stratejinin sonucu olduğunda işe yarar.",
     "belief2Number": "02",
     "belief2": "Her sektörün dijital dili farklıdır. Şablonlar bu farkı yok sayar.",
+    "belief2Support": "Bir hukuk bürosu ile bir butik otel aynı dili konuşmaz. Sektörünüzün kodunu anlayan bir tasarım, yabancıları müşteriye dönüştürür.",
     "belief3Number": "03",
-    "belief3": "En iyi website, müşterinizin sizi seçmesini kolaylaştıran websitedir."
+    "belief3": "En iyi website, müşterinizin sizi seçmesini kolaylaştıran websitedir.",
+    "belief3Support": "Karmaşık navigasyon, belirsiz mesajlar, yavaş yüklemeler — bunların hepsi kararı zorlaştırır. Biz kararı kolaylaştırırız."
   },
   "capabilities": {
     "sectionNumber": "02",

@@ -12,9 +12,9 @@ export default function Philosophy() {
   const [hovered, setHovered] = useState<number | null>(null);
 
   const beliefs = [
-    { number: t("belief1Number"), text: t("belief1") },
-    { number: t("belief2Number"), text: t("belief2") },
-    { number: t("belief3Number"), text: t("belief3") },
+    { number: t("belief1Number"), text: t("belief1"), support: t("belief1Support") },
+    { number: t("belief2Number"), text: t("belief2"), support: t("belief2Support") },
+    { number: t("belief3Number"), text: t("belief3"), support: t("belief3Support") },
   ] as const;
 
   return (
@@ -208,35 +208,71 @@ export default function Philosophy() {
                         : "rgba(255,108,12,0.38)",
                     transition: "color 220ms ease",
                     userSelect: "none",
+                    alignSelf: "start",
+                    paddingTop: 4,
                   }}
                 >
                   {belief.number}
                 </span>
 
-                {/* Belief text */}
-                <p
+                {/* Belief text + support */}
+                <div
                   style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "clamp(19px, 2.4vw, 38px)",
-                    fontStyle: "italic",
-                    fontWeight: 500,
-                    lineHeight: 1.22,
-                    letterSpacing: "-0.015em",
-                    color:
-                      hovered === i
-                        ? "rgba(255,251,243,0.97)"
-                        : "rgba(255,251,243,0.68)",
-                    margin: 0,
-                    transition:
-                      "color 220ms ease, transform 250ms cubic-bezier(0,0,0.2,1)",
+                    transition: "transform 250ms cubic-bezier(0,0,0.2,1)",
                     transform:
                       hovered === i && !shouldReduce
                         ? "translateX(8px)"
                         : "translateX(0)",
                   }}
                 >
-                  {belief.text}
-                </p>
+                  <p
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontSize: "clamp(19px, 2.4vw, 38px)",
+                      fontStyle: "italic",
+                      fontWeight: 500,
+                      lineHeight: 1.22,
+                      letterSpacing: "-0.015em",
+                      color:
+                        hovered === i
+                          ? "rgba(255,251,243,0.97)"
+                          : "rgba(255,251,243,0.68)",
+                      margin: "0 0 16px 0",
+                      transition: "color 220ms ease",
+                    }}
+                  >
+                    {belief.text}
+                  </p>
+
+                  {/* Divider */}
+                  <div
+                    style={{
+                      width: hovered === i ? 32 : 20,
+                      height: 1,
+                      backgroundColor: "var(--color-action)",
+                      opacity: hovered === i ? 0.8 : 0.35,
+                      marginBottom: 16,
+                      transition: "width 280ms ease, opacity 220ms ease",
+                    }}
+                  />
+
+                  <p
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: "clamp(12px, 1.05vw, 14px)",
+                      lineHeight: 1.7,
+                      color:
+                        hovered === i
+                          ? "rgba(255,251,243,0.60)"
+                          : "rgba(255,251,243,0.38)",
+                      margin: 0,
+                      maxWidth: 520,
+                      transition: "color 220ms ease",
+                    }}
+                  >
+                    {belief.support}
+                  </p>
+                </div>
               </div>
             </motion.div>
           ))}
