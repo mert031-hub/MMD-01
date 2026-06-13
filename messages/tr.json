@@ -1,0 +1,156 @@
+{
+  "nav": {
+    "work": "Projeler",
+    "studio": "Stüdyo",
+    "services": "Hizmetler",
+    "process": "Süreç",
+    "cta": "Projeyi Başlat",
+    "mobileMenuOpen": "Menüyü aç",
+    "mobileMenuClose": "Menüyü kapat"
+  },
+  "hero": {
+    "label": "Digital Experience Studio",
+    "heading1": "Güçlü işler,",
+    "heading2": "güçlü dijital",
+    "heading3": "deneyimler hak eder.",
+    "supporting": "Web siteleri tasarlamıyoruz. İnsanların sizi tercih etmesini kolaylaştırıyoruz.",
+    "primaryCta": "Projeyi Başlat",
+    "phoneCta": "Hemen Ara",
+    "scrollLabel": "Keşfet"
+  },
+  "signal": {
+    "ariaLabel": "Çalıştığımız sektörler"
+  },
+  "work": {
+    "sectionNumber": "01",
+    "sectionTitle": "Seçili Projeler",
+    "sectionDescriptor": "Her proje bir dönüşüm hikayesidir.",
+    "viewProject": "Projeyi İncele",
+    "viewAll": "Tüm Projeleri Gör",
+    "projects": {
+      "pilotEngineering": {
+        "industry": "Mühendislik",
+        "name": "Pi-Lot Engineering",
+        "transformation": "Teknik uzmanlık, dijital otoriteye dönüştü."
+      },
+      "kaleichiHotel": {
+        "industry": "Konaklama",
+        "name": "Kaleiçi Hotel",
+        "transformation": "200 yıllık bir miras, modern rezervasyonlar için yeniden tasarlandı."
+      },
+      "kocyigitTrade": {
+        "industry": "Ticaret",
+        "name": "Kocyiğit Trade",
+        "transformation": "Kurumsal güven, dijital sahaya taşındı."
+      }
+    }
+  },
+  "philosophy": {
+    "quote": "Güzel görünen her site işe yaramaz.",
+    "belief1Number": "01",
+    "belief1": "Tasarım, stratejinin görsel halidir. Dekorasyon değil.",
+    "belief2Number": "02",
+    "belief2": "Her sektörün dijital dili farklıdır. Şablonlar bu farkı yok sayar.",
+    "belief3Number": "03",
+    "belief3": "En iyi website, müşterinizin sizi seçmesini kolaylaştıran websitedir."
+  },
+  "capabilities": {
+    "sectionNumber": "02",
+    "sectionTitle": "Ne Yapıyoruz",
+    "sectionDescriptor": "Strateji ile başlar, deneyim ile tamamlanır.",
+    "items": {
+      "websiteDesign": {
+        "number": "01",
+        "title": "Website Tasarımı",
+        "descriptor": "Sektörünüze özgü, stratejik temelli dijital varlıklar."
+      },
+      "brandExperience": {
+        "number": "02",
+        "title": "Marka Deneyimi",
+        "descriptor": "Markanızı dijitalde doğru şekilde konumlandırıyoruz."
+      },
+      "conversionOptimization": {
+        "number": "03",
+        "title": "Dönüşüm Optimizasyonu",
+        "descriptor": "Ziyaretçileri müşteriye dönüştüren yapılar."
+      },
+      "uiSystems": {
+        "number": "04",
+        "title": "UI Sistemleri",
+        "descriptor": "Tutarlı, ölçeklenebilir arayüz bileşen mimarileri."
+      },
+      "performance": {
+        "number": "05",
+        "title": "Performans Mühendisliği",
+        "descriptor": "Hızlı yüklenen, sorunsuz çalışan sistemler."
+      },
+      "seoFoundations": {
+        "number": "06",
+        "title": "SEO Temelleri",
+        "descriptor": "Doğru teknik altyapı ile arama görünürlüğü."
+      },
+      "digitalConsulting": {
+        "number": "07",
+        "title": "Dijital Danışmanlık",
+        "descriptor": "Dijital strateji ve büyüme yol haritası."
+      }
+    }
+  },
+  "process": {
+    "sectionNumber": "03",
+    "sectionTitle": "Nasıl Çalışıyoruz",
+    "sectionDescriptor": "Her adım bir amaca hizmet eder.",
+    "stages": {
+      "discovery": {
+        "number": "01",
+        "title": "Tanışma",
+        "description": "Brief ile değil, işinizle başlıyoruz. Hedeflerinizi, sektörünüzü ve hedef kitlenizi birlikte anlıyoruz."
+      },
+      "strategy": {
+        "number": "02",
+        "title": "Strateji",
+        "description": "Tasarım başlamadan önce başarının neye benzediği üzerine mutabık kalıyoruz. Tahmin yürütme yok."
+      },
+      "design": {
+        "number": "03",
+        "title": "Tasarım & Geliştirme",
+        "description": "Tek bir yön, birlikte rafine edilir. Revizyonlar sürpriz olmaz; sürecin bir parçasıdır."
+      },
+      "launch": {
+        "number": "04",
+        "title": "Lansman & Ötesi",
+        "description": "Teslim ediyoruz. Sonra çalıştığından emin oluyoruz. Lansman son değil, başlangıçtır."
+      }
+    }
+  },
+  "cta": {
+    "heading": "Fark yaratan bir website için doğru adrestesiniz.",
+    "supporting": "Fikrinizi paylaşın. Biz gerisi için buradayız.",
+    "whatsapp": "WhatsApp'tan Yazın",
+    "phone": "0534 962 66 27",
+    "freeConsult": "Ücretsiz ilk görüşme"
+  },
+  "footer": {
+    "tagline": "Digital Experience Studio",
+    "copyright": "© 2025 MMDESIGN. Tüm hakları saklıdır.",
+    "nav": {
+      "workTitle": "Projeler",
+      "selectedWork": "Seçili Projeler",
+      "allWork": "Tüm Projeler",
+      "studioTitle": "Stüdyo",
+      "about": "Hakkımızda",
+      "philosophy": "Felsefemiz",
+      "servicesTitle": "Hizmetler",
+      "websiteDesign": "Website Tasarımı",
+      "brandExperience": "Marka Deneyimi",
+      "consulting": "Dijital Danışmanlık",
+      "contactTitle": "İletişim",
+      "whatsapp": "WhatsApp",
+      "phone": "Telefon"
+    }
+  },
+  "whatsapp": {
+    "label": "WhatsApp ile iletişim",
+    "tooltip": "Bize Yazın"
+  }
+}

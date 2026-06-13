@@ -1,0 +1,156 @@
+{
+  "nav": {
+    "work": "Work",
+    "studio": "Studio",
+    "services": "Services",
+    "process": "Process",
+    "cta": "Start a Project",
+    "mobileMenuOpen": "Open menu",
+    "mobileMenuClose": "Close menu"
+  },
+  "hero": {
+    "label": "Digital Experience Studio",
+    "heading1": "Strong businesses",
+    "heading2": "deserve strong",
+    "heading3": "digital experiences.",
+    "supporting": "We don't just build websites. We make it easier for people to choose you.",
+    "primaryCta": "Start a Project",
+    "phoneCta": "Call Now",
+    "scrollLabel": "Explore"
+  },
+  "signal": {
+    "ariaLabel": "Industries we work with"
+  },
+  "work": {
+    "sectionNumber": "01",
+    "sectionTitle": "Selected Work",
+    "sectionDescriptor": "Every project is a transformation story.",
+    "viewProject": "View Project",
+    "viewAll": "View All Work",
+    "projects": {
+      "pilotEngineering": {
+        "industry": "Engineering",
+        "name": "Pi-Lot Engineering",
+        "transformation": "Technical expertise transformed into digital authority."
+      },
+      "kaleichiHotel": {
+        "industry": "Hospitality",
+        "name": "Kaleiçi Hotel",
+        "transformation": "200 years of heritage, redesigned for modern bookings."
+      },
+      "kocyigitTrade": {
+        "industry": "Trade",
+        "name": "Kocyiğit Trade",
+        "transformation": "Corporate trust brought into the digital arena."
+      }
+    }
+  },
+  "philosophy": {
+    "quote": "A beautiful website that doesn't perform is just expensive decoration.",
+    "belief1Number": "01",
+    "belief1": "Design is strategy made visible. Not decoration.",
+    "belief2Number": "02",
+    "belief2": "Every industry speaks a different digital language. Templates ignore this.",
+    "belief3Number": "03",
+    "belief3": "The best website is the one that makes it easy for clients to choose you."
+  },
+  "capabilities": {
+    "sectionNumber": "02",
+    "sectionTitle": "What We Build",
+    "sectionDescriptor": "It starts with strategy. It ends with experience.",
+    "items": {
+      "websiteDesign": {
+        "number": "01",
+        "title": "Website Design",
+        "descriptor": "Strategy-led digital assets, tailored to your industry."
+      },
+      "brandExperience": {
+        "number": "02",
+        "title": "Brand Experience",
+        "descriptor": "Positioning your brand correctly in the digital space."
+      },
+      "conversionOptimization": {
+        "number": "03",
+        "title": "Conversion Optimization",
+        "descriptor": "Systems that turn visitors into customers."
+      },
+      "uiSystems": {
+        "number": "04",
+        "title": "UI Systems",
+        "descriptor": "Consistent, scalable interface component architecture."
+      },
+      "performance": {
+        "number": "05",
+        "title": "Performance Engineering",
+        "descriptor": "Fast-loading, seamlessly operating systems."
+      },
+      "seoFoundations": {
+        "number": "06",
+        "title": "SEO Foundations",
+        "descriptor": "Search visibility through the right technical foundation."
+      },
+      "digitalConsulting": {
+        "number": "07",
+        "title": "Digital Consulting",
+        "descriptor": "Digital strategy and growth roadmapping."
+      }
+    }
+  },
+  "process": {
+    "sectionNumber": "03",
+    "sectionTitle": "How We Work",
+    "sectionDescriptor": "Every step serves a purpose.",
+    "stages": {
+      "discovery": {
+        "number": "01",
+        "title": "Discovery",
+        "description": "We start with your business, not your brief. Together we understand your goals, industry, and audience."
+      },
+      "strategy": {
+        "number": "02",
+        "title": "Strategy",
+        "description": "Before design begins, we align on what success looks like. No guessing games."
+      },
+      "design": {
+        "number": "03",
+        "title": "Design & Build",
+        "description": "One direction, refined together. Revisions aren't surprises — they're part of the process."
+      },
+      "launch": {
+        "number": "04",
+        "title": "Launch & Beyond",
+        "description": "We deliver. Then we make sure it works. Launch isn't the end — it's the beginning."
+      }
+    }
+  },
+  "cta": {
+    "heading": "You've found the right studio for a website that makes a difference.",
+    "supporting": "Tell us about your project. We'll take it from there.",
+    "whatsapp": "Message on WhatsApp",
+    "phone": "0534 962 66 27",
+    "freeConsult": "Free initial consultation"
+  },
+  "footer": {
+    "tagline": "Digital Experience Studio",
+    "copyright": "© 2025 MMDESIGN. All rights reserved.",
+    "nav": {
+      "workTitle": "Work",
+      "selectedWork": "Selected Work",
+      "allWork": "All Projects",
+      "studioTitle": "Studio",
+      "about": "About",
+      "philosophy": "Our Philosophy",
+      "servicesTitle": "Services",
+      "websiteDesign": "Website Design",
+      "brandExperience": "Brand Experience",
+      "consulting": "Digital Consulting",
+      "contactTitle": "Contact",
+      "whatsapp": "WhatsApp",
+      "phone": "Phone"
+    }
+  },
+  "whatsapp": {
+    "label": "Contact via WhatsApp",
+    "tooltip": "Message Us"
+  }
+}

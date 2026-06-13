@@ -1,0 +1,290 @@
+@import "tailwindcss";
+
+/* ─── DESIGN TOKENS ──────────────────────────────────────────── */
+
+@theme {
+  /* Fonts */
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-body: var(--font-plus-jakarta-sans), system-ui, sans-serif;
+
+  /* Brand Colors */
+  --color-bg-primary: #fffbf3;
+  --color-bg-surface: #fff7e8;
+  --color-bg-inset: #f5edd8;
+
+  --color-text-primary: #111111;
+  --color-text-secondary: #444444;
+  --color-text-tertiary: #888888;
+  --color-text-inverse: #fffbf3;
+
+  --color-authority: #060771;
+  --color-authority-deep: #03044a;
+  --color-action: #ff6c0c;
+  --color-action-hover: #e55e00;
+  --color-accent: #bf1a1a;
+  --color-highlight: #ffe08f;
+
+  --color-dark-primary: #060771;
+  --color-dark-surface: #0a0ba3;
+  --color-dark-border: rgba(255, 251, 243, 0.1);
+
+  --color-border: rgba(6, 7, 113, 0.08);
+  --color-border-strong: rgba(6, 7, 113, 0.16);
+  --color-focus-ring: #ff6c0c;
+
+  /* Motion */
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+  --duration-deliberate: 700ms;
+
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/* ─── BASE RESET & DEFAULTS ──────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ─── TYPOGRAPHY BASE ─────────────────────────────────────────── */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--color-text-primary);
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ─── FOCUS STATES (ACCESSIBILITY) ──────────────────────────── */
+
+:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ─── SELECTION ──────────────────────────────────────────────── */
+
+::selection {
+  background-color: var(--color-highlight);
+  color: var(--color-authority);
+}
+
+/* ─── SECTION RHYTHM ─────────────────────────────────────────── */
+
+.section-padding {
+  padding-top: 120px;
+  padding-bottom: 120px;
+}
+
+@media (max-width: 1024px) {
+  .section-padding {
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+}
+
+@media (max-width: 767px) {
+  .section-padding {
+    padding-top: 64px;
+    padding-bottom: 64px;
+  }
+}
+
+/* ─── CONTAINER ──────────────────────────────────────────────── */
+
+.container-site {
+  width: 100%;
+  max-width: 1440px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 120px;
+  padding-right: 120px;
+}
+
+@media (max-width: 1280px) {
+  .container-site {
+    padding-left: 80px;
+    padding-right: 80px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .container-site {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+}
+
+@media (max-width: 767px) {
+  .container-site {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+@media (max-width: 374px) {
+  .container-site {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* ─── TYPE SCALE ─────────────────────────────────────────────── */
+
+.text-display-2xl {
+  font-family: var(--font-display);
+  font-size: clamp(56px, 8vw, 128px);
+  line-height: 0.93;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.text-display-xl {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5.5vw, 96px);
+  line-height: 0.97;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.text-display-lg {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4vw, 72px);
+  line-height: 1.05;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.text-h1 {
+  font-size: clamp(28px, 3vw, 56px);
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.text-h2 {
+  font-size: clamp(22px, 2.5vw, 40px);
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.text-h3 {
+  font-size: clamp(18px, 2vw, 32px);
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+.text-h4 {
+  font-size: 24px;
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+.text-body-lg {
+  font-size: 20px;
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+.text-body {
+  font-size: 16px;
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+.text-body-sm {
+  font-size: 14px;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+.text-caption {
+  font-size: 12px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.text-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ─── SCROLLBAR ──────────────────────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(6, 7, 113, 0.3);
+  border-radius: 9999px;
+}
