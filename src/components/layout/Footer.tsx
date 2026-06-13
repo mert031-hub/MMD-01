@@ -1,7 +1,6 @@
 import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
-
-const WA_URL = "https://wa.me/905349626627";
+import { waUrl } from "@/lib/whatsapp";
 
 type FooterLinkProps = {
   href: string;
@@ -155,7 +154,7 @@ export default function Footer() {
 
             {/* WhatsApp CTA */}
             <a
-              href={WA_URL}
+              href={waUrl(locale)}
               target="_blank"
               rel="noopener noreferrer"
               aria-label={locale === "tr" ? "WhatsApp'tan iletişime geç" : "Contact via WhatsApp"}
@@ -280,7 +279,7 @@ export default function Footer() {
             >
               {t("nav.contactTitle")}
             </p>
-            <FooterLink href={WA_URL} external>{t("nav.whatsapp")}</FooterLink>
+            <FooterLink href={waUrl(locale)} external>{t("nav.whatsapp")}</FooterLink>
             <FooterLink href="tel:+905349626627" external>{t("nav.phone")}</FooterLink>
             <div
               style={{

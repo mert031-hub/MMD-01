@@ -6,7 +6,8 @@ import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import JsonLd from "@/components/ui/JsonLd";
-import { getProject, getAllSlugs } from "@/lib/projects";
+import { getProject, getAllSlugs, getAdjacentProjects } from "@/lib/projects";
+import { waUrl } from "@/lib/whatsapp";
 
 const BASE_URL = "https://mmdesign.com.tr";
 
@@ -57,6 +58,9 @@ export default async function CaseStudyPage({ params }: Props) {
     locale === "tr" ? project.approach.tr : project.approach.en;
   const deliverables =
     locale === "tr" ? project.deliverables.tr : project.deliverables.en;
+
+  const { prev: prevProject, next: nextProject, index: projectIndex } =
+    getAdjacentProjects(slug);
 
   const desktopImagePublicPath = project.images.desktop;
   const desktopImageFsPath = path.join(
@@ -403,7 +407,7 @@ export default async function CaseStudyPage({ params }: Props) {
               {t("ctaHeading")}
             </h2>
             <a
-              href="https://wa.me/905349626627"
+              href={waUrl(locale)}
               target="_blank"
               rel="noopener noreferrer"
               style={{
@@ -429,6 +433,164 @@ export default async function CaseStudyPage({ params }: Props) {
         </div>
       </section>
 
+      {/* ─── Editorial Project Navigation ────────────────────── */}
+      <section
+        aria-label={locale === "tr" ? "Proje navigasyonu" : "Project navigation"}
+        style={{
+          backgroundColor: "var(--color-authority-deep)",
+          borderTop: "1px solid rgba(255,251,243,0.06)",
+        }}
+      >
+        <div className="container-site">
+          {/* Prev / Next grid */}
+          <div className="case-proj-nav">
+            {/* Previous */}
+            {prevProject ? (
+              <Link
+                href={`/projeler/${prevProject.slug}`}
+                className="case-proj-nav-item case-proj-nav-prev"
+                style={{ textDecoration: "none", display: "block" }}
+              >
+                <p
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 10,
+                    fontWeight: 600,
+                    letterSpacing: "0.16em",
+                    textTransform: "uppercase",
+                    color: "rgba(255,251,243,0.3)",
+                    marginBottom: 16,
+                  }}
+                >
+                  ← {t("prevProject")}
+                </p>
+                <p
+                  className="text-label"
+                  style={{
+                    color: "rgba(255,251,243,0.4)",
+                    marginBottom: 10,
+                    letterSpacing: "0.1em",
+                  }}
+                >
+                  {String(projectIndex).padStart(2, "0")} —{" "}
+                  {locale === "tr"
+                    ? prevProject.industry.tr
+                    : prevProject.industry.en}
+                </p>
+                <p
+                  className="case-proj-name"
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "clamp(22px, 2.4vw, 36px)",
+                    fontWeight: 600,
+                    lineHeight: 1.1,
+                    letterSpacing: "-0.02em",
+                    color: "rgba(255,251,243,0.7)",
+                    transition: "color 200ms ease",
+                  }}
+                >
+                  {prevProject.name}
+                </p>
+              </Link>
+            ) : (
+              <div />
+            )}
+
+            {/* Vertical divider */}
+            <div
+              aria-hidden="true"
+              style={{
+                width: 1,
+                backgroundColor: "rgba(255,251,243,0.07)",
+                alignSelf: "stretch",
+              }}
+            />
+
+            {/* Next */}
+            {nextProject ? (
+              <Link
+                href={`/projeler/${nextProject.slug}`}
+                className="case-proj-nav-item case-proj-nav-next"
+                style={{ textDecoration: "none", display: "block" }}
+              >
+                <p
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: 10,
+                    fontWeight: 600,
+                    letterSpacing: "0.16em",
+                    textTransform: "uppercase",
+                    color: "rgba(255,251,243,0.3)",
+                    marginBottom: 16,
+                    textAlign: "right",
+                  }}
+                >
+                  {t("nextProject")} →
+                </p>
+                <p
+                  className="text-label"
+                  style={{
+                    color: "rgba(255,251,243,0.4)",
+                    marginBottom: 10,
+                    letterSpacing: "0.1em",
+                    textAlign: "right",
+                  }}
+                >
+                  {String(projectIndex + 2).padStart(2, "0")} —{" "}
+                  {locale === "tr"
+                    ? nextProject.industry.tr
+                    : nextProject.industry.en}
+                </p>
+                <p
+                  className="case-proj-name"
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "clamp(22px, 2.4vw, 36px)",
+                    fontWeight: 600,
+                    lineHeight: 1.1,
+                    letterSpacing: "-0.02em",
+                    color: "rgba(255,251,243,0.7)",
+                    textAlign: "right",
+                    transition: "color 200ms ease",
+                  }}
+                >
+                  {nextProject.name}
+                </p>
+              </Link>
+            ) : (
+              <div />
+            )}
+          </div>
+
+          {/* All projects link */}
+          <div
+            style={{
+              borderTop: "1px solid rgba(255,251,243,0.06)",
+              paddingTop: 28,
+              paddingBottom: 48,
+              textAlign: "center",
+            }}
+          >
+            <Link
+              href="/projeler"
+              className="case-all-link"
+              style={{
+                fontFamily: "var(--font-body)",
+                fontWeight: 600,
+                fontSize: 11,
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+                color: "rgba(255,251,243,0.3)",
+                textDecoration: "none",
+                transition: "color 200ms ease",
+              }}
+            >
+              ← {t("backToWork")}
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <style>{`
         .case-back-link:hover { color: rgba(255,251,243,0.9) !important; }
         .case-live-link:hover { color: rgba(255,251,243,0.9) !important; }
@@ -441,6 +603,25 @@ export default async function CaseStudyPage({ params }: Props) {
           grid-template-columns: 1fr 1fr;
           gap: 64px;
         }
+
+        /* Project navigation */
+        .case-proj-nav {
+          display: grid;
+          grid-template-columns: 1fr auto 1fr;
+          gap: 0 48px;
+          padding: 56px 0 48px;
+        }
+        .case-proj-nav-item:hover .case-proj-name {
+          color: rgba(255,251,243,0.95) !important;
+        }
+        .case-proj-nav-prev:hover p:first-child {
+          color: rgba(255,251,243,0.55) !important;
+        }
+        .case-proj-nav-next:hover p:first-child {
+          color: rgba(255,251,243,0.55) !important;
+        }
+        .case-all-link:hover { color: rgba(255,251,243,0.7) !important; }
+
         @media (max-width: 767px) {
           .case-grid {
             grid-template-columns: 1fr !important;
@@ -448,6 +629,18 @@ export default async function CaseStudyPage({ params }: Props) {
           }
           .case-mobile-shot {
             display: none !important;
+          }
+          .case-proj-nav {
+            grid-template-columns: 1fr !important;
+            gap: 40px !important;
+            padding: 40px 0 36px !important;
+          }
+          .case-proj-nav > div:nth-child(2) {
+            display: none !important;
+          }
+          .case-proj-nav-next p,
+          .case-proj-nav-next .case-proj-name {
+            text-align: left !important;
           }
         }
       `}</style>

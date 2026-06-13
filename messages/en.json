@@ -134,7 +134,8 @@
     "supporting": "Tell us about your project. We'll take it from there.",
     "whatsapp": "Message on WhatsApp",
     "phone": "0534 962 66 27",
-    "freeConsult": "Free initial consultation"
+    "freeConsult": "Free initial consultation",
+    "availability": "Usually replying within the same day."
   },
   "footer": {
     "tagline": "Digital Experience Studio",
@@ -178,6 +179,8 @@
     "ctaHeading": "Looking for a similar transformation?",
     "ctaAction": "Start a Project",
     "visitLive": "Visit Live Site",
-    "notFound": "Project not found."
+    "notFound": "Project not found.",
+    "prevProject": "Previous Project",
+    "nextProject": "Next Project"
   }
 }

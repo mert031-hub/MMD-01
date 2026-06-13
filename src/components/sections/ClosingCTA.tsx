@@ -1,14 +1,14 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+import { waUrl } from "@/lib/whatsapp";
 
 const EASE_OUT = [0.0, 0.0, 0.2, 1] as const;
 
-const WA_URL = "https://wa.me/905349626627";
-
 export default function ClosingCTA() {
   const t = useTranslations("cta");
+  const locale = useLocale();
   const shouldReduce = useReducedMotion() ?? false;
 
   const fadeUp = (delay: number) => ({
@@ -126,7 +126,7 @@ export default function ClosingCTA() {
         >
           {/* WhatsApp primary */}
           <a
-            href={WA_URL}
+            href={waUrl(locale)}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="WhatsApp üzerinden iletişime geç"
@@ -211,13 +211,28 @@ export default function ClosingCTA() {
           </a>
         </motion.div>
 
+        {/* Availability signal — trust microcopy */}
+        <motion.p
+          {...fadeUp(0.38)}
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            color: "rgba(255,251,243,0.38)",
+            marginTop: 4,
+            letterSpacing: "0.02em",
+          }}
+        >
+          {t("availability")}
+        </motion.p>
+
         {/* Reassurance note */}
         <motion.p
-          {...fadeUp(0.42)}
+          {...fadeUp(0.46)}
           className="text-label"
           style={{
-            color: "rgba(255,251,243,0.35)",
+            color: "rgba(255,251,243,0.28)",
             letterSpacing: "0.1em",
+            marginTop: 20,
           }}
         >
           {t("freeConsult")}

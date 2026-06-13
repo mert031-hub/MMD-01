@@ -8,6 +8,7 @@ import Navigation from "@/components/layout/Navigation";
 import Footer from "@/components/layout/Footer";
 import WhatsAppButton from "@/components/layout/WhatsAppButton";
 import JsonLd from "@/components/ui/JsonLd";
+import LocalePersistence from "@/components/ui/LocalePersistence";
 import "../globals.css";
 
 const fraunces = Fraunces({
@@ -127,6 +128,7 @@ export default async function LocaleLayout({ children, params }: Props) {
       <body>
         <JsonLd data={organizationSchema} />
         <NextIntlClientProvider messages={messages}>
+          <LocalePersistence />
           <Navigation />
           <main id="main-content" tabIndex={-1}>
             {children}
