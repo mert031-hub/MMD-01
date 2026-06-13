@@ -118,7 +118,7 @@ export default function ProblemSolution({ isTr }: { isTr: boolean }) {
                   <span
                     className="text-label"
                     style={{
-                      color: "rgba(255,251,243,0.35)",
+                      color: "rgba(255,251,243,0.55)",
                       display: "block",
                       marginBottom: 14,
                     }}
