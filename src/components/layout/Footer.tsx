@@ -1,5 +1,7 @@
+"use client";
+
 import { useTranslations, useLocale } from "next-intl";
-import { Link } from "@/i18n/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
 import { waUrl } from "@/lib/whatsapp";
 
 type FooterLinkProps = {
@@ -19,7 +21,7 @@ function FooterLink({ href, external, children }: FooterLinkProps) {
           fontFamily: "var(--font-body)",
           fontWeight: 400,
           fontSize: 13,
-          color: "rgba(255,251,243,0.45)",
+          color: "rgba(255,251,243,0.65)",
           textDecoration: "none",
           display: "block",
           lineHeight: 1,
@@ -40,7 +42,7 @@ function FooterLink({ href, external, children }: FooterLinkProps) {
         fontFamily: "var(--font-body)",
         fontWeight: 400,
         fontSize: 13,
-        color: "rgba(255,251,243,0.45)",
+        color: "rgba(255,251,243,0.65)",
         textDecoration: "none",
         display: "block",
         lineHeight: 1,
@@ -58,6 +60,7 @@ function FooterLink({ href, external, children }: FooterLinkProps) {
 export default function Footer() {
   const t = useTranslations("footer");
   const locale = useLocale();
+  const pathname = usePathname();
   const alternateLocale = locale === "tr" ? "en" : "tr";
   const alternateLabel = locale === "tr" ? "EN" : "TR";
 
@@ -143,7 +146,7 @@ export default function Footer() {
                   fontFamily: "var(--font-body)",
                   fontSize: 13,
                   lineHeight: 1.6,
-                  color: "rgba(255,251,243,0.38)",
+                  color: "rgba(255,251,243,0.65)",
                   maxWidth: 300,
                   margin: 0,
                 }}
@@ -163,7 +166,7 @@ export default function Footer() {
                 fontWeight: 600,
                 fontSize: 12,
                 letterSpacing: "0.04em",
-                color: "#fffbf3",
+                color: "#060771",
                 backgroundColor: "#25D366",
                 padding: "12px 22px",
                 textDecoration: "none",
@@ -287,7 +290,7 @@ export default function Footer() {
                 paddingBottom: 5,
                 fontFamily: "var(--font-body)",
                 fontSize: 13,
-                color: "rgba(255,251,243,0.25)",
+                color: "rgba(255,251,243,0.55)",
               }}
             >
               {t("nav.location")}
@@ -316,14 +319,14 @@ export default function Footer() {
           style={{
             fontFamily: "var(--font-body)",
             fontSize: 12,
-            color: "rgba(255,251,243,0.25)",
+            color: "rgba(255,251,243,0.55)",
           }}
         >
           {copyright}
         </span>
 
         <Link
-          href="/"
+          href={pathname}
           locale={alternateLocale}
           aria-label={
             locale === "tr" ? "Switch to English" : "Türkçeye geç"
@@ -335,7 +338,7 @@ export default function Footer() {
             fontSize: 11,
             letterSpacing: "0.12em",
             textTransform: "uppercase",
-            color: "rgba(255,251,243,0.25)",
+            color: "rgba(255,251,243,0.55)",
             textDecoration: "none",
           }}
         >
@@ -349,7 +352,7 @@ export default function Footer() {
             fontFamily: "var(--font-body)",
             fontSize: 12,
             letterSpacing: "-0.01em",
-            color: "rgba(255,251,243,0.25)",
+            color: "rgba(255,251,243,0.55)",
             textDecoration: "none",
           }}
         >

@@ -201,7 +201,7 @@ export default function Navigation() {
                   letterSpacing: "0.08em",
                   textTransform: "uppercase",
                   color: isActive(href)
-                    ? "var(--color-action)"
+                    ? "var(--color-authority)"
                     : "var(--color-text-primary)",
                   textDecoration: "none",
                   transition: "color 200ms ease",
@@ -540,7 +540,7 @@ export default function Navigation() {
           transform-origin: left;
         }
         .nav-link.nav-active {
-          color: var(--color-action) !important;
+          color: var(--color-authority) !important;
         }
       `}</style>
     </>

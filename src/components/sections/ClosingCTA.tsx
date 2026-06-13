@@ -144,7 +144,7 @@ export default function ClosingCTA() {
             <p
               className="text-label"
               style={{
-                color: "rgba(255,251,243,0.35)",
+                color: "rgba(255,251,243,0.65)",
                 letterSpacing: "0.12em",
                 marginBottom: 20,
               }}
@@ -264,7 +264,7 @@ export default function ClosingCTA() {
                 style={{
                   fontFamily: "var(--font-body)",
                   fontSize: 12,
-                  color: "rgba(255,251,243,0.38)",
+                  color: "rgba(255,251,243,0.60)",
                   letterSpacing: "0.02em",
                   margin: 0,
                 }}
