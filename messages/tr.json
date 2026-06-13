@@ -19,13 +19,14 @@
     "scrollLabel": "Keşfet"
   },
   "signal": {
-    "ariaLabel": "Çalıştığımız sektörler"
+    "ariaLabel": "Çalışmalarımız ve yaklaşımımız"
   },
   "work": {
     "sectionNumber": "01",
     "sectionTitle": "Seçili Projeler",
     "sectionDescriptor": "Her proje bir dönüşüm hikayesidir.",
     "viewProject": "Projeyi İncele",
+    "visitLive": "Canlı Siteyi Gör",
     "viewAll": "Tüm Projeleri Gör",
     "projects": {
       "pilotEngineering": {
@@ -42,6 +43,11 @@
         "industry": "Ticaret",
         "name": "Kocyiğit Trade",
         "transformation": "Kurumsal güven, dijital sahaya taşındı."
+      },
+      "karivaHotel": {
+        "industry": "Konaklama",
+        "name": "Kariva Hotel",
+        "transformation": "Butik konaklama deneyimi, dijitale taşındı."
       }
     }
   },
@@ -61,38 +67,38 @@
     "items": {
       "websiteDesign": {
         "number": "01",
-        "title": "Website Tasarımı",
-        "descriptor": "Sektörünüze özgü, stratejik temelli dijital varlıklar."
+        "title": "Strateji",
+        "descriptor": "Müşterilerinizin nasıl karar verdiğini anlamadan, tasarıma başlamıyoruz."
       },
       "brandExperience": {
         "number": "02",
-        "title": "Marka Deneyimi",
-        "descriptor": "Markanızı dijitalde doğru şekilde konumlandırıyoruz."
+        "title": "Deneyim Tasarımı",
+        "descriptor": "Dikkat yöneten, güven inşa eden, eylem yaratan dijital deneyimler."
       },
       "conversionOptimization": {
         "number": "03",
-        "title": "Dönüşüm Optimizasyonu",
-        "descriptor": "Ziyaretçileri müşteriye dönüştüren yapılar."
+        "title": "Dönüşüm",
+        "descriptor": "Ziyaretçi getirmek yetmez. Onları müşterine dönüştürmeliyiz."
       },
       "uiSystems": {
         "number": "04",
         "title": "UI Sistemleri",
-        "descriptor": "Tutarlı, ölçeklenebilir arayüz bileşen mimarileri."
+        "descriptor": "Tutarlı, ölçeklenebilir. Büyüdükçe ayak uyduran arayüzler."
       },
       "performance": {
         "number": "05",
-        "title": "Performans Mühendisliği",
-        "descriptor": "Hızlı yüklenen, sorunsuz çalışan sistemler."
+        "title": "Performans",
+        "descriptor": "Hızlı yüklenen, temiz çalışan, güçlü teknik altyapı."
       },
       "seoFoundations": {
         "number": "06",
         "title": "SEO Temelleri",
-        "descriptor": "Doğru teknik altyapı ile arama görünürlüğü."
+        "descriptor": "Bulunabilir, anlaşılabilir ve indekslenebilir bir yapı."
       },
       "digitalConsulting": {
         "number": "07",
         "title": "Dijital Danışmanlık",
-        "descriptor": "Dijital strateji ve büyüme yol haritası."
+        "descriptor": "Nereye gidileceğini birileri göstermelidir. Biz bu işi yapıyoruz."
       }
     }
   },
@@ -132,6 +138,7 @@
   },
   "footer": {
     "tagline": "Digital Experience Studio",
+    "description": "Hizmet sektörüne özel, strateji odaklı dijital deneyimler tasarlıyoruz.",
     "copyright": "© 2025 MMDESIGN. Tüm hakları saklıdır.",
     "nav": {
       "workTitle": "Projeler",
@@ -140,13 +147,15 @@
       "studioTitle": "Stüdyo",
       "about": "Hakkımızda",
       "philosophy": "Felsefemiz",
+      "process": "Sürecimiz",
       "servicesTitle": "Hizmetler",
-      "websiteDesign": "Website Tasarımı",
-      "brandExperience": "Marka Deneyimi",
+      "websiteDesign": "Strateji & Tasarım",
+      "brandExperience": "Deneyim Tasarımı",
       "consulting": "Dijital Danışmanlık",
       "contactTitle": "İletişim",
-      "whatsapp": "WhatsApp",
-      "phone": "Telefon"
+      "whatsapp": "WhatsApp'tan Yazın",
+      "phone": "0534 962 66 27",
+      "location": "Türkiye"
     }
   },
   "whatsapp": {
@@ -155,7 +164,7 @@
   },
   "workIndex": {
     "metaTitle": "Projeler",
-    "metaDescription": "MMDESIGN'ın dönüştürdüğü projeler. Mühendislik, konaklama ve ticaret sektörlerinden seçili dijital deneyimler.",
+    "metaDescription": "MMDESIGN'ın dönüştürdüğü projeler. Mühendislik, konaklama, ticaret, sağlık ve turizm sektörlerinden seçili dijital deneyimler.",
     "label": "Seçili Projeler",
     "heading": "Dönüştürdüğümüz işler.",
     "descriptor": "Her proje bir dönüşüm hikayesidir. Farklı sektörler, aynı titizlik.",
@@ -168,6 +177,7 @@
     "deliverablesLabel": "Teslim Edilenler",
     "ctaHeading": "Benzer bir dönüşüm mü arıyorsunuz?",
     "ctaAction": "Projeyi Başlat",
+    "visitLive": "Canlı Siteyi Gör",
     "notFound": "Proje bulunamadı."
   }
 }

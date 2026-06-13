@@ -168,6 +168,34 @@ export default async function CaseStudyPage({ params }: Props) {
           >
             {transformation}
           </p>
+
+          {project.liveUrl && (
+            <a
+              href={project.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                marginTop: 32,
+                fontFamily: "var(--font-body)",
+                fontWeight: 600,
+                fontSize: 12,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                color: "rgba(255,251,243,0.5)",
+                textDecoration: "none",
+                transition: "color 150ms ease",
+              }}
+              className="case-live-link"
+            >
+              {t("visitLive")}
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                <path d="M2 2h6v6M8 2L2 8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </a>
+          )}
         </div>
       </section>
 
@@ -403,6 +431,7 @@ export default async function CaseStudyPage({ params }: Props) {
 
       <style>{`
         .case-back-link:hover { color: rgba(255,251,243,0.9) !important; }
+        .case-live-link:hover { color: rgba(255,251,243,0.9) !important; }
         .case-cta-btn:hover {
           background-color: var(--color-action-hover) !important;
           transform: translateY(-1px);

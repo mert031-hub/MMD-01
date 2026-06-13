@@ -19,13 +19,14 @@
     "scrollLabel": "Explore"
   },
   "signal": {
-    "ariaLabel": "Industries we work with"
+    "ariaLabel": "Our work and approach"
   },
   "work": {
     "sectionNumber": "01",
     "sectionTitle": "Selected Work",
     "sectionDescriptor": "Every project is a transformation story.",
     "viewProject": "View Project",
+    "visitLive": "Visit Live Site",
     "viewAll": "View All Work",
     "projects": {
       "pilotEngineering": {
@@ -42,6 +43,11 @@
         "industry": "Trade",
         "name": "Kocyiğit Trade",
         "transformation": "Corporate trust brought into the digital arena."
+      },
+      "karivaHotel": {
+        "industry": "Hospitality",
+        "name": "Kariva Hotel",
+        "transformation": "Boutique hospitality experience brought into the digital space."
       }
     }
   },
@@ -61,38 +67,38 @@
     "items": {
       "websiteDesign": {
         "number": "01",
-        "title": "Website Design",
-        "descriptor": "Strategy-led digital assets, tailored to your industry."
+        "title": "Strategy",
+        "descriptor": "We understand how your customers decide before designing what they see."
       },
       "brandExperience": {
         "number": "02",
-        "title": "Brand Experience",
-        "descriptor": "Positioning your brand correctly in the digital space."
+        "title": "Experience Design",
+        "descriptor": "We create websites that direct attention, build confidence, and drive action."
       },
       "conversionOptimization": {
         "number": "03",
-        "title": "Conversion Optimization",
-        "descriptor": "Systems that turn visitors into customers."
+        "title": "Conversion",
+        "descriptor": "Getting visitors is not enough. We build structures that turn them into customers."
       },
       "uiSystems": {
         "number": "04",
         "title": "UI Systems",
-        "descriptor": "Consistent, scalable interface component architecture."
+        "descriptor": "Consistent, scalable interfaces that grow with your business."
       },
       "performance": {
         "number": "05",
-        "title": "Performance Engineering",
-        "descriptor": "Fast-loading, seamlessly operating systems."
+        "title": "Performance",
+        "descriptor": "Fast, clean, and built on a solid technical foundation."
       },
       "seoFoundations": {
         "number": "06",
         "title": "SEO Foundations",
-        "descriptor": "Search visibility through the right technical foundation."
+        "descriptor": "Structured to be found, understood, and indexed."
       },
       "digitalConsulting": {
         "number": "07",
         "title": "Digital Consulting",
-        "descriptor": "Digital strategy and growth roadmapping."
+        "descriptor": "Someone needs to show the direction. That's what we do."
       }
     }
   },
@@ -132,6 +138,7 @@
   },
   "footer": {
     "tagline": "Digital Experience Studio",
+    "description": "Strategy-led digital experiences designed for service businesses.",
     "copyright": "© 2025 MMDESIGN. All rights reserved.",
     "nav": {
       "workTitle": "Work",
@@ -140,13 +147,15 @@
       "studioTitle": "Studio",
       "about": "About",
       "philosophy": "Our Philosophy",
+      "process": "Our Process",
       "servicesTitle": "Services",
-      "websiteDesign": "Website Design",
-      "brandExperience": "Brand Experience",
+      "websiteDesign": "Strategy & Design",
+      "brandExperience": "Experience Design",
       "consulting": "Digital Consulting",
       "contactTitle": "Contact",
-      "whatsapp": "WhatsApp",
-      "phone": "Phone"
+      "whatsapp": "Message on WhatsApp",
+      "phone": "0534 962 66 27",
+      "location": "Turkey"
     }
   },
   "whatsapp": {
@@ -155,7 +164,7 @@
   },
   "workIndex": {
     "metaTitle": "Work",
-    "metaDescription": "Projects transformed by MMDESIGN. Selected digital experiences from engineering, hospitality, and trade.",
+    "metaDescription": "Projects transformed by MMDESIGN. Selected digital experiences from engineering, hospitality, trade, health, and tourism.",
     "label": "Selected Work",
     "heading": "Work we've transformed.",
     "descriptor": "Every project is a transformation story. Different industries, the same rigor.",
@@ -168,6 +177,7 @@
     "deliverablesLabel": "Deliverables",
     "ctaHeading": "Looking for a similar transformation?",
     "ctaAction": "Start a Project",
+    "visitLive": "Visit Live Site",
     "notFound": "Project not found."
   }
 }

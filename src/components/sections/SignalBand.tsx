@@ -1,20 +1,34 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
+import { useLocale } from "next-intl";
 
-const ITEMS = [
-  "Pi-Lot Engineering",
-  "Kaleiçi Hotel",
-  "Seda İşisağ",
-  "Kocyiğit Trade",
-  "Mühendislik",
-  "Konaklama",
-  "Klinik & Sağlık",
-  "Turizm",
-  "Kişisel Marka",
-  "Ticaret",
-  "Restoran",
-  "KOBİ",
+type Item = { text: string; type: "statement" | "industry" };
+
+const ITEMS_TR: Item[] = [
+  { text: "Gerçek projeler.", type: "statement" },
+  { text: "Gerçek işler.", type: "statement" },
+  { text: "Şablon değil.", type: "statement" },
+  { text: "Konaklama", type: "industry" },
+  { text: "Mühendislik", type: "industry" },
+  { text: "Ticaret", type: "industry" },
+  { text: "Sağlık", type: "industry" },
+  { text: "Turizm", type: "industry" },
+  { text: "Kişisel Marka", type: "industry" },
+  { text: "7 sektör.", type: "statement" },
+];
+
+const ITEMS_EN: Item[] = [
+  { text: "Real projects.", type: "statement" },
+  { text: "Real businesses.", type: "statement" },
+  { text: "No templates.", type: "statement" },
+  { text: "Hospitality", type: "industry" },
+  { text: "Engineering", type: "industry" },
+  { text: "Trade", type: "industry" },
+  { text: "Health", type: "industry" },
+  { text: "Tourism", type: "industry" },
+  { text: "Personal Brand", type: "industry" },
+  { text: "7 industries.", type: "statement" },
 ];
 
 const DOT = (
@@ -22,10 +36,10 @@ const DOT = (
     aria-hidden="true"
     style={{
       display: "inline-block",
-      width: 4,
-      height: 4,
+      width: 3,
+      height: 3,
       borderRadius: "50%",
-      backgroundColor: "var(--color-action)",
+      backgroundColor: "var(--color-border-strong)",
       flexShrink: 0,
       verticalAlign: "middle",
       marginBottom: 1,
@@ -33,17 +47,16 @@ const DOT = (
   />
 );
 
-function MarqueeRow({ paused }: { paused: boolean }) {
-  /* Duplicate items so the loop is seamless */
-  const doubled = [...ITEMS, ...ITEMS];
+function MarqueeRow({ items, paused }: { items: Item[]; paused: boolean }) {
+  const doubled = [...items, ...items];
 
   return (
     <div
       style={{
         display: "flex",
         alignItems: "center",
-        gap: 28,
-        animation: `marquee-slide 36s linear infinite`,
+        gap: 32,
+        animation: "marquee-slide 48s linear infinite",
         animationPlayState: paused ? "paused" : "running",
         willChange: "transform",
         whiteSpace: "nowrap",
@@ -53,17 +66,22 @@ function MarqueeRow({ paused }: { paused: boolean }) {
       {doubled.map((item, i) => (
         <span
           key={i}
-          style={{ display: "inline-flex", alignItems: "center", gap: 28 }}
+          style={{ display: "inline-flex", alignItems: "center", gap: 32 }}
         >
           <span
-            className="text-label"
             style={{
-              color: "var(--color-text-secondary)",
-              letterSpacing: "0.06em",
+              fontFamily: "var(--font-body)",
+              fontWeight: item.type === "statement" ? 600 : 400,
               fontSize: 11,
+              letterSpacing: item.type === "statement" ? "0.04em" : "0.1em",
+              textTransform: item.type === "industry" ? "uppercase" : "none",
+              color:
+                item.type === "statement"
+                  ? "var(--color-action)"
+                  : "var(--color-text-tertiary)",
             }}
           >
-            {item}
+            {item.text}
           </span>
           {DOT}
         </span>
@@ -72,7 +90,7 @@ function MarqueeRow({ paused }: { paused: boolean }) {
   );
 }
 
-function StaticRow() {
+function StaticRow({ items }: { items: Item[] }) {
   return (
     <div
       style={{
@@ -83,22 +101,27 @@ function StaticRow() {
         justifyContent: "center",
       }}
     >
-      {ITEMS.map((item, i) => (
+      {items.map((item, i) => (
         <span
           key={i}
           style={{ display: "inline-flex", alignItems: "center", gap: 24 }}
         >
           <span
-            className="text-label"
             style={{
-              color: "var(--color-text-secondary)",
-              letterSpacing: "0.06em",
+              fontFamily: "var(--font-body)",
+              fontWeight: item.type === "statement" ? 600 : 400,
               fontSize: 11,
+              letterSpacing: item.type === "statement" ? "0.04em" : "0.1em",
+              textTransform: item.type === "industry" ? "uppercase" : "none",
+              color:
+                item.type === "statement"
+                  ? "var(--color-action)"
+                  : "var(--color-text-tertiary)",
             }}
           >
-            {item}
+            {item.text}
           </span>
-          {i < ITEMS.length - 1 && DOT}
+          {i < items.length - 1 && DOT}
         </span>
       ))}
     </div>
@@ -106,6 +129,9 @@ function StaticRow() {
 }
 
 export default function SignalBand() {
+  const locale = useLocale();
+  const items = locale === "en" ? ITEMS_EN : ITEMS_TR;
+
   const [paused, setPaused] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(
     () =>
@@ -125,7 +151,7 @@ export default function SignalBand() {
     <div
       ref={ref}
       role="region"
-      aria-label="Çalıştığımız sektörler"
+      aria-label={locale === "en" ? "Our work and approach" : "Çalışmalarımız ve yaklaşımımız"}
       style={{
         backgroundColor: "var(--color-bg-surface)",
         borderTop: "1px solid var(--color-border)",
@@ -143,11 +169,10 @@ export default function SignalBand() {
     >
       {reducedMotion ? (
         <div className="container-site" style={{ width: "100%" }}>
-          <StaticRow />
+          <StaticRow items={items} />
         </div>
       ) : (
         <>
-          {/* Fade edges */}
           <div
             aria-hidden="true"
             style={{
@@ -178,9 +203,9 @@ export default function SignalBand() {
           />
           <div
             aria-hidden="true"
-            style={{ display: "flex", alignItems: "center", gap: 28 }}
+            style={{ display: "flex", alignItems: "center", gap: 32 }}
           >
-            <MarqueeRow paused={paused} />
+            <MarqueeRow items={items} paused={paused} />
           </div>
         </>
       )}

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 
@@ -8,6 +9,7 @@ const EASE_OUT = [0.0, 0.0, 0.2, 1] as const;
 export default function Philosophy() {
   const t = useTranslations("philosophy");
   const shouldReduce = useReducedMotion() ?? false;
+  const [hovered, setHovered] = useState<number | null>(null);
 
   const beliefs = [
     { number: t("belief1Number"), text: t("belief1") },
@@ -25,18 +27,18 @@ export default function Philosophy() {
         overflow: "hidden",
       }}
     >
-      {/* Background texture — MM */}
+      {/* Background texture — MM, very subtle */}
       <div
         aria-hidden="true"
         style={{
           position: "absolute",
-          right: "-2%",
+          right: "-4%",
           top: "50%",
           transform: "translateY(-50%)",
           fontFamily: "var(--font-display)",
-          fontSize: "clamp(240px, 30vw, 480px)",
+          fontSize: "clamp(260px, 32vw, 520px)",
           fontWeight: 700,
-          color: "rgba(255,251,243,0.025)",
+          color: "rgba(255,251,243,0.018)",
           lineHeight: 1,
           userSelect: "none",
           pointerEvents: "none",
@@ -95,39 +97,71 @@ export default function Philosophy() {
                 delay: i * 0.15,
                 ease: EASE_OUT,
               }}
+              onMouseEnter={() => setHovered(i)}
+              onMouseLeave={() => setHovered(null)}
               style={{
                 display: "grid",
-                gridTemplateColumns: "40px 1fr",
+                gridTemplateColumns: "48px 1fr",
                 gap: "0 24px",
                 alignItems: "start",
                 paddingTop: 28,
                 paddingBottom: 28,
-                borderTop: "1px solid var(--color-dark-border)",
+                borderTop: hovered === i
+                  ? "1px solid var(--color-action)"
+                  : "1px solid var(--color-dark-border)",
+                transition: "border-color 200ms ease",
+                cursor: "default",
               }}
             >
-              <span
-                className="text-label"
+              {/* Number — display font, strong */}
+              <div style={{ overflow: "hidden", paddingTop: 2 }}>
+                <span
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: 15,
+                    fontWeight: 700,
+                    letterSpacing: "-0.02em",
+                    color: "var(--color-action)",
+                    display: "block",
+                    transform: hovered === i && !shouldReduce ? "scale(1.1)" : "scale(1)",
+                    transformOrigin: "left center",
+                    transition: "transform 200ms ease",
+                  }}
+                >
+                  {belief.number}
+                </span>
+              </div>
+
+              {/* Content */}
+              <div
                 style={{
-                  color: "var(--color-action)",
-                  paddingTop: 3,
-                  display: "block",
+                  transform: hovered === i && !shouldReduce ? "translateX(6px)" : "translateX(0)",
+                  transition: "transform 200ms ease",
                 }}
               >
-                {belief.number}
-              </span>
-              <p
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: "clamp(15px, 1.4vw, 18px)",
-                  lineHeight: 1.65,
-                  color: "rgba(255,251,243,0.75)",
-                  margin: 0,
-                }}
-              >
-                {belief.text}
-              </p>
+                <p
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: "clamp(15px, 1.4vw, 18px)",
+                    lineHeight: 1.65,
+                    color: hovered === i
+                      ? "rgba(255,251,243,0.95)"
+                      : "rgba(255,251,243,0.72)",
+                    margin: 0,
+                    transition: "color 200ms ease",
+                  }}
+                >
+                  {belief.text}
+                </p>
+              </div>
             </motion.div>
           ))}
+          {/* Bottom border */}
+          <div
+            style={{
+              borderTop: "1px solid var(--color-dark-border)",
+            }}
+          />
         </div>
       </div>
     </section>

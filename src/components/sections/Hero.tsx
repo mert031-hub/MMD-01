@@ -6,264 +6,356 @@ import { Link } from "@/i18n/navigation";
 
 const EASE_OUT = [0.0, 0.0, 0.2, 1] as const;
 
-/* ─── BROWSER MOCKUP ─────────────────────────────────────────── */
+/* ─── ENGINEERING CARD (secondary, dark) ─────────────────────── */
 
-function ProjectMockup() {
+function EngineeringCard() {
   return (
     <div
-      aria-hidden="true"
       style={{
         width: "100%",
-        maxWidth: 400,
-        borderRadius: 10,
+        borderRadius: 8,
         overflow: "hidden",
-        boxShadow:
-          "0 24px 64px rgba(6,7,113,0.18), 0 4px 16px rgba(6,7,113,0.08)",
-        transform: "rotate(-2.5deg) translateY(-8px)",
-        backgroundColor: "#ffffff",
-        border: "1px solid rgba(6,7,113,0.08)",
+        boxShadow: "0 16px 48px rgba(6,7,113,0.28), 0 4px 12px rgba(6,7,113,0.12)",
+        border: "1px solid rgba(255,108,12,0.15)",
         userSelect: "none",
         pointerEvents: "none",
+        backgroundColor: "#07091f",
       }}
     >
-      {/* Browser chrome */}
+      {/* Nav */}
       <div
         style={{
-          height: 32,
-          backgroundColor: "#f0ece4",
-          borderBottom: "1px solid rgba(6,7,113,0.08)",
-          display: "flex",
-          alignItems: "center",
-          paddingLeft: 10,
-          gap: 5,
-          flexShrink: 0,
-        }}
-      >
-        <span
-          style={{
-            width: 8,
-            height: 8,
-            borderRadius: "50%",
-            backgroundColor: "#FF5F57",
-            display: "block",
-          }}
-        />
-        <span
-          style={{
-            width: 8,
-            height: 8,
-            borderRadius: "50%",
-            backgroundColor: "#FEBC2E",
-            display: "block",
-          }}
-        />
-        <span
-          style={{
-            width: 8,
-            height: 8,
-            borderRadius: "50%",
-            backgroundColor: "#28C840",
-            display: "block",
-          }}
-        />
-        <div
-          style={{
-            flex: 1,
-            height: 16,
-            backgroundColor: "rgba(6,7,113,0.06)",
-            borderRadius: 4,
-            marginLeft: 8,
-            marginRight: 10,
-          }}
-        />
-      </div>
-
-      {/* Site navigation */}
-      <div
-        style={{
-          height: 44,
-          backgroundColor: "#060771",
+          height: 36,
+          backgroundColor: "#05061a",
+          borderBottom: "1px solid rgba(255,108,12,0.12)",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          padding: "0 16px",
+          padding: "0 14px",
         }}
       >
-        <div
-          style={{
-            width: 72,
-            height: 10,
-            backgroundColor: "rgba(255,251,243,0.85)",
-            borderRadius: 2,
-          }}
-        />
-        <div style={{ display: "flex", gap: 10 }}>
-          {[44, 40, 44].map((w, i) => (
-            <div
-              key={i}
-              style={{
-                width: w,
-                height: 6,
-                backgroundColor: "rgba(255,251,243,0.3)",
-                borderRadius: 2,
-              }}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* Hero section */}
-      <div
-        style={{
-          backgroundColor: "#fffbf3",
-          padding: "28px 20px 20px",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        <div
-          style={{
-            fontSize: 8,
-            fontFamily: "var(--font-body)",
-            fontWeight: 600,
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-            color: "#ff6c0c",
-            marginBottom: 6,
-          }}
-        >
-          KALEİÇİ HOTEL
-        </div>
-        <div
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: 24,
-            fontWeight: 700,
-            lineHeight: 1.0,
-            letterSpacing: "-0.02em",
-            color: "#060771",
-            marginBottom: 8,
-          }}
-        >
-          200 yıllık
-          <br />
-          bir miras.
-        </div>
-        <div
-          style={{
-            width: 36,
-            height: 1.5,
-            backgroundColor: "#ff6c0c",
-            marginBottom: 8,
-          }}
-        />
-        <div style={{ display: "flex", flexDirection: "column", gap: 3, marginBottom: 14 }}>
-          {[90, 75, 60].map((w, i) => (
-            <div
-              key={i}
-              style={{
-                width: `${w}%`,
-                height: 5,
-                backgroundColor: "rgba(6,7,113,0.08)",
-                borderRadius: 2,
-              }}
-            />
-          ))}
-        </div>
-        <div
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 6,
-            backgroundColor: "#ff6c0c",
-            padding: "6px 12px",
-            fontSize: 7.5,
-            fontFamily: "var(--font-body)",
-            fontWeight: 700,
-            letterSpacing: "0.06em",
-            textTransform: "uppercase",
-            color: "#fffbf3",
-          }}
-        >
-          Rezervasyon
-          <svg
-            width="8"
-            height="8"
-            viewBox="0 0 8 8"
-            fill="none"
-            aria-hidden="true"
-          >
-            <path
-              d="M1.5 4h5M4.5 2l2 2-2 2"
-              stroke="currentColor"
-              strokeWidth="1.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </div>
-      </div>
-
-      {/* Content strip */}
-      <div
-        style={{
-          backgroundColor: "#fff7e8",
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: 1,
-          borderTop: "1px solid rgba(6,7,113,0.06)",
-        }}
-      >
-        <div style={{ padding: "14px 16px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
           <div
             style={{
               width: 16,
               height: 16,
-              backgroundColor: "rgba(6,7,113,0.08)",
+              backgroundColor: "#ff6c0c",
               borderRadius: 2,
-              marginBottom: 6,
             }}
           />
-          {[80, 60].map((w, i) => (
+          <div
+            style={{
+              width: 52,
+              height: 5,
+              backgroundColor: "rgba(255,251,243,0.7)",
+              borderRadius: 2,
+            }}
+          />
+        </div>
+        <div style={{ display: "flex", gap: 10 }}>
+          {[32, 40, 28].map((w, i) => (
             <div
               key={i}
               style={{
-                width: `${w}%`,
+                width: w,
                 height: 4,
-                backgroundColor: "rgba(6,7,113,0.07)",
-                borderRadius: 2,
-                marginBottom: 3,
+                backgroundColor: "rgba(255,251,243,0.18)",
+                borderRadius: 1,
               }}
             />
           ))}
+        </div>
+      </div>
+
+      {/* Hero content */}
+      <div
+        style={{
+          padding: "22px 18px 18px",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        {/* Subtle grid lines */}
+        {[0, 1, 2, 3].map((i) => (
+          <div
+            key={i}
+            style={{
+              position: "absolute",
+              left: `${i * 33.3}%`,
+              top: 0,
+              bottom: 0,
+              width: 1,
+              backgroundColor: "rgba(255,108,12,0.05)",
+            }}
+          />
+        ))}
+        <div
+          style={{
+            fontSize: 7.5,
+            fontFamily: "var(--font-body)",
+            fontWeight: 600,
+            letterSpacing: "0.14em",
+            textTransform: "uppercase",
+            color: "#ff6c0c",
+            marginBottom: 8,
+            position: "relative",
+          }}
+        >
+          Pi-Lot Engineering
         </div>
         <div
           style={{
-            padding: "14px 16px",
-            borderLeft: "1px solid rgba(6,7,113,0.06)",
+            fontFamily: "var(--font-display)",
+            fontSize: 20,
+            fontWeight: 700,
+            lineHeight: 1.0,
+            letterSpacing: "-0.025em",
+            color: "#fffbf3",
+            marginBottom: 4,
+            position: "relative",
           }}
         >
-          <div
-            style={{
-              width: "100%",
-              height: 40,
-              backgroundColor: "rgba(6,7,113,0.05)",
-              borderRadius: 2,
-              marginBottom: 6,
-            }}
-          />
-          {[70].map((w, i) => (
+          Precision
+          <br />
+          Engineering.
+        </div>
+        <div
+          style={{
+            width: 24,
+            height: 1.5,
+            backgroundColor: "#ff6c0c",
+            marginBottom: 10,
+            position: "relative",
+          }}
+        />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 3,
+            position: "relative",
+          }}
+        >
+          {[80, 65, 50].map((w, i) => (
             <div
               key={i}
               style={{
                 width: `${w}%`,
-                height: 4,
-                backgroundColor: "rgba(6,7,113,0.07)",
-                borderRadius: 2,
+                height: 3,
+                backgroundColor: "rgba(255,251,243,0.12)",
+                borderRadius: 1,
               }}
             />
           ))}
         </div>
+      </div>
+
+      {/* Category strip */}
+      <div
+        style={{
+          backgroundColor: "#05061a",
+          padding: "8px 14px",
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          borderTop: "1px solid rgba(255,108,12,0.1)",
+        }}
+      >
+        {["Mühendislik", "Tasarım", "Altyapı"].map((tag, i) => (
+          <span
+            key={i}
+            style={{
+              fontSize: 7,
+              fontFamily: "var(--font-body)",
+              fontWeight: 600,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              color: i === 0 ? "rgba(255,108,12,0.8)" : "rgba(255,251,243,0.25)",
+              border: `1px solid ${i === 0 ? "rgba(255,108,12,0.3)" : "rgba(255,251,243,0.08)"}`,
+              padding: "2px 6px",
+              borderRadius: 2,
+            }}
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ─── HOTEL CARD (main, premium warm) ───────────────────────── */
+
+function HotelCard() {
+  return (
+    <div
+      style={{
+        width: "100%",
+        borderRadius: 10,
+        overflow: "hidden",
+        boxShadow:
+          "0 32px 80px rgba(6,7,113,0.22), 0 8px 24px rgba(6,7,113,0.10)",
+        border: "1px solid rgba(6,7,113,0.07)",
+        userSelect: "none",
+        pointerEvents: "none",
+        backgroundColor: "#ffffff",
+      }}
+    >
+      {/* Nav */}
+      <div
+        style={{
+          height: 40,
+          backgroundColor: "rgba(255,251,243,0.97)",
+          borderBottom: "1px solid rgba(6,7,113,0.07)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0 18px",
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: 10,
+            fontWeight: 700,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            color: "#060771",
+          }}
+        >
+          KALEİÇİ
+        </div>
+        <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+          {[28, 36, 24].map((w, i) => (
+            <div
+              key={i}
+              style={{
+                width: w,
+                height: 4,
+                backgroundColor: "rgba(6,7,113,0.12)",
+                borderRadius: 1,
+              }}
+            />
+          ))}
+          <div
+            style={{
+              backgroundColor: "#ff6c0c",
+              padding: "4px 9px",
+              fontSize: 7,
+              fontFamily: "var(--font-body)",
+              fontWeight: 700,
+              letterSpacing: "0.06em",
+              textTransform: "uppercase",
+              color: "#fffbf3",
+            }}
+          >
+            Rezervasyon
+          </div>
+        </div>
+      </div>
+
+      {/* Full image hero */}
+      <div
+        style={{
+          height: 148,
+          background: "linear-gradient(155deg, #c8ad89 0%, #9e7d55 40%, #6b4f2a 100%)",
+          position: "relative",
+          overflow: "hidden",
+          display: "flex",
+          alignItems: "flex-end",
+          padding: "0 22px 18px",
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(to top, rgba(6,7,113,0.6) 0%, transparent 55%)",
+          }}
+        />
+        {/* Arch detail */}
+        <div
+          style={{
+            position: "absolute",
+            top: 18,
+            right: 22,
+            width: 36,
+            height: 54,
+            border: "1.5px solid rgba(255,251,243,0.22)",
+            borderRadius: "50% 50% 0 0 / 100% 100% 0 0",
+          }}
+        />
+        <div style={{ position: "relative" }}>
+          <div
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: 20,
+              fontWeight: 700,
+              lineHeight: 1.05,
+              letterSpacing: "-0.02em",
+              color: "#fffbf3",
+              marginBottom: 4,
+            }}
+          >
+            200 yıllık
+            <br />
+            bir miras.
+          </div>
+          <div
+            style={{ width: 22, height: 1.5, backgroundColor: "#ff6c0c" }}
+          />
+        </div>
+      </div>
+
+      {/* Room cards */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr 1fr",
+          gap: 1,
+          backgroundColor: "rgba(6,7,113,0.05)",
+        }}
+      >
+        {["Standart", "Deluxe", "Suite"].map((room, i) => (
+          <div
+            key={i}
+            style={{
+              backgroundColor: "#fffbf3",
+              padding: "10px 12px",
+            }}
+          >
+            <div
+              style={{
+                width: "100%",
+                height: 28,
+                backgroundColor:
+                  i === 2 ? "#060771" : "rgba(196,168,130,0.22)",
+                borderRadius: 2,
+                marginBottom: 5,
+              }}
+            />
+            <div
+              style={{
+                fontSize: 7.5,
+                fontFamily: "var(--font-body)",
+                fontWeight: 600,
+                color: "rgba(6,7,113,0.6)",
+                marginBottom: 3,
+              }}
+            >
+              {room}
+            </div>
+            <div
+              style={{
+                width: "65%",
+                height: 3,
+                backgroundColor: "rgba(6,7,113,0.08)",
+                borderRadius: 1,
+              }}
+            />
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -357,12 +449,6 @@ export default function Hero() {
     transition: { delay, duration: 0.7, ease: EASE_OUT },
   });
 
-  const mockupReveal = {
-    initial: shouldReduce ? {} : { opacity: 0, y: 32, scale: 0.97 },
-    animate: { opacity: 1, y: 0, scale: 1 },
-    transition: { delay: 1.1, duration: 0.8, ease: EASE_OUT },
-  };
-
   return (
     <section
       id="hero"
@@ -399,10 +485,7 @@ export default function Hero() {
             </motion.p>
 
             {/* Heading */}
-            <h1
-              aria-label={lines.join(" ")}
-              style={{ marginBottom: 28 }}
-            >
+            <h1 aria-label={lines.join(" ")} style={{ marginBottom: 28 }}>
               {lines.map((line, i) => (
                 <span
                   key={i}
@@ -492,7 +575,6 @@ export default function Hero() {
                   viewBox="0 0 13 13"
                   fill="none"
                   aria-hidden="true"
-                  className="hero-cta-arrow"
                 >
                   <path
                     d="M2 6.5h9M7.5 2.5l4 4-4 4"
@@ -546,7 +628,7 @@ export default function Hero() {
             </motion.div>
           </div>
 
-          {/* ─── RIGHT COLUMN ─────────────────────── */}
+          {/* ─── RIGHT COLUMN — Layered composition ── */}
           <div
             className="hero-right"
             aria-hidden="true"
@@ -557,83 +639,166 @@ export default function Hero() {
               justifyContent: "center",
             }}
           >
-            {/* MM background — very subtle opacity breathing */}
+            {/* Composition wrapper */}
             <div
               style={{
-                position: "absolute",
-                inset: 0,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                overflow: "hidden",
-                pointerEvents: "none",
+                position: "relative",
+                width: "100%",
+                height: 460,
               }}
             >
-              <motion.span
-                animate={
-                  shouldReduce
-                    ? {}
-                    : { opacity: [0.04, 0.065, 0.04] }
-                }
-                transition={
-                  shouldReduce
-                    ? {}
-                    : {
-                        duration: 5,
-                        ease: "easeInOut",
-                        repeat: Infinity,
-                        repeatType: "loop",
-                      }
-                }
+              {/* Giant MM watermark — cropped, breathing */}
+              <div
                 style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "clamp(180px, 22vw, 320px)",
-                  fontWeight: 700,
-                  color: "var(--color-authority)",
-                  letterSpacing: "-0.06em",
-                  lineHeight: 0.85,
-                  userSelect: "none",
-                  whiteSpace: "nowrap",
+                  position: "absolute",
+                  inset: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  overflow: "hidden",
+                  pointerEvents: "none",
                 }}
               >
-                MM
-              </motion.span>
-            </div>
+                <motion.span
+                  animate={
+                    shouldReduce
+                      ? {}
+                      : { opacity: [0.045, 0.07, 0.045] }
+                  }
+                  transition={
+                    shouldReduce
+                      ? {}
+                      : {
+                          duration: 5,
+                          ease: "easeInOut",
+                          repeat: Infinity,
+                          repeatType: "loop",
+                        }
+                  }
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "clamp(200px, 26vw, 360px)",
+                    fontWeight: 700,
+                    color: "var(--color-authority)",
+                    letterSpacing: "-0.06em",
+                    lineHeight: 0.85,
+                    userSelect: "none",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  MM
+                </motion.span>
+              </div>
 
-            {/* Floating mockup */}
-            <motion.div
-              {...mockupReveal}
-              style={{
-                position: "relative",
-                zIndex: 1,
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              {/* Subtle continuous float */}
+              {/* Secondary card — Engineering, top-left, behind */}
               <motion.div
-                animate={shouldReduce ? {} : { y: [0, -7, 0] }}
-                transition={
-                  shouldReduce
-                    ? {}
-                    : {
-                        duration: 4.5,
-                        ease: "easeInOut",
-                        repeat: Infinity,
-                        repeatType: "loop",
-                      }
-                }
+                initial={shouldReduce ? {} : { opacity: 0, scale: 0.92, y: 16 }}
+                animate={{ opacity: 0.88, scale: 1, y: 0 }}
+                transition={{ delay: 0.85, duration: 0.9, ease: EASE_OUT }}
+                style={{
+                  position: "absolute",
+                  top: "6%",
+                  left: "0%",
+                  width: "56%",
+                  zIndex: 1,
+                  transform: "rotate(2.8deg)",
+                }}
               >
-                <ProjectMockup />
+                <motion.div
+                  animate={shouldReduce ? {} : { y: [0, -5, 0] }}
+                  transition={
+                    shouldReduce
+                      ? {}
+                      : {
+                          duration: 5.8,
+                          ease: "easeInOut",
+                          repeat: Infinity,
+                          repeatType: "loop",
+                        }
+                  }
+                >
+                  <EngineeringCard />
+                </motion.div>
               </motion.div>
-            </motion.div>
+
+              {/* Main card — Hotel, center-right, front */}
+              <motion.div
+                initial={shouldReduce ? {} : { opacity: 0, y: 32, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ delay: 1.1, duration: 0.8, ease: EASE_OUT }}
+                style={{
+                  position: "absolute",
+                  bottom: "4%",
+                  right: "0%",
+                  width: "78%",
+                  zIndex: 2,
+                  transform: "rotate(-2deg)",
+                }}
+              >
+                <motion.div
+                  animate={shouldReduce ? {} : { y: [0, -7, 0] }}
+                  transition={
+                    shouldReduce
+                      ? {}
+                      : {
+                          duration: 4.5,
+                          ease: "easeInOut",
+                          repeat: Infinity,
+                          repeatType: "loop",
+                        }
+                  }
+                >
+                  <HotelCard />
+                </motion.div>
+              </motion.div>
+
+              {/* MM brand mark — subtle corner signature */}
+              <motion.div
+                initial={shouldReduce ? {} : { opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.6, duration: 0.6, ease: EASE_OUT }}
+                style={{
+                  position: "absolute",
+                  bottom: "1%",
+                  left: "2%",
+                  zIndex: 3,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
+                }}
+              >
+                <div
+                  style={{
+                    width: 2,
+                    height: 24,
+                    backgroundColor: "var(--color-action)",
+                    borderRadius: 1,
+                    opacity: 0.7,
+                  }}
+                />
+                <span
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: 11,
+                    fontWeight: 700,
+                    letterSpacing: "0.04em",
+                    color: "var(--color-text-tertiary)",
+                  }}
+                >
+                  MMDESIGN
+                </span>
+              </motion.div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Scroll indicator */}
-      <motion.div {...fadeUp(1.4)}>
+      <motion.div
+        initial={shouldReduce ? {} : { opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.6, duration: 0.5, ease: EASE_OUT }}
+      >
         <ScrollIndicator label={t("scrollLabel")} shouldReduce={shouldReduce} />
       </motion.div>
     </section>
