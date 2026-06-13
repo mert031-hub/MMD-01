@@ -988,8 +988,32 @@ function TranslatedProjectSpread({
         borderTop: "1px solid var(--color-border)",
         paddingTop: 80,
         paddingBottom: 80,
+        position: "relative",
+        overflow: "hidden",
       }}
     >
+      {/* Editorial background number */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          top: "50%",
+          [reversed ? "left" : "right"]: "-1%",
+          transform: "translateY(-50%)",
+          fontFamily: "var(--font-display)",
+          fontSize: "clamp(140px, 18vw, 260px)",
+          fontWeight: 700,
+          color: "rgba(6,7,113,0.028)",
+          letterSpacing: "-0.05em",
+          lineHeight: 1,
+          userSelect: "none",
+          pointerEvents: "none",
+          zIndex: 0,
+        }}
+      >
+        {String(index + 1).padStart(2, "0")}
+      </div>
+
       <div
         className="project-spread-grid"
         style={{
@@ -997,6 +1021,8 @@ function TranslatedProjectSpread({
           gridTemplateColumns: reversed ? "4fr 5fr" : "5fr 4fr",
           gap: "48px 64px",
           alignItems: "center",
+          position: "relative",
+          zIndex: 1,
         }}
       >
         {reversed ? (

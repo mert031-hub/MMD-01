@@ -268,9 +268,30 @@ export default async function CaseStudyPage({ params }: Props) {
       {/* Challenge + Approach */}
       <section
         className="section-padding"
-        style={{ backgroundColor: "var(--color-bg-primary)" }}
+        style={{ backgroundColor: "var(--color-bg-primary)", position: "relative", overflow: "hidden" }}
       >
-        <div className="container-site">
+        {/* Background chapter watermark */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            right: "-2%",
+            top: "50%",
+            transform: "translateY(-50%)",
+            fontFamily: "var(--font-display)",
+            fontSize: "clamp(160px, 20vw, 300px)",
+            fontWeight: 700,
+            color: "rgba(6,7,113,0.025)",
+            letterSpacing: "-0.05em",
+            lineHeight: 1,
+            userSelect: "none",
+            pointerEvents: "none",
+          }}
+        >
+          01
+        </div>
+
+        <div className="container-site" style={{ position: "relative" }}>
           <div className="case-grid">
             <div>
               <p

@@ -194,6 +194,7 @@ export default function WorkIndexList({ projects }: Props) {
               display: "block",
               textDecoration: "none",
               borderBottom: "1px solid var(--color-border)",
+              position: "relative",
             }}
             className="work-index-row"
             onMouseEnter={() => {
@@ -202,6 +203,21 @@ export default function WorkIndexList({ projects }: Props) {
             }}
             onMouseLeave={() => setActiveSlug(null)}
           >
+            {/* Left accent bar — grows on hover */}
+            <span
+              className="work-index-accent"
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                left: 0,
+                top: 0,
+                bottom: 0,
+                width: 2,
+                backgroundColor: "#ff6c0c",
+                transformOrigin: "top",
+              }}
+            />
+
             <div
               style={{
                 display: "flex",
@@ -210,8 +226,11 @@ export default function WorkIndexList({ projects }: Props) {
                 gap: 32,
                 paddingTop: 40,
                 paddingBottom: 40,
+                paddingLeft: 0,
                 flexWrap: "wrap",
+                transition: "padding-left 280ms cubic-bezier(0,0,0.2,1)",
               }}
+              className="work-index-inner"
             >
               <div style={{ flex: 1, minWidth: 0 }}>
                 <p
@@ -229,6 +248,7 @@ export default function WorkIndexList({ projects }: Props) {
                     color: "var(--color-text-primary)",
                     marginBottom: 12,
                     fontFamily: "var(--font-display)",
+                    transition: "color 200ms ease",
                   }}
                 >
                   {project.name}
@@ -280,7 +300,17 @@ export default function WorkIndexList({ projects }: Props) {
           align-items: start;
         }
         .work-index-preview-col {
-          padding-top: 1px; /* align with top border */
+          padding-top: 1px;
+        }
+        .work-index-accent {
+          transform: scaleY(0);
+          transition: transform 320ms cubic-bezier(0,0,0.2,1);
+        }
+        .work-index-row:hover .work-index-accent {
+          transform: scaleY(1);
+        }
+        .work-index-row:hover .work-index-inner {
+          padding-left: 16px !important;
         }
         .work-index-row:hover .work-index-arrow {
           transform: translateX(6px);

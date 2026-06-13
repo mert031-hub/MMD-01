@@ -817,11 +817,27 @@ export default function Hero() {
         </div>
       </div>
 
+      {/* Depth gradient — softens the hero-to-content transition */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: 120,
+          background: "linear-gradient(to bottom, transparent 0%, rgba(255,251,243,0.6) 100%)",
+          pointerEvents: "none",
+          zIndex: 1,
+        }}
+      />
+
       {/* Scroll indicator */}
       <motion.div
         initial={shouldReduce ? {} : { opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.6, duration: 0.5, ease: EASE_OUT }}
+        style={{ zIndex: 2, position: "relative" }}
       >
         <ScrollIndicator label={t("scrollLabel")} shouldReduce={shouldReduce} />
       </motion.div>
