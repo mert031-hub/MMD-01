@@ -5,7 +5,9 @@ import { motion, useMotionValue, useSpring, useReducedMotion } from "framer-moti
 import { useLocale } from "next-intl";
 
 type CursorState = "default" | "link" | "button" | "project";
+type CursorTheme = "light" | "dark";
 
+// ── Pointer detection (same pattern as MagneticButton) ───────────
 function subscribePointerFine(cb: () => void) {
   const mq = window.matchMedia("(pointer: fine)");
   mq.addEventListener("change", cb);
@@ -13,6 +15,38 @@ function subscribePointerFine(cb: () => void) {
 }
 const getPointerFineSnapshot = () => window.matchMedia("(pointer: fine)").matches;
 const getPointerFineServerSnapshot = () => false;
+
+// ── Background luminance detection ───────────────────────────────
+function getEffectiveBg(el: Element | null): string {
+  let node: Element | null = el;
+  while (node && node !== document.documentElement) {
+    const bg = window.getComputedStyle(node).backgroundColor;
+    if (bg && bg !== "rgba(0, 0, 0, 0)" && bg !== "transparent") return bg;
+    node = node.parentElement;
+  }
+  return "rgb(255, 251, 243)";
+}
+
+function isBgDark(rgb: string): boolean {
+  const m = rgb.match(/[\d.]+/g);
+  if (!m || m.length < 3) return false;
+  const r = +m[0], g = +m[1], b = +m[2];
+  // ITU-R BT.709 relative luminance
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b < 140;
+}
+
+// ── Color palette (raw values so Framer can interpolate) ─────────
+const COLORS = {
+  // Light sections (cream bg)
+  dotLight: "#060771",
+  ringLight: "#060771",
+  // Dark sections (navy bg)
+  dotDark: "rgba(255,251,243,0.95)",
+  ringDark: "rgba(255,251,243,0.65)",
+  // Project hover — always orange
+  ringProject: "#ff6c0c",
+  labelProject: "#ff6c0c",
+} as const;
 
 export default function CustomCursor() {
   const shouldReduce = useReducedMotion() ?? false;
@@ -26,11 +60,14 @@ export default function CustomCursor() {
 
   const [cursorState, setCursorState] = useState<CursorState>("default");
   const [isVisible, setIsVisible] = useState(false);
+  const [theme, setTheme] = useState<CursorTheme>("light");
+
   const isVisibleRef = useRef(false);
+  const themeRef = useRef<CursorTheme>("light");
+  const lastThemeCheckRef = useRef(0);
 
   const mouseX = useMotionValue(-200);
   const mouseY = useMotionValue(-200);
-
   const ringX = useSpring(mouseX, { stiffness: 180, damping: 28, mass: 0.6 });
   const ringY = useSpring(mouseY, { stiffness: 180, damping: 28, mass: 0.6 });
 
@@ -43,11 +80,13 @@ export default function CustomCursor() {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
 
+      // Visibility
       if (!isVisibleRef.current) {
         isVisibleRef.current = true;
         setIsVisible(true);
       }
 
+      // Cursor state (interactive element type)
       const target = e.target as Element;
       if (target.closest(".work-index-row")) {
         setCursorState("project");
@@ -58,17 +97,22 @@ export default function CustomCursor() {
       } else {
         setCursorState("default");
       }
+
+      // Theme detection — throttled to ~8fps (120ms) for performance
+      const now = Date.now();
+      if (now - lastThemeCheckRef.current > 120) {
+        lastThemeCheckRef.current = now;
+        const el = document.elementFromPoint(e.clientX, e.clientY);
+        const newTheme: CursorTheme = isBgDark(getEffectiveBg(el)) ? "dark" : "light";
+        if (newTheme !== themeRef.current) {
+          themeRef.current = newTheme;
+          setTheme(newTheme);
+        }
+      }
     };
 
-    const onLeave = () => {
-      isVisibleRef.current = false;
-      setIsVisible(false);
-    };
-
-    const onEnter = () => {
-      isVisibleRef.current = true;
-      setIsVisible(true);
-    };
+    const onLeave = () => { isVisibleRef.current = false; setIsVisible(false); };
+    const onEnter = () => { isVisibleRef.current = true; setIsVisible(true); };
 
     window.addEventListener("mousemove", onMove);
     document.documentElement.addEventListener("mouseleave", onLeave);
@@ -90,13 +134,23 @@ export default function CustomCursor() {
     : cursorState === "link" ? 34
     : 26;
 
+  const dotColor = theme === "dark" ? COLORS.dotDark : COLORS.dotLight;
+  const ringColor =
+    cursorState === "project"
+      ? COLORS.ringProject
+      : theme === "dark"
+      ? COLORS.ringDark
+      : COLORS.ringLight;
+
   const viewLabel = locale === "tr" ? "Gör" : "View";
 
   return (
     <>
-      {/* Dot — follows cursor instantly */}
+      {/* Dot — follows cursor instantly, color-aware */}
       <motion.div
         aria-hidden="true"
+        animate={{ backgroundColor: dotColor }}
+        transition={{ duration: 0.35, ease: [0, 0, 0.2, 1] }}
         style={{
           x: mouseX,
           y: mouseY,
@@ -108,7 +162,6 @@ export default function CustomCursor() {
           width: 5,
           height: 5,
           borderRadius: "50%",
-          backgroundColor: "var(--color-authority)",
           pointerEvents: "none",
           zIndex: 10000,
           opacity: isVisible ? 1 : 0,
@@ -116,19 +169,16 @@ export default function CustomCursor() {
         }}
       />
 
-      {/* Ring — spring lag */}
+      {/* Ring — spring lag, color-aware */}
       <motion.div
         aria-hidden="true"
         animate={{
           width: ringSize,
           height: ringSize,
-          opacity: isVisible ? (cursorState === "default" ? 0.5 : 0.8) : 0,
-          borderColor:
-            cursorState === "project"
-              ? "var(--color-action)"
-              : "var(--color-authority)",
+          opacity: isVisible ? (cursorState === "default" ? 0.55 : 0.85) : 0,
+          borderColor: ringColor,
         }}
-        transition={{ duration: 0.18, ease: [0, 0, 0.2, 1] }}
+        transition={{ duration: 0.28, ease: [0, 0, 0.2, 1] }}
         style={{
           x: ringX,
           y: ringY,
@@ -138,7 +188,7 @@ export default function CustomCursor() {
           top: 0,
           left: 0,
           borderRadius: "50%",
-          border: "1.5px solid var(--color-authority)",
+          border: "1.5px solid",
           pointerEvents: "none",
           zIndex: 9999,
           display: "flex",
@@ -146,7 +196,6 @@ export default function CustomCursor() {
           justifyContent: "center",
         }}
       >
-        {/* "View"/"Gör" label inside ring on project rows */}
         {cursorState === "project" && (
           <motion.span
             initial={{ opacity: 0, scale: 0.7 }}
@@ -159,7 +208,7 @@ export default function CustomCursor() {
               fontWeight: 700,
               letterSpacing: "0.1em",
               textTransform: "uppercase",
-              color: "var(--color-action)",
+              color: COLORS.labelProject,
               userSelect: "none",
               whiteSpace: "nowrap",
             }}
