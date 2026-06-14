@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import { useReducedMotion } from "framer-motion";
-import { useTranslations } from "next-intl";
-import SectionHeader from "@/components/ui/SectionHeader";
+import React, { useState } from "react";
+import { useReducedMotion, motion } from "framer-motion";
+import { useTranslations, useLocale } from "next-intl";
 
 type CapabilityKey =
   | "websiteDesign"
@@ -24,343 +23,135 @@ const CAPABILITY_KEYS: CapabilityKey[] = [
   "digitalConsulting",
 ];
 
-const CAPABILITY_ICONS: Record<CapabilityKey, React.ReactNode> = {
-  websiteDesign: (
-    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-      <rect x="2" y="3" width="16" height="11" rx="1.5" stroke="currentColor" strokeWidth="1.4"/>
-      <path d="M6.5 17.5h7M10 14.5v3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
-      <path d="M5 7.5h5M5 10h7" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeOpacity="0.45"/>
-    </svg>
-  ),
-  brandExperience: (
-    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-      <path d="M10 2l2.2 5h5L13.5 10l1.8 5L10 12.5 4.7 15l1.8-5L2.8 7h5z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/>
-    </svg>
-  ),
-  conversionOptimization: (
-    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-      <path d="M3 14L7.5 8.5l3.5 3.5L16 6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
-      <path d="M13 6h3v3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
-      <path d="M3 17.5h14" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeOpacity="0.4"/>
-    </svg>
-  ),
-  uiSystems: (
-    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-      <rect x="2.5" y="2.5" width="6" height="6" rx="1" stroke="currentColor" strokeWidth="1.4"/>
-      <rect x="11.5" y="2.5" width="6" height="6" rx="1" stroke="currentColor" strokeWidth="1.4"/>
-      <rect x="2.5" y="11.5" width="6" height="6" rx="1" stroke="currentColor" strokeWidth="1.4"/>
-      <rect x="11.5" y="11.5" width="6" height="6" rx="1" stroke="currentColor" strokeWidth="1.4"/>
-    </svg>
-  ),
-  performance: (
-    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-      <path d="M11 2.5L4.5 11h6l-2 6.5L17 9h-6z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/>
-    </svg>
-  ),
-  seoFoundations: (
-    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-      <circle cx="9" cy="9" r="5.5" stroke="currentColor" strokeWidth="1.4"/>
-      <path d="M13.5 13.5l3.5 3.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
-    </svg>
-  ),
-  digitalConsulting: (
-    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-      <circle cx="10" cy="10" r="7" stroke="currentColor" strokeWidth="1.4"/>
-      <path d="M10 3.5v3M10 13.5v3M3.5 10h3M13.5 10h3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeOpacity="0.45"/>
-      <circle cx="10" cy="10" r="1.5" fill="currentColor"/>
-    </svg>
-  ),
-};
+/* ─── MM Orbit System ──────────────────────────────────────────────── */
 
-// Orange scatter dots: [x, y, size, opacity] — offsets from MM circle center
-const MM_SCATTER: Array<[number, number, number, number]> = [
-  // Left cluster
-  [-108, -52, 7, 0.95],
-  [-92, 22, 5, 0.80],
-  [-80, -88, 4, 0.68],
-  [-125, 40, 3.5, 0.58],
-  [-70, 68, 3, 0.50],
-  [-145, -5, 2.5, 0.40],
-  [-55, -112, 2, 0.35],
-  [-118, -78, 2, 0.30],
-  // Right cluster (mirrored)
-  [108, -52, 7, 0.95],
-  [92, 22, 5, 0.80],
-  [80, -88, 4, 0.68],
-  [125, 40, 3.5, 0.58],
-  [70, 68, 3, 0.50],
-  [145, -5, 2.5, 0.40],
-  [55, -112, 2, 0.35],
-  [118, -78, 2, 0.30],
-  // Top arc
-  [0, -128, 4, 0.62],
-  [-35, -118, 2.5, 0.40],
-  [35, -118, 2.5, 0.40],
-  [-62, -105, 1.5, 0.28],
-  [62, -105, 1.5, 0.28],
-  // Bottom arc
-  [0, 98, 3, 0.48],
-  [-22, 92, 2, 0.33],
-  [22, 92, 2, 0.33],
+const SZ = 280;
+const C = SZ / 2;
+
+const RING_DEFS = [
+  { r: 52, dur: 20, rev: false, stroke: "rgba(6,7,113,0.09)", dash: undefined },
+  { r: 84, dur: 36, rev: true,  stroke: "rgba(255,108,12,0.10)", dash: "4 9" },
+  { r: 116, dur: 60, rev: false, stroke: "rgba(6,7,113,0.05)", dash: "2 12" },
+] as const;
+
+const NODE_DEFS = [
+  { ring: 0, angle: 60,  size: 7, glow: true },
+  { ring: 0, angle: 228, size: 4.5, glow: false },
+  { ring: 1, angle: 138, size: 6, glow: true },
+  { ring: 1, angle: 318, size: 3.5, glow: false },
+  { ring: 2, angle: 78,  size: 5, glow: true },
+  { ring: 2, angle: 252, size: 3, glow: false },
 ];
 
-function CapabilityCard({
-  number,
-  title,
-  descriptor,
-  icon,
-  delayMs,
-  shouldReduce,
-}: {
-  number: string;
-  title: string;
-  descriptor: string;
-  icon: React.ReactNode;
-  delayMs: number;
-  shouldReduce: boolean;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [entered, setEntered] = useState(shouldReduce);
-  const [hovered, setHovered] = useState(false);
+const SCATTER = [
+  { x: -142, y: -52,  s: 2.5, op: 0.38, d: 0    },
+  { x:  138, y:  38,  s: 2,   op: 0.30, d: 0.9  },
+  { x: -108, y:  98,  s: 1.5, op: 0.24, d: 1.7  },
+  { x:  110, y: -88,  s: 2,   op: 0.32, d: 0.4  },
+  { x:  -72, y: -120, s: 1.5, op: 0.22, d: 2.2  },
+  { x:  118, y:  82,  s: 1.5, op: 0.26, d: 1.1  },
+  { x:  -40, y:  138, s: 2,   op: 0.19, d: 3.0  },
+  { x:   52, y: -140, s: 1.5, op: 0.23, d: 1.8  },
+];
 
-  useEffect(() => {
-    if (shouldReduce) return;
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setEntered(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [shouldReduce]);
-
-  return (
-    <div
-      ref={ref}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        backgroundColor: "#ffffff",
-        borderRadius: 14,
-        borderTop: "1px solid rgba(6,7,113,0.09)",
-        borderRight: "1px solid rgba(6,7,113,0.09)",
-        borderBottom: "1px solid rgba(6,7,113,0.09)",
-        borderLeft: "3px solid #ff6c0c",
-        boxShadow: hovered
-          ? "0 6px 24px rgba(6,7,113,0.09)"
-          : "0 2px 8px rgba(6,7,113,0.04)",
-        padding: "18px 18px 14px",
-        display: "flex",
-        flexDirection: "column",
-        gap: 9,
-        opacity: entered ? 1 : 0,
-        transform: entered ? "translateY(0)" : "translateY(14px)",
-        transition: shouldReduce
-          ? "none"
-          : `opacity 480ms ease ${delayMs}ms, transform 480ms ease ${delayMs}ms, box-shadow 200ms ease`,
-      }}
-    >
-      {/* Top row: icon circle + number */}
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
-        <div
-          style={{
-            width: 44,
-            height: 44,
-            borderRadius: "50%",
-            backgroundColor: hovered ? "rgba(255,108,12,0.09)" : "#fdf8f0",
-            border: "1px solid rgba(6,7,113,0.07)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexShrink: 0,
-            color: hovered ? "#ff6c0c" : "var(--color-authority)",
-            transition: "background-color 200ms ease, color 200ms ease",
-          }}
-        >
-          {icon}
-        </div>
-        <span
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: 11,
-            fontWeight: 700,
-            letterSpacing: "0.07em",
-            color: "#ff6c0c",
-            paddingTop: 3,
-          }}
-        >
-          {number}
-        </span>
-      </div>
-
-      {/* Title */}
-      <p
-        style={{
-          fontFamily: "var(--font-body)",
-          fontWeight: 700,
-          fontSize: "clamp(13px, 0.95vw, 15px)",
-          color: hovered ? "#ff6c0c" : "var(--color-authority)",
-          margin: 0,
-          lineHeight: 1.3,
-          transition: "color 200ms ease",
-        }}
-      >
-        {title}
-      </p>
-
-      {/* Description */}
-      <p
-        style={{
-          fontFamily: "var(--font-body)",
-          fontWeight: 400,
-          fontSize: 12,
-          lineHeight: 1.58,
-          color: "rgba(6,7,113,0.48)",
-          margin: 0,
-          flex: 1,
-        }}
-      >
-        {descriptor}
-      </p>
-
-      {/* Arrow */}
-      <div style={{ textAlign: "right", marginTop: 2 }}>
-        <span
-          style={{
-            display: "inline-block",
-            fontSize: 14,
-            color: "#ff6c0c",
-            opacity: hovered ? 1 : 0.45,
-            transform: hovered ? "translateX(3px)" : "translateX(0)",
-            transition: "opacity 200ms ease, transform 200ms ease",
-          }}
-        >
-          →
-        </span>
-      </div>
-    </div>
-  );
+function nodePos(angle: number, r: number, size: number) {
+  const rad = (angle * Math.PI) / 180;
+  return { left: r + r * Math.cos(rad) - size / 2, top: r - r * Math.sin(rad) - size / 2 };
 }
 
-function CenterMM() {
-  const CONNECTOR_Y_OFFSETS = [-5, 0, 5] as const;
-  const CONNECTOR_DOT_COUNT = 8;
-
+function MMOrbitSystem({ shouldReduce }: { shouldReduce: boolean }) {
   return (
-    <div
-      aria-hidden="true"
-      style={{
-        position: "relative",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        minHeight: 320,
-      }}
-    >
-      {/* Dots and connectors layer — overflow visible so dots bleed into card columns */}
+    <div style={{ position: "relative", width: SZ, height: SZ, margin: "auto" }} aria-hidden="true">
+      {/* Static SVG rings */}
+      <svg
+        style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
+        width={SZ} height={SZ}
+        viewBox={`0 0 ${SZ} ${SZ}`}
+        fill="none"
+      >
+        {RING_DEFS.map(({ r, stroke, dash }, i) => (
+          <circle key={i} cx={C} cy={C} r={r} stroke={stroke} strokeWidth="1" strokeDasharray={dash} />
+        ))}
+        {/* Subtle cross-tick at center */}
+        <line x1={C - 18} y1={C} x2={C + 18} y2={C} stroke="rgba(6,7,113,0.04)" strokeWidth="1" />
+        <line x1={C} y1={C - 18} x2={C} y2={C + 18} stroke="rgba(6,7,113,0.04)" strokeWidth="1" />
+      </svg>
+
+      {/* Animated rings + nodes */}
+      {RING_DEFS.map(({ r, dur, rev }, ri) => (
+        <div
+          key={ri}
+          style={{
+            position: "absolute",
+            width: r * 2, height: r * 2,
+            top: C - r, left: C - r,
+            ...(shouldReduce ? {} : {
+              animation: `capOrbit${rev ? "Rev" : ""} ${dur}s linear infinite`,
+            }),
+            pointerEvents: "none",
+          }}
+        >
+          {NODE_DEFS.filter(n => n.ring === ri).map((nd, ni) => {
+            const pos = nodePos(nd.angle, r, nd.size);
+            return (
+              <div
+                key={ni}
+                style={{
+                  position: "absolute",
+                  width: nd.size, height: nd.size,
+                  left: pos.left, top: pos.top,
+                  borderRadius: "50%",
+                  backgroundColor: "#ff6c0c",
+                  opacity: nd.glow ? 1 : 0.52,
+                  boxShadow: nd.glow
+                    ? "0 0 8px rgba(255,108,12,0.7), 0 0 20px rgba(255,108,12,0.28)"
+                    : "none",
+                  ...(nd.glow && !shouldReduce
+                    ? { animation: "capNodePulse 2.6s ease-in-out infinite" }
+                    : {}),
+                }}
+              />
+            );
+          })}
+        </div>
+      ))}
+
+      {/* Scatter particles */}
+      {!shouldReduce && SCATTER.map((sc, i) => (
+        <div
+          key={i}
+          style={{
+            position: "absolute",
+            left: C + sc.x - sc.s / 2,
+            top: C + sc.y - sc.s / 2,
+            width: sc.s, height: sc.s,
+            borderRadius: "50%",
+            backgroundColor: "#ff6c0c",
+            opacity: sc.op,
+            animation: `capScatter ${3.2 + (i % 4) * 0.9}s ease-in-out ${sc.d}s infinite`,
+            pointerEvents: "none",
+          }}
+        />
+      ))}
+
+      {/* MM circle */}
       <div
         style={{
           position: "absolute",
-          inset: 0,
-          overflow: "visible",
-          pointerEvents: "none",
-          zIndex: 1,
-        }}
-      >
-        {/* Orange scatter dots */}
-        {MM_SCATTER.map(([x, y, size, opacity], i) => (
-          <div
-            key={i}
-            style={{
-              position: "absolute",
-              left: "50%",
-              top: "50%",
-              width: size,
-              height: size,
-              marginLeft: x - size / 2,
-              marginTop: y - size / 2,
-              borderRadius: "50%",
-              backgroundColor: "#ff6c0c",
-              opacity,
-            }}
-          />
-        ))}
-
-        {/* Left connector dots — fade in toward MM */}
-        {CONNECTOR_Y_OFFSETS.map((yOff) =>
-          Array.from({ length: CONNECTOR_DOT_COUNT }).map((_, j) => (
-            <div
-              key={`lc-${yOff}-${j}`}
-              style={{
-                position: "absolute",
-                left: "50%",
-                top: "50%",
-                width: 2,
-                height: 2,
-                borderRadius: "50%",
-                backgroundColor: "rgba(6,7,113,0.22)",
-                marginLeft: -(70 + j * 10) - 1,
-                marginTop: yOff - 1,
-                opacity: 0.25 + (j / (CONNECTOR_DOT_COUNT - 1)) * 0.55,
-              }}
-            />
-          ))
-        )}
-
-        {/* Right connector dots — fade out away from MM */}
-        {CONNECTOR_Y_OFFSETS.map((yOff) =>
-          Array.from({ length: CONNECTOR_DOT_COUNT }).map((_, j) => (
-            <div
-              key={`rc-${yOff}-${j}`}
-              style={{
-                position: "absolute",
-                left: "50%",
-                top: "50%",
-                width: 2,
-                height: 2,
-                borderRadius: "50%",
-                backgroundColor: "rgba(6,7,113,0.22)",
-                marginLeft: 69 + j * 10 - 1,
-                marginTop: yOff - 1,
-                opacity: 0.25 + ((CONNECTOR_DOT_COUNT - 1 - j) / (CONNECTOR_DOT_COUNT - 1)) * 0.55,
-              }}
-            />
-          ))
-        )}
-      </div>
-
-      {/* MM Circle */}
-      <div
-        style={{
-          width: 130,
-          height: 130,
-          borderRadius: "50%",
+          left: C - 38, top: C - 38,
+          width: 76, height: 76, borderRadius: "50%",
           backgroundColor: "var(--color-authority)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          position: "relative",
+          display: "flex", alignItems: "center", justifyContent: "center",
           zIndex: 2,
-          flexShrink: 0,
           boxShadow:
-            "0 4px 28px rgba(6,7,113,0.24), 0 0 0 8px rgba(6,7,113,0.055), 0 0 0 18px rgba(6,7,113,0.025)",
+            "0 4px 24px rgba(6,7,113,0.20), 0 0 0 7px rgba(6,7,113,0.055), 0 0 0 16px rgba(6,7,113,0.022)",
         }}
       >
-        <span
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: 30,
-            fontWeight: 700,
-            color: "rgba(255,251,243,0.92)",
-            letterSpacing: "0.02em",
-          }}
-        >
+        <span style={{
+          fontFamily: "var(--font-display)",
+          fontSize: 20, fontWeight: 700,
+          color: "rgba(255,251,243,0.92)", letterSpacing: "0.03em",
+        }}>
           MM
         </span>
       </div>
@@ -368,144 +159,322 @@ function CenterMM() {
   );
 }
 
+/* ─── Service panel row ────────────────────────────────────────────── */
+
+function ServiceRow({
+  number,
+  title,
+  isLast,
+  shouldReduce,
+}: {
+  number: string;
+  title: string;
+  isLast: boolean;
+  shouldReduce: boolean;
+}) {
+  const [hov, setHov] = useState(false);
+
+  return (
+    <div
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        display: "flex", alignItems: "center", gap: 14,
+        padding: "13px 22px 13px 18px",
+        borderBottom: isLast ? "none" : "1px solid rgba(6,7,113,0.052)",
+        backgroundColor: hov && !shouldReduce ? "rgba(255,108,12,0.030)" : "transparent",
+        transition: "background-color 160ms ease",
+        cursor: "default", position: "relative",
+      }}
+    >
+      {/* Left accent bar */}
+      <div style={{
+        position: "absolute", left: 0, top: 0, bottom: 0, width: 2.5,
+        backgroundColor: "#ff6c0c",
+        transform: hov && !shouldReduce ? "scaleY(1)" : "scaleY(0)",
+        transformOrigin: "center",
+        transition: "transform 150ms ease",
+      }} />
+
+      {/* Number */}
+      <span style={{
+        fontFamily: "var(--font-display)", fontSize: 10, fontWeight: 700,
+        letterSpacing: "0.09em",
+        color: hov ? "#ff6c0c" : "rgba(255,108,12,0.40)",
+        width: 16, flexShrink: 0, transition: "color 150ms ease",
+      }}>
+        {number}
+      </span>
+
+      {/* Pip divider */}
+      <div style={{ width: 1, height: 13, backgroundColor: "rgba(6,7,113,0.08)", flexShrink: 0 }} />
+
+      {/* Title */}
+      <span style={{
+        fontFamily: "var(--font-body)", fontSize: 13.5,
+        fontWeight: hov ? 600 : 500,
+        color: hov ? "var(--color-authority)" : "rgba(6,7,113,0.58)",
+        flex: 1, transition: "color 150ms ease, font-weight 0ms",
+        letterSpacing: "-0.008em",
+      }}>
+        {title}
+      </span>
+
+      {/* Arrow */}
+      <span style={{
+        fontSize: 11, color: "#ff6c0c", flexShrink: 0,
+        opacity: hov && !shouldReduce ? 0.75 : 0,
+        transform: hov && !shouldReduce ? "translateX(0)" : "translateX(-5px)",
+        transition: "opacity 150ms ease, transform 150ms ease",
+      }}>
+        →
+      </span>
+    </div>
+  );
+}
+
+/* ─── Main export ──────────────────────────────────────────────────── */
+
 export default function Capabilities() {
   const t = useTranslations("capabilities");
+  const locale = useLocale();
   const shouldReduce = useReducedMotion() ?? false;
 
-  const leftKeys = CAPABILITY_KEYS.slice(0, 4);
-  const rightKeys = CAPABILITY_KEYS.slice(4);
+  const E = [0, 0, 0.2, 1] as const;
+  const vp = { once: true as const, margin: "-60px" as const };
+
+  const metrics = [
+    { value: "20+",  label: locale === "tr" ? "Proje"        : "Projects"      },
+    { value: "5+",   label: locale === "tr" ? "Sektör"       : "Industries"    },
+    { value: "100%", label: locale === "tr" ? "Mobil Uyumlu" : "Mobile Ready"  },
+    { value: "<24h", label: locale === "tr" ? "Yanıt Süresi" : "Response Time" },
+  ];
 
   return (
     <>
       <style>{`
-        @media (max-width: 1023px) {
-          .cap-desktop-grid { display: none !important; }
-          .cap-mobile-stack { display: flex !important; }
+        @keyframes capOrbit    { from { transform: rotate(0deg);   } to { transform: rotate(360deg);  } }
+        @keyframes capOrbitRev { from { transform: rotate(0deg);   } to { transform: rotate(-360deg); } }
+        @keyframes capNodePulse {
+          0%, 100% { box-shadow: 0 0 8px rgba(255,108,12,0.65), 0 0 18px rgba(255,108,12,0.22); }
+          50%      { box-shadow: 0 0 14px rgba(255,108,12,0.92), 0 0 32px rgba(255,108,12,0.45); }
+        }
+        @keyframes capScatter {
+          0%, 100% { transform: translate(0, 0)    scale(1);    }
+          42%      { transform: translate(4px, -6px) scale(1.28); }
+          72%      { transform: translate(-3px, 4px) scale(0.82); }
+        }
+        .cap-3col {
+          display: grid;
+          grid-template-columns: minmax(220px, 360px) 1fr minmax(260px, 420px);
+          gap: 0 44px;
+          align-items: center;
+        }
+        .cap-metrics {
+          display: flex;
+          align-items: center;
+        }
+        @media (max-width: 1100px) {
+          .cap-3col { grid-template-columns: 1fr !important; }
+          .cap-mm-col { display: none !important; }
+        }
+        @media (max-width: 600px) {
+          .cap-metrics { flex-wrap: wrap; }
+          .cap-metrics-item { min-width: 50% !important; border-right: none !important; }
         }
       `}</style>
 
       <section
         id="hizmetler"
-        aria-label="Hizmetler ve Yetenekler"
+        aria-label="Hizmetler"
         className="section-padding"
-        style={{
-          backgroundColor: "var(--color-bg-surface)",
-          position: "relative",
-          overflow: "hidden",
-        }}
+        style={{ backgroundColor: "var(--color-bg-surface)", overflow: "hidden" }}
       >
-        <div className="container-site" style={{ position: "relative", zIndex: 1 }}>
-          <SectionHeader
-            number={t("sectionNumber")}
-            title={t("sectionTitle")}
-            descriptor={t("sectionDescriptor")}
-          />
+        <div className="container-site">
 
-          {/* Desktop: 3-column card grid with center MM */}
-          <div
-            className="cap-desktop-grid"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 180px 1fr",
-              gap: "0 20px",
-              alignItems: "center",
-            }}
+          {/* ── Section label ── */}
+          <motion.div
+            initial={shouldReduce ? {} : { opacity: 0, x: -10 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={vp}
+            transition={{ duration: 0.5, ease: E }}
+            style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 44 }}
           >
-            {/* Left column — 4 cards */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              {leftKeys.map((key, i) => {
-                const item = t.raw(`items.${key}`) as {
-                  number: string;
-                  title: string;
-                  descriptor: string;
-                };
-                return (
-                  <CapabilityCard
-                    key={key}
-                    number={item.number}
-                    title={item.title}
-                    descriptor={item.descriptor}
-                    icon={CAPABILITY_ICONS[key]}
-                    delayMs={i * 60}
-                    shouldReduce={shouldReduce}
-                  />
-                );
-              })}
-            </div>
-
-            {/* Center MM node */}
-            <CenterMM />
-
-            {/* Right column — 3 cards */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              {rightKeys.map((key, i) => {
-                const item = t.raw(`items.${key}`) as {
-                  number: string;
-                  title: string;
-                  descriptor: string;
-                };
-                return (
-                  <CapabilityCard
-                    key={key}
-                    number={item.number}
-                    title={item.title}
-                    descriptor={item.descriptor}
-                    icon={CAPABILITY_ICONS[key]}
-                    delayMs={(i + 2) * 60}
-                    shouldReduce={shouldReduce}
-                  />
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Mobile: single-column card stack */}
-          <div
-            className="cap-mobile-stack"
-            style={{ display: "none", flexDirection: "column", gap: 14 }}
-          >
-            {CAPABILITY_KEYS.map((key, i) => {
-              const item = t.raw(`items.${key}`) as {
-                number: string;
-                title: string;
-                descriptor: string;
-              };
-              return (
-                <CapabilityCard
-                  key={key}
-                  number={item.number}
-                  title={item.title}
-                  descriptor={item.descriptor}
-                  icon={CAPABILITY_ICONS[key]}
-                  delayMs={i * 50}
-                  shouldReduce={shouldReduce}
-                />
-              );
-            })}
-          </div>
-
-          {/* Bottom strip */}
-          <div
-            style={{
-              borderTop: "1px solid rgba(6,7,113,0.08)",
-              marginTop: 48,
-              paddingTop: 22,
-              textAlign: "center",
-            }}
-          >
-            <span
-              style={{
-                fontFamily: "var(--font-body)",
-                fontWeight: 600,
-                fontSize: 10.5,
-                letterSpacing: "0.22em",
-                color: "rgba(6,7,113,0.35)",
-                textTransform: "uppercase",
-              }}
-            >
-              ✦ BUILT FOR THOSE WHO CARE ABOUT DETAILS
+            <span style={{ fontFamily: "var(--font-display)", fontSize: 11, fontWeight: 700, color: "#ff6c0c", letterSpacing: "0.09em" }}>
+              {t("sectionNumber")}
             </span>
+            <div style={{ width: 28, height: 1, backgroundColor: "rgba(6,7,113,0.14)" }} />
+            <span style={{ fontFamily: "var(--font-body)", fontSize: 10.5, fontWeight: 600, color: "rgba(6,7,113,0.32)", letterSpacing: "0.17em", textTransform: "uppercase" }}>
+              {t("sectionTitle")}
+            </span>
+          </motion.div>
+
+          {/* ── Three-column main layout ── */}
+          <div className="cap-3col">
+
+            {/* LEFT — Editorial */}
+            <motion.div
+              initial={shouldReduce ? {} : { opacity: 0, y: 22 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={vp}
+              transition={{ duration: 0.72, ease: E }}
+            >
+              {/* Large display headline */}
+              <h2
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "clamp(44px, 5vw, 80px)",
+                  fontWeight: 700, lineHeight: 0.98,
+                  letterSpacing: "-0.038em",
+                  color: "var(--color-authority)",
+                  margin: "0 0 22px 0",
+                }}
+              >
+                {t("sectionTitle")}
+              </h2>
+
+              {/* Editorial sub-line */}
+              <p
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "clamp(16px, 1.9vw, 23px)",
+                  fontWeight: 400, lineHeight: 1.42,
+                  letterSpacing: "-0.015em",
+                  color: "rgba(6,7,113,0.40)",
+                  margin: "0 0 40px 0",
+                  maxWidth: 320,
+                }}
+              >
+                {t("editorial")}
+              </p>
+
+              {/* Descriptor accent */}
+              <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+                <div style={{ width: 20, height: 1.5, marginTop: 7, backgroundColor: "#ff6c0c", opacity: 0.6, flexShrink: 0 }} />
+                <p style={{
+                  fontFamily: "var(--font-body)", fontSize: 12,
+                  lineHeight: 1.65, fontStyle: "italic",
+                  color: "rgba(6,7,113,0.30)", margin: 0,
+                }}>
+                  {t("sectionDescriptor")}
+                </p>
+              </div>
+            </motion.div>
+
+            {/* CENTER — MM Orbit */}
+            <div className="cap-mm-col" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <motion.div
+                initial={shouldReduce ? {} : { opacity: 0, scale: 0.88 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={vp}
+                transition={{ duration: 0.9, ease: E }}
+              >
+                <MMOrbitSystem shouldReduce={shouldReduce} />
+              </motion.div>
+            </div>
+
+            {/* RIGHT — Service panel */}
+            <motion.div
+              initial={shouldReduce ? {} : { opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={vp}
+              transition={{ duration: 0.65, delay: 0.14, ease: E }}
+            >
+              <div
+                style={{
+                  backgroundColor: "rgba(255,255,255,0.98)",
+                  border: "1px solid rgba(6,7,113,0.07)",
+                  borderLeft: "2.5px solid rgba(255,108,12,0.55)",
+                  boxShadow:
+                    "0 2px 8px rgba(6,7,113,0.04), 0 8px 48px rgba(6,7,113,0.07)",
+                  borderRadius: 3,
+                  overflow: "hidden",
+                }}
+              >
+                {/* Panel header */}
+                <div
+                  style={{
+                    padding: "13px 22px",
+                    borderBottom: "1px solid rgba(6,7,113,0.058)",
+                    display: "flex", alignItems: "center", gap: 10,
+                    backgroundColor: "rgba(255,251,243,0.55)",
+                  }}
+                >
+                  <div style={{ width: 14, height: 1.5, backgroundColor: "#ff6c0c", opacity: 0.50 }} />
+                  <span
+                    style={{
+                      fontFamily: "var(--font-body)", fontSize: 9.5, fontWeight: 700,
+                      letterSpacing: "0.21em", textTransform: "uppercase",
+                      color: "rgba(6,7,113,0.28)",
+                    }}
+                  >
+                    {t("panelLabel")}
+                  </span>
+                </div>
+
+                {/* Rows */}
+                {CAPABILITY_KEYS.map((key, i) => {
+                  const item = t.raw(`items.${key}`) as { number: string; title: string; descriptor: string };
+                  return (
+                    <ServiceRow
+                      key={key}
+                      number={item.number}
+                      title={item.title}
+                      isLast={i === CAPABILITY_KEYS.length - 1}
+                      shouldReduce={shouldReduce}
+                    />
+                  );
+                })}
+              </div>
+            </motion.div>
+
           </div>
+
+          {/* ── Bottom metrics band ── */}
+          <motion.div
+            initial={shouldReduce ? {} : { opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={vp}
+            transition={{ duration: 0.5, delay: 0.1, ease: E }}
+            style={{ marginTop: 52 }}
+          >
+            <div style={{ borderTop: "1px solid rgba(6,7,113,0.07)" }} />
+            <div className="cap-metrics" style={{ paddingTop: 22, paddingBottom: 22 }}>
+              {metrics.map(({ value, label }, i) => (
+                <React.Fragment key={label}>
+                  {i > 0 && (
+                    <div style={{ width: 1, height: 30, backgroundColor: "rgba(6,7,113,0.08)", flexShrink: 0, alignSelf: "center" }} />
+                  )}
+                  <div
+                    className="cap-metrics-item"
+                    style={{ flex: 1, textAlign: "center", padding: "0 10px" }}
+                  >
+                    <div
+                      style={{
+                        fontFamily: "var(--font-display)",
+                        fontSize: "clamp(18px, 1.9vw, 28px)",
+                        fontWeight: 700, letterSpacing: "-0.028em",
+                        color: "var(--color-authority)", lineHeight: 1, marginBottom: 5,
+                      }}
+                    >
+                      {value}
+                    </div>
+                    <div
+                      style={{
+                        fontFamily: "var(--font-body)", fontSize: 10, fontWeight: 600,
+                        letterSpacing: "0.10em", textTransform: "uppercase",
+                        color: "rgba(6,7,113,0.34)",
+                      }}
+                    >
+                      {label}
+                    </div>
+                  </div>
+                </React.Fragment>
+              ))}
+            </div>
+            <div style={{ borderBottom: "1px solid rgba(6,7,113,0.07)" }} />
+          </motion.div>
+
         </div>
       </section>
     </>

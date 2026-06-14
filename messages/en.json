@@ -104,7 +104,9 @@
         "title": "Digital Consulting",
         "descriptor": "Someone needs to show the direction. That's what we do."
       }
-    }
+    },
+    "editorial": "Strategy-first digital experiences that turn attention into action.",
+    "panelLabel": "System Capabilities"
   },
   "process": {
     "sectionNumber": "03",
