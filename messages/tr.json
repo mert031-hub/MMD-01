@@ -152,7 +152,8 @@
     "stat3label": "Mobil Uyumluluk",
     "availabilityStatus": "Şu anda yeni projeler kabul ediliyor",
     "responseTime": "< 24 saat",
-    "responseLabel": "Ortalama yanıt süresi"
+    "responseLabel": "Ortalama yanıt süresi",
+    "locationLabel": "İstanbul, Türkiye"
   },
   "footer": {
     "tagline": "Digital Experience Studio",
