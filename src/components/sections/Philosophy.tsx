@@ -221,8 +221,8 @@ export default function Philosophy() {
   /* Orbit shift: +120 px right when active (creates left-column room) */
   const rawOrbitX     = useTransform(scrollYProgress, [0.06, 0.20], [0, 120]);
   const rawOrbitScale = useTransform(scrollYProgress, [0.06, 0.20], [1, 0.84]);
-  const orbitX     = useSpring(rawOrbitX,     { stiffness: 90, damping: 22, mass: 1 });
-  const orbitScale = useSpring(rawOrbitScale, { stiffness: 90, damping: 22, mass: 1 });
+  const orbitX     = useSpring(rawOrbitX,     { stiffness: 160, damping: 26, mass: 0.9 });
+  const orbitScale = useSpring(rawOrbitScale, { stiffness: 160, damping: 26, mass: 0.9 });
 
   /*
     Quote fades completely to 0 at 0.10.
@@ -585,7 +585,7 @@ export default function Philosophy() {
                       opacity:   isNodeActive ? 0 : isDimmed ? 0.11 : 1,
                       transform: isDimmed ? "scale(0.76)" : "scale(1)",
                       transition:
-                        "opacity 600ms cubic-bezier(0,0,0.2,1), transform 600ms cubic-bezier(0,0,0.2,1)",
+                        "opacity 320ms cubic-bezier(0,0,0.2,1), transform 320ms cubic-bezier(0,0,0.2,1)",
                     }}
                   >
                     <span
@@ -704,12 +704,12 @@ export default function Philosophy() {
                   pointerEvents: "none",
                 }}
                 animate={{
-                  x:       isActive ? -(ORBIT_R - 20) : 0,
-                  y:       isActive ? -30 : -(ORBIT_R - 8),
-                  scale:   isActive ? 1 : 0.3,
+                  x:       -(ORBIT_R - 20),
+                  y:       -30,
+                  scale:   isActive ? 1 : 0.1,
                   opacity: isActive ? 1 : 0,
                 }}
-                transition={{ type: "spring", stiffness: 110, damping: 14, mass: 1.05 }}
+                transition={{ type: "spring", stiffness: 220, damping: 24, mass: 0.8 }}
               >
                 {/* Expanding pulse ring */}
                 <div
