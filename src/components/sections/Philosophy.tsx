@@ -60,30 +60,29 @@ interface PanelProps {
   vis: MotionValue<number>;
   shouldReduce: boolean;
   activeStep: number;
+  mounted: boolean;
 }
 
-function ContentPanel({ num, lines, support, vis, shouldReduce, activeStep }: PanelProps) {
+function ContentPanel({ num, lines, support, vis, shouldReduce, activeStep, mounted }: PanelProps) {
   const numInt = parseInt(num, 10);
   const opacityVal = shouldReduce ? (activeStep === numInt ? 1 : 0) : vis;
   return (
     /*
-      Fills the shared panel-wrap container (position:absolute inset:0).
-      Flex column + justify:center keeps content vertically centred.
-      Opacity is the ONLY motion applied — no Y drift — so all text
-      is fully readable the instant the panel reaches opacity > 0.4.
+      display:none when outside active scroll range — belt-and-suspenders
+      guarantee that NO overlap is ever rendered, even at 0 opacity.
+      Opacity handles the visual crossfade; display handles isolation.
     */
     <motion.div
       style={{
         position: "absolute",
         inset: 0,
-        display: "flex",
+        display: mounted ? "flex" : "none",
         flexDirection: "column",
         justifyContent: "center",
         opacity: opacityVal,
         pointerEvents: "none",
       }}
     >
-      {/* Ghost principle number — decorative, aria-hidden */}
       <div
         aria-hidden="true"
         className="phil-ghost-num"
@@ -114,7 +113,6 @@ function ContentPanel({ num, lines, support, vis, shouldReduce, activeStep }: Pa
         PHILOSOPHY {num}
       </span>
 
-      {/* Full statement — all lines always visible at same time */}
       <div style={{ marginBottom: 18, flexShrink: 0 }}>
         {lines.map((line, i) => {
           const isLast = i === lines.length - 1;
@@ -138,7 +136,6 @@ function ContentPanel({ num, lines, support, vis, shouldReduce, activeStep }: Pa
         })}
       </div>
 
-      {/* Orange rule */}
       <div
         style={{
           width: 36,
@@ -149,7 +146,6 @@ function ContentPanel({ num, lines, support, vis, shouldReduce, activeStep }: Pa
         }}
       />
 
-      {/* Supporting paragraph */}
       <p
         style={{
           fontFamily: "var(--font-body)",
@@ -164,7 +160,6 @@ function ContentPanel({ num, lines, support, vis, shouldReduce, activeStep }: Pa
         {support}
       </p>
 
-      {/* Attribution */}
       <span
         style={{
           fontFamily: "var(--font-body)",
@@ -190,66 +185,76 @@ export default function Philosophy() {
   const sectionRef   = useRef<HTMLElement>(null);
   const [activeStep, setActiveStep] = useState(0);
 
+  /*
+    panelMounted: controls display:none / display:flex per panel.
+    Updated on every scroll frame from useMotionValueEvent.
+    Guarantees only one panel (or two with opacity=0 during the gap)
+    is ever in the DOM at a time — eliminates all text overlap.
+  */
+  const [panelMounted, setPanelMounted] = useState({
+    quote: true, s1: false, s2: false, s3: false,
+  });
+
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end end"],
   });
 
   /*
-    ── Scroll timeline (500 vh total) ──────────────────────────────────────
-    0.00 – 0.07   Idle: orbit visible, quote panel fully shown
-    0.07 – 0.10   Quote fades OUT (fully gone at 0.10)
-    — GAP —       0.10 – 0.12 nothing visible (orbit-shift still happening)
-    0.12 – 0.20   Step 1 fades IN  (starts AFTER quote is 100% gone)
-    0.20 – 0.38   Step 1 readable  (~90 vh)
-    0.38 – 0.46   Step 1 fades OUT (fully gone at 0.46)
-    — GAP —       0.46 – 0.48
-    0.48 – 0.56   Step 2 fades IN  (starts AFTER step 1 is 100% gone)
-    0.56 – 0.68   Step 2 readable  (~60 vh)
-    0.68 – 0.76   Step 2 fades OUT (fully gone at 0.76)
-    — GAP —       0.76 – 0.78
-    0.78 – 0.86   Step 3 fades IN  (starts AFTER step 2 is 100% gone)
-    0.86 – 1.00   Step 3 readable  (~70 vh)
+    ── Scroll timeline (400 vh total) ──────────────────────────────────────
+    0.00 – 0.06   Quote fully visible
+    0.06 – 0.13   Quote fades out                  (7 % = 28 vh)
+    [gap 0.13 – 0.16]
+    0.16 – 0.24   Step 1 fades in                  (8 % = 32 vh)
+    0.24 – 0.44   Step 1 readable                  (20 % = 80 vh)
+    0.44 – 0.51   Step 1 fades out                 (7 % = 28 vh)
+    [gap 0.51 – 0.54]
+    0.54 – 0.62   Step 2 fades in                  (8 % = 32 vh)
+    0.62 – 0.73   Step 2 readable                  (11 % = 44 vh)
+    0.73 – 0.80   Step 2 fades out                 (7 % = 28 vh)
+    [gap 0.80 – 0.83]
+    0.83 – 0.91   Step 3 fades in                  (8 % = 32 vh)
+    0.91 – 1.00   Step 3 readable / stays visible
   */
 
-  /* Discrete step drives orbit node dimming + hero node identity */
+  /* Update display isolation on every scroll frame */
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    setPanelMounted({
+      quote: v <  0.16,
+      s1:    v >= 0.13 && v <= 0.54,
+      s2:    v >= 0.51 && v <= 0.83,
+      s3:    v >= 0.80,
+    });
+  });
+
+  /* Discrete step → orbit dimming + hero identity */
   const stepFloat = useTransform(
     scrollYProgress,
-    [0,   0.08, 0.12, 0.42, 0.48, 0.72, 0.78, 1.0],
-    [0,   0,    1,    1,    2,    2,    3,    3  ]
+    [0,    0.10, 0.16, 0.48, 0.54, 0.78, 0.83, 1.0],
+    [0,    0,    1,    1,    2,    2,    3,    3   ]
   );
   useMotionValueEvent(stepFloat, "change", (v) => {
     setActiveStep(v < 0.5 ? 0 : v < 1.5 ? 1 : v < 2.5 ? 2 : 3);
   });
 
-  /* Orbit shift: +120 px right when active (creates left-column room) */
-  const rawOrbitX     = useTransform(scrollYProgress, [0.06, 0.20], [0, 120]);
-  const rawOrbitScale = useTransform(scrollYProgress, [0.06, 0.20], [1, 0.84]);
+  /* Orbit shifts right to make room for left column */
+  const rawOrbitX     = useTransform(scrollYProgress, [0.08, 0.26], [0, 120]);
+  const rawOrbitScale = useTransform(scrollYProgress, [0.08, 0.26], [1, 0.84]);
   const orbitX     = useSpring(rawOrbitX,     { stiffness: 160, damping: 26, mass: 0.9 });
   const orbitScale = useSpring(rawOrbitScale, { stiffness: 160, damping: 26, mass: 0.9 });
 
-  /*
-    Quote fades completely to 0 at 0.10.
-    Step 1 does NOT start until 0.12. Gap guaranteed → zero overlap.
-  */
-  const quotePanelOp = useTransform(scrollYProgress, [0.04, 0.10], [1, 0]);
+  /* Panel opacities — strictly non-overlapping ranges */
+  const quotePanelOp = useTransform(scrollYProgress, [0.06, 0.13], [1, 0]);
 
-  /* Trail: only visible during transition windows */
   const trailOp = useTransform(
     scrollYProgress,
-    [0.04, 0.10, 0.14, 0.35, 0.38, 0.56, 0.60, 0.66, 0.68, 0.86, 0.90],
+    [0.06, 0.13, 0.18, 0.41, 0.44, 0.60, 0.64, 0.70, 0.73, 0.89, 0.93],
     [0,    0.9,  0,    0,    0.9,  0,    0,    0,    0.9,  0,    0   ]
   );
 
-  /*
-    Panel opacity ranges are strictly sequential — zero overlap guaranteed:
-    quote   exits  at 0.10  →  s1 enters at 0.12  (gap 0.10-0.12)
-    s1      exits  at 0.46  →  s2 enters at 0.48  (gap 0.46-0.48)
-    s2      exits  at 0.76  →  s3 enters at 0.78  (gap 0.76-0.78)
-  */
-  const s1Vis = useTransform(scrollYProgress, [0.12, 0.20, 0.38, 0.46], [0, 1, 1, 0]);
-  const s2Vis = useTransform(scrollYProgress, [0.48, 0.56, 0.68, 0.76], [0, 1, 1, 0]);
-  const s3Vis = useTransform(scrollYProgress, [0.78, 0.86, 0.98, 1.0 ], [0, 1, 1, 1]);
+  const s1Vis = useTransform(scrollYProgress, [0.16, 0.24, 0.44, 0.51], [0, 1, 1, 0]);
+  const s2Vis = useTransform(scrollYProgress, [0.54, 0.62, 0.73, 0.80], [0, 1, 1, 0]);
+  const s3Vis = useTransform(scrollYProgress, [0.83, 0.91, 0.99, 1.00], [0, 1, 1, 1]);
 
   const beliefs = [
     { num: "01", support: t("belief1Support") },
@@ -257,23 +262,23 @@ export default function Philosophy() {
     { num: "03", support: t("belief3Support") },
   ];
 
-  const isActive     = activeStep > 0;
-  const lang         = locale === "en" ? "en" : "tr";
+  const isActive = activeStep > 0;
+  const lang     = locale === "en" ? "en" : "tr";
 
   const stepPanels = [
-    { num: "01", lines: DISPLAY_LINES["01"]?.[lang] ?? [], support: beliefs[0].support, vis: s1Vis },
-    { num: "02", lines: DISPLAY_LINES["02"]?.[lang] ?? [], support: beliefs[1].support, vis: s2Vis },
-    { num: "03", lines: DISPLAY_LINES["03"]?.[lang] ?? [], support: beliefs[2].support, vis: s3Vis },
+    { num: "01", lines: DISPLAY_LINES["01"]?.[lang] ?? [], support: beliefs[0].support, vis: s1Vis, mounted: panelMounted.s1 },
+    { num: "02", lines: DISPLAY_LINES["02"]?.[lang] ?? [], support: beliefs[1].support, vis: s2Vis, mounted: panelMounted.s2 },
+    { num: "03", lines: DISPLAY_LINES["03"]?.[lang] ?? [], support: beliefs[2].support, vis: s3Vis, mounted: panelMounted.s3 },
   ];
 
-  const heroNum = isActive ? beliefs[activeStep - 1]?.num ?? "01" : "01";
+  const heroNum = isActive ? (beliefs[activeStep - 1]?.num ?? "01") : "01";
 
   return (
     <section
       ref={sectionRef}
       id="felsefe"
       aria-label="Stüdyo felsefesi"
-      style={{ height: "500vh", position: "relative" }}
+      style={{ height: "400vh", position: "relative" }}
     >
       <div
         style={{
@@ -287,7 +292,7 @@ export default function Philosophy() {
           backgroundSize: "32px 32px",
         }}
       >
-        {/* Depth gradients — z:1, decorative only */}
+        {/* Depth gradients */}
         <div aria-hidden="true" style={{
           position: "absolute", top: "50%", left: "50%",
           width: 900, height: 900, marginTop: -450, marginLeft: -450,
@@ -303,7 +308,7 @@ export default function Philosophy() {
           pointerEvents: "none", zIndex: 1,
         }} />
 
-        {/* MM Monument — z:0, aria-hidden, purely decorative */}
+        {/* MM Monument — decorative */}
         <div aria-hidden="true" style={{
           position: "absolute", top: "50%", left: "50%",
           transform: "translate(-50%, -50%)",
@@ -316,11 +321,10 @@ export default function Philosophy() {
 
         {/*
           ══ LEFT COLUMN ═══════════════════════════════════════════════════
-          Stretches full viewport height, uses flexbox to vertically centre
-          the panel-wrap. All panels (quote + 3 content) sit inside the
-          same panel-wrap as position:absolute with inset:0, so they all
-          occupy the same space and scroll-driven opacity decides which one
-          is visible. This eliminates all stacking / overlap issues.
+          All panels (quote + 3 content) share one phil-panel-wrap container
+          with a fixed height. Each panel is position:absolute inset:0, so
+          they ALL occupy the same space. display:none + scroll-driven
+          opacity together guarantee zero simultaneous rendering.
         */}
         <div
           className="phil-left-col"
@@ -341,7 +345,6 @@ export default function Philosophy() {
             style={{
               position: "relative",
               width: "100%",
-              /* Fixed height so all absolutely-positioned children have a reference */
               height: "clamp(300px, 56vh, 500px)",
             }}
           >
@@ -350,7 +353,7 @@ export default function Philosophy() {
               style={{
                 position: "absolute",
                 inset: 0,
-                display: "flex",
+                display: panelMounted.quote ? "flex" : "none",
                 flexDirection: "column",
                 justifyContent: "center",
                 opacity: shouldReduce ? (activeStep === 0 ? 1 : 0) : quotePanelOp,
@@ -367,12 +370,9 @@ export default function Philosophy() {
                 aria-hidden="true"
                 style={{
                   fontFamily: "var(--font-display)",
-                  fontSize: 52,
-                  fontStyle: "italic",
-                  fontWeight: 700,
+                  fontSize: 52, fontStyle: "italic", fontWeight: 700,
                   color: "rgba(255,108,12,0.09)",
-                  lineHeight: 0.75,
-                  marginBottom: 8,
+                  lineHeight: 0.75, marginBottom: 8,
                   userSelect: "none",
                 }}
               >
@@ -382,14 +382,10 @@ export default function Philosophy() {
                 style={{
                   fontFamily: "var(--font-display)",
                   fontSize: "clamp(13px, 1.4vw, 20px)",
-                  fontStyle: "italic",
-                  fontWeight: 600,
-                  lineHeight: 1.3,
-                  letterSpacing: "-0.015em",
+                  fontStyle: "italic", fontWeight: 600,
+                  lineHeight: 1.3, letterSpacing: "-0.015em",
                   color: "rgba(255,251,243,0.80)",
-                  margin: "0 0 14px",
-                  padding: 0,
-                  border: "none",
+                  margin: "0 0 14px", padding: 0, border: "none",
                 }}
               >
                 {t("quote")}
@@ -397,10 +393,8 @@ export default function Philosophy() {
               <span
                 style={{
                   fontFamily: "var(--font-body)",
-                  fontSize: 10,
-                  fontWeight: 700,
-                  letterSpacing: "0.20em",
-                  textTransform: "uppercase",
+                  fontSize: 10, fontWeight: 700,
+                  letterSpacing: "0.20em", textTransform: "uppercase",
                   color: "rgba(255,108,12,0.42)",
                 }}
               >
@@ -408,7 +402,7 @@ export default function Philosophy() {
               </span>
             </motion.div>
 
-            {/* ── Content panels (01, 02, 03) ─────────────────────── */}
+            {/* ── Content panels 01 / 02 / 03 ─────────────────────── */}
             {stepPanels.map((panel) => (
               <ContentPanel
                 key={panel.num}
@@ -416,6 +410,7 @@ export default function Philosophy() {
                 lines={panel.lines}
                 support={panel.support}
                 vis={panel.vis}
+                mounted={panel.mounted}
                 shouldReduce={shouldReduce}
                 activeStep={activeStep}
               />
@@ -425,15 +420,11 @@ export default function Philosophy() {
 
         {/*
           ══ ORBIT SYSTEM ══════════════════════════════════════════════════
-          Centred in viewport; shifts +120 px right when a step is active.
-          The outermost ring (530 px diam) extends leftward, visually
-          framing the content column. z:5 — below content (z:7).
         */}
         <div
           style={{
             position: "absolute",
-            top: "50%",
-            left: "50%",
+            top: "50%", left: "50%",
             transform: "translate(-50%, -50%)",
             zIndex: 5,
           }}
@@ -443,8 +434,7 @@ export default function Philosophy() {
               x: shouldReduce ? 0 : orbitX,
               scale: shouldReduce ? 1 : orbitScale,
               position: "relative",
-              width: 460,
-              height: 460,
+              width: 460, height: 460,
             }}
           >
             {/* Rings */}
@@ -452,15 +442,10 @@ export default function Philosophy() {
               <div
                 key={d}
                 style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  width: d,
-                  height: d,
-                  marginTop: -(d / 2),
-                  marginLeft: -(d / 2),
-                  borderRadius: "50%",
-                  border: `1px solid ${color}`,
+                  position: "absolute", top: "50%", left: "50%",
+                  width: d, height: d,
+                  marginTop: -(d / 2), marginLeft: -(d / 2),
+                  borderRadius: "50%", border: `1px solid ${color}`,
                   pointerEvents: "none",
                 }}
               />
@@ -470,36 +455,24 @@ export default function Philosophy() {
             <div
               className="phil-energy-ring"
               style={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                width: 280,
-                height: 280,
-                marginTop: -140,
-                marginLeft: -140,
-                borderRadius: "50%",
-                border: "1px solid rgba(255,108,12,0.09)",
+                position: "absolute", top: "50%", left: "50%",
+                width: 280, height: 280, marginTop: -140, marginLeft: -140,
+                borderRadius: "50%", border: "1px solid rgba(255,108,12,0.09)",
                 pointerEvents: "none",
               }}
             />
 
-            {/* Orbit trail — only visible during transitions */}
+            {/* Orbit trail */}
             {!shouldReduce && (
               <motion.div
                 className="phil-orbit-trail"
                 style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  width: ORBIT_R * 2,
-                  height: ORBIT_R * 2,
-                  marginTop: -ORBIT_R,
-                  marginLeft: -ORBIT_R,
+                  position: "absolute", top: "50%", left: "50%",
+                  width: ORBIT_R * 2, height: ORBIT_R * 2,
+                  marginTop: -ORBIT_R, marginLeft: -ORBIT_R,
                   borderRadius: "50%",
-                  background:
-                    "conic-gradient(from 0deg, transparent 0%, rgba(255,108,12,0.018) 20%, rgba(255,108,12,0.055) 42%, rgba(255,108,12,0.018) 62%, transparent 75%)",
-                  pointerEvents: "none",
-                  opacity: trailOp,
+                  background: "conic-gradient(from 0deg, transparent 0%, rgba(255,108,12,0.018) 20%, rgba(255,108,12,0.055) 42%, rgba(255,108,12,0.018) 62%, transparent 75%)",
+                  pointerEvents: "none", opacity: trailOp,
                 }}
               />
             )}
@@ -515,14 +488,9 @@ export default function Philosophy() {
                 <div
                   key={`t${deg}`}
                   style={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    width: size,
-                    height: size,
-                    borderRadius: "50%",
-                    marginTop: -(size / 2),
-                    marginLeft: -(size / 2),
+                    position: "absolute", top: "50%", left: "50%",
+                    width: size, height: size, borderRadius: "50%",
+                    marginTop: -(size / 2), marginLeft: -(size / 2),
                     backgroundColor: `rgba(255,251,243,${op})`,
                     transform: `translate(${Math.cos(rad) * ORBIT_R}px, ${Math.sin(rad) * ORBIT_R}px)`,
                     pointerEvents: "none",
@@ -543,14 +511,9 @@ export default function Philosophy() {
                   <div
                     key={idx}
                     style={{
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      width: size,
-                      height: size,
-                      borderRadius: "50%",
-                      marginTop: -(size / 2),
-                      marginLeft: -(size / 2),
+                      position: "absolute", top: "50%", left: "50%",
+                      width: size, height: size, borderRadius: "50%",
+                      marginTop: -(size / 2), marginLeft: -(size / 2),
                       backgroundColor: `rgba(255,108,12,${opacity})`,
                       boxShadow: `0 0 ${size * 6}px rgba(255,108,12,${opacity * 0.8})`,
                       transform: `translate(${Math.cos(rad) * r}px, ${Math.sin(rad) * r}px)`,
@@ -569,24 +532,16 @@ export default function Philosophy() {
                   key={b.num}
                   className={`phil-orbit-n${i + 1}${shouldReduce ? " orbit-paused" : ""}`}
                   style={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    marginTop: -26,
-                    marginLeft: -26,
-                    pointerEvents: "none",
+                    position: "absolute", top: "50%", left: "50%",
+                    marginTop: -26, marginLeft: -26, pointerEvents: "none",
                   }}
                 >
                   <div
                     style={{
-                      width: 52,
-                      height: 52,
-                      borderRadius: "50%",
+                      width: 52, height: 52, borderRadius: "50%",
                       backgroundColor: "rgba(255,251,243,0.06)",
                       border: "1px solid rgba(255,251,243,0.18)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
+                      display: "flex", alignItems: "center", justifyContent: "center",
                       opacity:   isNodeActive ? 0 : isDimmed ? 0.11 : 1,
                       transform: isDimmed ? "scale(0.76)" : "scale(1)",
                       transition:
@@ -596,9 +551,7 @@ export default function Philosophy() {
                     <span
                       style={{
                         fontFamily: "var(--font-display)",
-                        fontSize: 13,
-                        fontWeight: 700,
-                        letterSpacing: "0.04em",
+                        fontSize: 13, fontWeight: 700, letterSpacing: "0.04em",
                         color: "rgba(255,251,243,0.80)",
                       }}
                     >
@@ -612,194 +565,140 @@ export default function Philosophy() {
             {/* MM Core */}
             <div
               style={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                width: 96,
-                height: 96,
-                marginTop: -48,
-                marginLeft: -48,
-                zIndex: 3,
+                position: "absolute", top: "50%", left: "50%",
+                width: 96, height: 96, marginTop: -48, marginLeft: -48, zIndex: 3,
               }}
             >
-              <div
-                className="phil-mm-halo"
-                style={{
-                  position: "absolute",
-                  top: -22,
-                  left: -22,
-                  width: 140,
-                  height: 140,
-                  borderRadius: "50%",
-                  border: "1px solid rgba(255,108,12,0.04)",
-                  pointerEvents: "none",
-                }}
-              />
-              <div
-                className="phil-mm-outer-ring"
-                style={{
-                  position: "absolute",
-                  top: -10,
-                  left: -10,
-                  width: 116,
-                  height: 116,
-                  borderRadius: "50%",
-                  border: "1px solid rgba(255,108,12,0.08)",
-                  pointerEvents: "none",
-                }}
-              />
+              <div className="phil-mm-halo" style={{
+                position: "absolute", top: -22, left: -22,
+                width: 140, height: 140, borderRadius: "50%",
+                border: "1px solid rgba(255,108,12,0.04)", pointerEvents: "none",
+              }} />
+              <div className="phil-mm-outer-ring" style={{
+                position: "absolute", top: -10, left: -10,
+                width: 116, height: 116, borderRadius: "50%",
+                border: "1px solid rgba(255,108,12,0.08)", pointerEvents: "none",
+              }} />
               <div
                 className="phil-mm-center"
                 style={{
-                  width: "100%",
-                  height: "100%",
-                  borderRadius: "50%",
+                  width: "100%", height: "100%", borderRadius: "50%",
                   backgroundColor: "rgba(3,4,74,0.98)",
                   border: "1px solid rgba(255,251,243,0.10)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  position: "relative",
-                  overflow: "hidden",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  position: "relative", overflow: "hidden",
                 }}
               >
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    borderRadius: "50%",
-                    background:
-                      "radial-gradient(circle at 38% 34%, rgba(255,108,12,0.10) 0%, transparent 60%)",
-                    pointerEvents: "none",
-                  }}
-                />
-                <span
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: 22,
-                    fontWeight: 700,
-                    letterSpacing: "-0.04em",
-                    color: "rgba(255,251,243,0.9)",
-                    position: "relative",
-                    zIndex: 1,
-                  }}
-                >
+                <div style={{
+                  position: "absolute", inset: 0, borderRadius: "50%",
+                  background: "radial-gradient(circle at 38% 34%, rgba(255,108,12,0.10) 0%, transparent 60%)",
+                  pointerEvents: "none",
+                }} />
+                <span style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: 22, fontWeight: 700, letterSpacing: "-0.04em",
+                  color: "rgba(255,251,243,0.9)", position: "relative", zIndex: 1,
+                }}>
                   MM
                 </span>
               </div>
             </div>
 
             {/*
-              Hero node — single instance that springs to the orbit LEFT EDGE
-              (x: -(ORBIT_R-20), y: -30) when any step is active.
-              The number text updates in-place as steps change.
-              Using a single persistent motion.div avoids AnimatePresence
-              re-mount flickering and the "exiting clone reads stale props"
-              race condition.
+              Hero node — MAGNETIC PULL animation.
+              key={`hero-${activeStep}`} causes a fresh remount on every step
+              change, so each number springs FROM the orbit area TO the hero
+              position (left of orbit center) — the magnet-pull effect.
+              exit plays quickly; enter is a visible spring trajectory.
             */}
-            {!shouldReduce && (
-              <motion.div
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  marginTop: -46,
-                  marginLeft: -46,
-                  zIndex: 10,
-                  pointerEvents: "none",
-                }}
-                initial={{ opacity: 0, scale: 0.1, x: -(ORBIT_R - 20), y: -30 }}
-                animate={{
-                  x:       -(ORBIT_R - 20),
-                  y:       -30,
-                  scale:   isActive ? 1 : 0.1,
-                  opacity: isActive ? 1 : 0,
-                }}
-                transition={{ type: "spring", stiffness: 220, damping: 24, mass: 0.8 }}
-              >
-                {/* Expanding pulse ring */}
-                <div
-                  className="phil-hero-pulse"
+            <AnimatePresence mode="sync">
+              {!shouldReduce && isActive && (
+                <motion.div
+                  key={`hero-${activeStep}`}
                   style={{
-                    position: "absolute",
-                    top: -12,
-                    left: -12,
-                    width: 116,
-                    height: 116,
-                    borderRadius: "50%",
-                    border: "1px solid rgba(255,108,12,0.26)",
-                    pointerEvents: "none",
+                    position: "absolute", top: "50%", left: "50%",
+                    marginTop: -46, marginLeft: -46,
+                    zIndex: 10, pointerEvents: "none",
                   }}
-                />
-                {/* Orange circle */}
-                <div
-                  style={{
-                    width: 92,
-                    height: 92,
-                    borderRadius: "50%",
-                    backgroundColor: "var(--color-action)",
-                    border: "2px solid rgba(255,140,50,0.48)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    boxShadow:
-                      "0 0 28px rgba(255,108,12,0.62), 0 0 56px rgba(255,108,12,0.28), 0 0 90px rgba(255,108,12,0.12)",
+                  initial={{
+                    x:       ORBIT_R * 0.62,
+                    y:       -ORBIT_R * 0.48,
+                    scale:   0.28,
+                    opacity: 0,
+                  }}
+                  animate={{
+                    x:       -(ORBIT_R - 20),
+                    y:       -30,
+                    scale:   1,
+                    opacity: 1,
+                  }}
+                  exit={{
+                    scale:   0.18,
+                    opacity: 0,
+                    transition: { duration: 0.16, ease: [0.4, 0, 1, 1] },
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 340,
+                    damping:   26,
+                    mass:      0.65,
                   }}
                 >
-                  <AnimatePresence mode="wait" initial={false}>
-                    <motion.span
-                      key={heroNum}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.12 }}
+                  {/* Expanding pulse ring */}
+                  <div
+                    className="phil-hero-pulse"
+                    style={{
+                      position: "absolute", top: -12, left: -12,
+                      width: 116, height: 116, borderRadius: "50%",
+                      border: "1px solid rgba(255,108,12,0.26)", pointerEvents: "none",
+                    }}
+                  />
+                  {/* Orange circle */}
+                  <div
+                    style={{
+                      width: 92, height: 92, borderRadius: "50%",
+                      backgroundColor: "var(--color-action)",
+                      border: "2px solid rgba(255,140,50,0.48)",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      boxShadow:
+                        "0 0 28px rgba(255,108,12,0.62), 0 0 56px rgba(255,108,12,0.28), 0 0 90px rgba(255,108,12,0.12)",
+                    }}
+                  >
+                    <span
                       style={{
                         fontFamily: "var(--font-display)",
-                        fontSize: 18,
-                        fontWeight: 700,
-                        letterSpacing: "0.04em",
-                        color: "#fff",
-                        position: "absolute",
+                        fontSize: 18, fontWeight: 700, letterSpacing: "0.04em",
+                        color: "#fff", position: "absolute",
                       }}
                     >
                       {heroNum}
-                    </motion.span>
-                  </AnimatePresence>
-                </div>
-              </motion.div>
-            )}
+                    </span>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         </div>
 
-        {/* ── Scroll indicator — z:9, right edge ─────────────────────── */}
+        {/* ── Scroll indicator ─────────────────────────────────────────── */}
         <div
           className="phil-indicator"
           style={{
             position: "absolute",
             right: "clamp(14px, 1.8vw, 28px)",
-            top: "50%",
-            transform: "translateY(-50%)",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            zIndex: 9,
-            userSelect: "none",
+            top: "50%", transform: "translateY(-50%)",
+            display: "flex", flexDirection: "column", alignItems: "center",
+            zIndex: 9, userSelect: "none",
           }}
         >
           {[1, 2, 3].map((s, i) => (
-            <div
-              key={s}
-              style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
-            >
+            <div key={s} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
               {i > 0 && (
                 <div
                   style={{
-                    width: 1,
-                    height: 24,
+                    width: 1, height: 24,
                     backgroundColor:
-                      activeStep >= s
-                        ? "rgba(255,108,12,0.45)"
-                        : "rgba(255,251,243,0.07)",
+                      activeStep >= s ? "rgba(255,108,12,0.45)" : "rgba(255,251,243,0.07)",
                     transition: "background-color 220ms ease",
                   }}
                 />
@@ -824,13 +723,9 @@ export default function Philosophy() {
               <span
                 style={{
                   fontFamily: "var(--font-display)",
-                  fontSize: 9,
-                  fontWeight: 700,
-                  letterSpacing: "0.04em",
-                  color:
-                    activeStep === s ? "var(--color-action)" : "rgba(255,251,243,0.18)",
-                  transition: "color 220ms ease",
-                  marginBottom: 4,
+                  fontSize: 9, fontWeight: 700, letterSpacing: "0.04em",
+                  color: activeStep === s ? "var(--color-action)" : "rgba(255,251,243,0.18)",
+                  transition: "color 220ms ease", marginBottom: 4,
                 }}
               >
                 {`0${s}`}
@@ -901,7 +796,6 @@ export default function Philosophy() {
           .phil-orbit-n3 { animation: orbit-go 28s linear infinite; animation-delay: -18.667s; }
           .orbit-paused  { animation-play-state: paused !important; }
 
-          /* ── Responsive ─────────────────────────────────────────── */
           @media (max-width: 1100px) {
             .phil-left-col { width: clamp(240px, 38%, 440px) !important; }
           }
@@ -911,11 +805,6 @@ export default function Philosophy() {
             .phil-indicator { display: none !important; }
           }
 
-          /*
-            Mobile (≤640px): stack content below orbit.
-            Left col spans full width at bottom; semi-transparent gradient
-            ensures it never clashes with the orbit rings above it.
-          */
           @media (max-width: 640px) {
             .phil-left-col {
               left: 0 !important;
@@ -932,11 +821,10 @@ export default function Philosophy() {
               ) !important;
               z-index: 8 !important;
             }
+            /* Keep explicit height so absolute children have a reference */
             .phil-panel-wrap {
-              height: auto !important;
-              min-height: 220px !important;
+              height: 260px !important;
             }
-            /* Ghost number too large on mobile */
             .phil-ghost-num { display: none !important; }
             .phil-indicator { display: none !important; }
           }
