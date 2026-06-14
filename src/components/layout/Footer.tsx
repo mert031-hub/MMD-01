@@ -386,7 +386,7 @@ export default function Footer() {
             willChange: "transform, opacity",
           }}
         >
-          MM
+          MMDESIGN
         </div>
 
         {/* ═══════════════════════════════════════════════════════════════ */}
@@ -557,6 +557,27 @@ export default function Footer() {
                   </span>
                 ))}
               </motion.div>
+
+              {/* Discipline pills — brand · web · strategy */}
+              <motion.div
+                aria-hidden
+                initial={shouldReduce ? {} : { opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.84 }}
+                style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 14, pointerEvents: "none" }}
+              >
+                {["BRAND", "WEB", "STRATEGY"].map((tag, i) => (
+                  <span key={i} style={{
+                    fontFamily: "var(--font-body)", fontSize: 8,
+                    letterSpacing: "0.14em", textTransform: "uppercase",
+                    color: "rgba(255,108,12,0.28)",
+                    border: "1px solid rgba(255,108,12,0.14)",
+                    borderRadius: 2,
+                    padding: "3px 7px",
+                  }}>{tag}</span>
+                ))}
+              </motion.div>
             </div>
 
             {/* ── Right: status + lightweight contact panel ── */}
@@ -661,7 +682,7 @@ export default function Footer() {
         {/* ═══════════════════════════════════════════════════════════════ */}
         {/* HORIZONTAL ORBIT LINE — full-bleed, slow traveling node        */}
         {/* ═══════════════════════════════════════════════════════════════ */}
-        <div style={{ position: "relative", marginTop: 80, height: 20 }}>
+        <div style={{ position: "relative", marginTop: 44, height: 20 }}>
           {/* The line */}
           <div style={{
             position: "absolute", top: "50%", left: 0, right: 0, height: 1,
@@ -693,11 +714,11 @@ export default function Footer() {
         {/* ═══════════════════════════════════════════════════════════════ */}
         <div
           className="container-site"
-          style={{ paddingTop: 60, paddingBottom: 0, position: "relative" }}
+          style={{ paddingTop: 36, paddingBottom: 0, position: "relative" }}
         >
           {/* Thin divider */}
           <div style={{
-            height: 1, marginBottom: 48,
+            height: 1, marginBottom: 32,
             background: "linear-gradient(90deg, transparent 0%, rgba(255,251,243,0.06) 15%, rgba(255,251,243,0.06) 85%, transparent 100%)",
           }} />
 
@@ -750,19 +771,27 @@ export default function Footer() {
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1, ease: EASE_OUT }}
           style={{
-            paddingTop: 28, paddingBottom: 48, marginTop: 44,
+            paddingTop: 22, paddingBottom: 32, marginTop: 28,
             borderTop: "1px solid rgba(255,251,243,0.042)",
             display: "flex", alignItems: "center",
             justifyContent: "space-between",
             flexWrap: "wrap", gap: 16, position: "relative",
           }}
         >
-          <span style={{
-            fontFamily: "var(--font-body)", fontSize: 11,
-            color: "rgba(255,251,243,0.26)",
-          }}>
-            {copyright}
-          </span>
+          <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+            <span style={{
+              fontFamily: "var(--font-body)", fontSize: 11,
+              color: "rgba(255,251,243,0.26)",
+            }}>
+              {copyright}
+            </span>
+            <span aria-hidden style={{ width: 1, height: 9, backgroundColor: "rgba(255,251,243,0.10)", display: "block" }} />
+            <span style={{
+              fontFamily: "var(--font-body)", fontSize: 9,
+              letterSpacing: "0.12em", textTransform: "uppercase",
+              color: "rgba(255,108,12,0.22)",
+            }}>BUILD {year}</span>
+          </div>
 
           {/* Right: locale + socials */}
           <div style={{ display: "flex", alignItems: "center", gap: 22 }}>
