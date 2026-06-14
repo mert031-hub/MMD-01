@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import {
   motion,
+  AnimatePresence,
   useScroll,
   useTransform,
   useSpring,
@@ -58,9 +59,12 @@ interface PanelProps {
   support: string;
   vis: MotionValue<number>;
   shouldReduce: boolean;
+  activeStep: number;
 }
 
-function ContentPanel({ num, lines, support, vis, shouldReduce }: PanelProps) {
+function ContentPanel({ num, lines, support, vis, shouldReduce, activeStep }: PanelProps) {
+  const numInt = parseInt(num, 10);
+  const opacityVal = shouldReduce ? (activeStep === numInt ? 1 : 0) : vis;
   return (
     /*
       Fills the shared panel-wrap container (position:absolute inset:0).
@@ -75,7 +79,7 @@ function ContentPanel({ num, lines, support, vis, shouldReduce }: PanelProps) {
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        opacity: shouldReduce ? 1 : vis,
+        opacity: opacityVal,
         pointerEvents: "none",
       }}
     >
@@ -349,7 +353,7 @@ export default function Philosophy() {
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
-                opacity: shouldReduce ? 1 : quotePanelOp,
+                opacity: shouldReduce ? (activeStep === 0 ? 1 : 0) : quotePanelOp,
                 pointerEvents: "none",
               }}
             >
@@ -413,6 +417,7 @@ export default function Philosophy() {
                 support={panel.support}
                 vis={panel.vis}
                 shouldReduce={shouldReduce}
+                activeStep={activeStep}
               />
             ))}
           </div>
@@ -703,6 +708,7 @@ export default function Philosophy() {
                   zIndex: 10,
                   pointerEvents: "none",
                 }}
+                initial={{ opacity: 0, scale: 0.1, x: -(ORBIT_R - 20), y: -30 }}
                 animate={{
                   x:       -(ORBIT_R - 20),
                   y:       -30,
@@ -740,19 +746,25 @@ export default function Philosophy() {
                       "0 0 28px rgba(255,108,12,0.62), 0 0 56px rgba(255,108,12,0.28), 0 0 90px rgba(255,108,12,0.12)",
                   }}
                 >
-                  <span
-                    style={{
-                      fontFamily: "var(--font-display)",
-                      fontSize: 18,
-                      fontWeight: 700,
-                      letterSpacing: "0.04em",
-                      color: "#fff",
-                      /* Smooth number crossfade on step change */
-                      transition: "opacity 200ms ease",
-                    }}
-                  >
-                    {heroNum}
-                  </span>
+                  <AnimatePresence mode="wait" initial={false}>
+                    <motion.span
+                      key={heroNum}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.12 }}
+                      style={{
+                        fontFamily: "var(--font-display)",
+                        fontSize: 18,
+                        fontWeight: 700,
+                        letterSpacing: "0.04em",
+                        color: "#fff",
+                        position: "absolute",
+                      }}
+                    >
+                      {heroNum}
+                    </motion.span>
+                  </AnimatePresence>
                 </div>
               </motion.div>
             )}
@@ -788,7 +800,7 @@ export default function Philosophy() {
                       activeStep >= s
                         ? "rgba(255,108,12,0.45)"
                         : "rgba(255,251,243,0.07)",
-                    transition: "background-color 500ms ease",
+                    transition: "background-color 220ms ease",
                   }}
                 />
               )}
@@ -805,7 +817,7 @@ export default function Philosophy() {
                     activeStep === s
                       ? "0 0 10px rgba(255,108,12,0.8), 0 0 20px rgba(255,108,12,0.3)"
                       : "none",
-                  transition: "all 400ms cubic-bezier(0,0,0.2,1)",
+                  transition: "all 220ms cubic-bezier(0,0,0.2,1)",
                   margin: "4px auto",
                 }}
               />
@@ -817,7 +829,7 @@ export default function Philosophy() {
                   letterSpacing: "0.04em",
                   color:
                     activeStep === s ? "var(--color-action)" : "rgba(255,251,243,0.18)",
-                  transition: "color 400ms ease",
+                  transition: "color 220ms ease",
                   marginBottom: 4,
                 }}
               >
