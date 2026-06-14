@@ -91,28 +91,166 @@ function BackToTop({ shouldReduce }: { shouldReduce: boolean }) {
   );
 }
 
-/* ─── FooterLink ─────────────────────────────────────────────────────── */
-function FooterLink({
-  href, external, children,
-}: { href: string; external?: boolean; children: React.ReactNode }) {
-  const [hov, setHov] = useState(false);
-  const style: React.CSSProperties = {
-    fontFamily: "var(--font-body)", fontWeight: 400, fontSize: 12.5,
-    color: hov ? "rgba(255,251,243,0.78)" : "rgba(255,251,243,0.38)",
-    textDecoration: "none", display: "flex", alignItems: "center", gap: 6,
-    lineHeight: 1, transition: "color 180ms ease, transform 180ms ease",
-    paddingTop: 5, paddingBottom: 5,
-    transform: hov ? "translateX(5px)" : "translateX(0)",
-  };
-  const arrow = (
-    <span style={{ fontSize: 9, color: "#ff6c0c", opacity: hov ? 1 : 0, transition: "opacity 160ms ease", flexShrink: 0 }}>→</span>
+/* ─── Notebook card icons ───────────────────────────────────────────── */
+
+const FT_CARD_ICONS: Record<string, React.ReactNode> = {
+  folder: (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+    </svg>
+  ),
+  pencil: (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+    </svg>
+  ),
+  rocket: (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
+      <path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
+      <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
+    </svg>
+  ),
+  whatsapp: (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+  ),
+};
+
+/* ─── Card defs ──────────────────────────────────────────────────────── */
+
+const FT_CARD_DEFS = [
+  { key: "work",     number: "01", bg: "#F6EDE1", accent: "#FF9A3C", numberColor: "#CC6B00", noteColor: "#FF9A3C", noteDeg:  3, icon: "folder",   href: "/projeler",    external: false, featured: false },
+  { key: "studio",   number: "02", bg: "#E6F4EC", accent: "#52C07A", numberColor: "#1E7A44", noteColor: "#52C07A", noteDeg: -4, icon: "pencil",   href: "/studyo",      external: false, featured: false },
+  { key: "services", number: "03", bg: "#E7F0FF", accent: "#6BA7FF", numberColor: "#1855B8", noteColor: "#6BA7FF", noteDeg:  3, icon: "rocket",   href: "/#hizmetler",  external: false, featured: false },
+  { key: "contact",  number: "04", bg: "#FFF0EA", accent: "#FF6F3D", numberColor: "#C93D00", noteColor: "#FF6F3D", noteDeg: -3, icon: "whatsapp", href: "",             external: true,  featured: true  },
+] as const;
+
+/* ─── SpiralBinding ──────────────────────────────────────────────────── */
+
+function FtSpiralBinding({ accent }: { accent: string }) {
+  return (
+    <div style={{
+      position: "absolute", left: -7, top: 14, bottom: 14,
+      display: "flex", flexDirection: "column", justifyContent: "space-between",
+      zIndex: 2, pointerEvents: "none",
+    }}>
+      {Array.from({ length: 9 }).map((_, i) => (
+        <div key={i} style={{
+          width: 14, height: 14, borderRadius: "50%",
+          border: `2px solid ${accent}`,
+          backgroundColor: "rgba(255,255,255,0.72)",
+          boxShadow: "0 1px 3px rgba(0,0,0,0.12)",
+          flexShrink: 0,
+        }} />
+      ))}
+    </div>
   );
-  const inner = <>{arrow}{children}</>;
-  if (external)
-    return <a href={href} target="_blank" rel="noopener noreferrer" style={style}
-               onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>{inner}</a>;
-  return <Link href={href} style={style}
-               onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>{inner}</Link>;
+}
+
+/* ─── NotebookCard ───────────────────────────────────────────────────── */
+
+function FtNotebookCard({
+  def, title, desc, waHref, shouldReduce,
+}: {
+  def: typeof FT_CARD_DEFS[number];
+  title: string; desc: string; waHref: string; shouldReduce: boolean;
+}) {
+  const [hov, setHov] = useState(false);
+
+  const cardInner = (
+    <div
+      style={{
+        position: "relative",
+        backgroundColor: def.bg,
+        borderRadius: 12,
+        paddingLeft: 28, paddingRight: 20, paddingTop: 28, paddingBottom: 22,
+        boxShadow: def.featured
+          ? `0 ${hov && !shouldReduce ? 28 : 18}px ${hov && !shouldReduce ? 56 : 40}px rgba(255,111,61,0.22), 0 4px 12px rgba(0,0,0,0.10)`
+          : `0 ${hov && !shouldReduce ? 22 : 10}px ${hov && !shouldReduce ? 44 : 24}px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.07)`,
+        transform: hov && !shouldReduce ? "translateY(-8px)" : "translateY(0)",
+        transition: "transform 240ms ease, box-shadow 240ms ease",
+        ...(def.featured ? { outline: "1.5px solid rgba(255,111,61,0.22)" } : {}),
+        minHeight: def.featured ? 220 : 200,
+      }}
+    >
+      <FtSpiralBinding accent={def.accent} />
+
+      {/* Sticky note */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute", top: -12, right: 22,
+          width: 44, height: 44,
+          backgroundColor: def.noteColor,
+          transform: `rotate(${def.noteDeg}deg)`,
+          boxShadow: "2px 3px 10px rgba(0,0,0,0.20)",
+          borderRadius: 3,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          color: "#fff",
+          animation: !shouldReduce ? `ftCardNoteWobble 5s ease-in-out ${["work","studio","services","contact"].indexOf(def.key) * 0.7}s infinite` : undefined,
+        }}
+      >
+        {FT_CARD_ICONS[def.icon]}
+      </div>
+
+      {/* Number */}
+      <div style={{ fontFamily: "var(--font-display)", fontSize: 11, fontWeight: 700, letterSpacing: "0.09em", color: def.numberColor, opacity: 0.7, marginBottom: 8 }}>
+        {def.number}
+      </div>
+
+      {/* Title */}
+      <h3 style={{
+        fontFamily: "var(--font-display)",
+        fontSize: "clamp(18px, 2vw, 22px)",
+        fontWeight: 800, letterSpacing: "-0.02em",
+        color: def.featured ? def.numberColor : "rgba(6,7,113,0.90)",
+        margin: "0 0 6px 0", lineHeight: 1.1, textTransform: "uppercase",
+      }}>
+        {title}
+      </h3>
+
+      {/* Accent rule */}
+      <div style={{ width: 24, height: 1.5, backgroundColor: def.accent, opacity: 0.7, marginBottom: 10 }} />
+
+      {/* Description */}
+      <p style={{ fontFamily: "var(--font-body)", fontSize: 12.5, lineHeight: 1.6, fontStyle: "italic", color: "rgba(6,7,113,0.55)", margin: "0 0 16px 0" }}>
+        {desc}
+      </p>
+
+      {/* Arrow */}
+      {def.featured ? (
+        <div style={{
+          display: "inline-flex", alignItems: "center", justifyContent: "center",
+          width: 32, height: 32, borderRadius: "50%",
+          backgroundColor: def.accent, color: "#fff",
+          fontSize: 16, fontWeight: 700,
+          boxShadow: `0 4px 12px ${def.noteColor}55`,
+        }}>→</div>
+      ) : (
+        <span style={{ fontFamily: "var(--font-body)", fontSize: 16, color: def.accent, opacity: hov ? 1 : 0.55, transition: "opacity 200ms ease" }}>→</span>
+      )}
+    </div>
+  );
+
+  const href = def.featured ? waHref : def.href;
+
+  if (def.external) {
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", display: "block" }}
+         onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>
+        {cardInner}
+      </a>
+    );
+  }
+  return (
+    <Link href={href as Parameters<typeof Link>[0]["href"]} style={{ textDecoration: "none", display: "block" }}
+          onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>
+      {cardInner}
+    </Link>
+  );
 }
 
 /* ─── ContactRow ─────────────────────────────────────────────────────── */
@@ -177,64 +315,6 @@ function ContactRow({
   );
 }
 
-/* ─── NavItem — large editorial navigation ───────────────────────────── */
-function NavItem({
-  label, href, shouldReduce, delay, children,
-}: {
-  label: string; href: string; shouldReduce: boolean; delay: number;
-  children?: React.ReactNode;
-}) {
-  const [hov, setHov] = useState(false);
-  return (
-    <motion.div
-      initial={shouldReduce ? {} : { opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.55, delay, ease: EASE_OUT }}
-    >
-      <Link
-        href={href}
-        onMouseEnter={() => setHov(true)}
-        onMouseLeave={() => setHov(false)}
-        style={{
-          fontFamily: "var(--font-display)",
-          fontSize: "clamp(18px, 2.2vw, 34px)",
-          fontWeight: 700,
-          letterSpacing: "-0.025em",
-          lineHeight: 1.1,
-          color: hov ? "rgba(255,251,243,0.94)" : "rgba(255,251,243,0.40)",
-          textDecoration: "none",
-          display: "block",
-          paddingBottom: 12,
-          marginBottom: 14,
-          position: "relative",
-          transition: "color 260ms ease",
-        }}
-      >
-        {label}
-        {/* Static base line */}
-        <span aria-hidden style={{
-          position: "absolute", bottom: 0, left: 0, right: 0, height: 1,
-          backgroundColor: "rgba(255,251,243,0.055)",
-        }} />
-        {/* Animated orange fill */}
-        <span aria-hidden style={{
-          position: "absolute", bottom: 0, left: 0, right: 0, height: 2,
-          backgroundColor: "#ff6c0c",
-          transform: hov ? "scaleX(1)" : "scaleX(0)",
-          transformOrigin: "left",
-          transition: "transform 320ms cubic-bezier(0,0,0.2,1)",
-          boxShadow: "0 0 8px rgba(255,108,12,0.55)",
-        }} />
-      </Link>
-      {children && (
-        <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          {children}
-        </div>
-      )}
-    </motion.div>
-  );
-}
 
 /* ─── Main ───────────────────────────────────────────────────────────── */
 export default function Footer() {
@@ -282,10 +362,6 @@ export default function Footer() {
     : ["READY TO BUILD", "SOMETHING", "UNFORGETTABLE?"];
   const orangeIdx = headlineLines.length - 1;
 
-  const navWorkLabel     = isTR ? "ÇALIŞMALAR" : "WORK";
-  const navStudioLabel   = isTR ? "STÜDYO"     : "STUDIO";
-  const navServLabel     = isTR ? "HİZMETLER"  : "SERVICES";
-  const navContactLabel  = isTR ? "İLETİŞİM"   : "CONTACT";
 
   return (
     <>
@@ -722,42 +798,20 @@ export default function Footer() {
             background: "linear-gradient(90deg, transparent 0%, rgba(255,251,243,0.06) 15%, rgba(255,251,243,0.06) 85%, transparent 100%)",
           }} />
 
-          <div className="ft-nav-grid" style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: "0 32px",
-          }}>
-            <NavItem label={navWorkLabel} href="/projeler" shouldReduce={shouldReduce} delay={0}>
-              <FooterLink href="/projeler">{t("nav.selectedWork")}</FooterLink>
-              <FooterLink href="/projeler">{t("nav.allWork")}</FooterLink>
-              <FooterLink href="/projeler/pi-lot-engineering">Pi-Lot Engineering</FooterLink>
-              <FooterLink href="/projeler/kaleici-hotel">Kaleiçi Hotel</FooterLink>
-              <FooterLink href="/projeler/kocyigit-trade">Kocyiğit Trade</FooterLink>
-            </NavItem>
-
-            <NavItem label={navStudioLabel} href="/studyo" shouldReduce={shouldReduce} delay={0.08}>
-              <FooterLink href="/studyo">{t("nav.about")}</FooterLink>
-              <FooterLink href="/#felsefe">{t("nav.philosophy")}</FooterLink>
-              <FooterLink href="/surec">{t("nav.process")}</FooterLink>
-            </NavItem>
-
-            <NavItem label={navServLabel} href="/#hizmetler" shouldReduce={shouldReduce} delay={0.16}>
-              <FooterLink href="/#hizmetler">{t("nav.websiteDesign")}</FooterLink>
-              <FooterLink href="/#hizmetler">{t("nav.brandExperience")}</FooterLink>
-              <FooterLink href="/#hizmetler">{t("nav.consulting")}</FooterLink>
-            </NavItem>
-
-            <NavItem label={navContactLabel} href={waUrl(locale)} shouldReduce={shouldReduce} delay={0.24}>
-              <FooterLink href={waUrl(locale)} external>{t("nav.whatsapp")}</FooterLink>
-              <FooterLink href="tel:+905349626627" external>{t("nav.phone")}</FooterLink>
-              <div style={{
-                paddingTop: 5, paddingBottom: 5,
-                fontFamily: "var(--font-body)", fontSize: 12.5,
-                color: "rgba(255,251,243,0.30)",
-              }}>
-                {t("nav.location")}
-              </div>
-            </NavItem>
+          <div className="ft-notebook-grid">
+            {FT_CARD_DEFS.map((def) => {
+              const card = t.raw(`cards.${def.key}`) as { title: string; desc: string };
+              return (
+                <FtNotebookCard
+                  key={def.key}
+                  def={def}
+                  title={card.title}
+                  desc={card.desc}
+                  waHref={waUrl(locale)}
+                  shouldReduce={shouldReduce}
+                />
+              );
+            })}
           </div>
         </div>
 
@@ -872,12 +926,24 @@ export default function Footer() {
           .ft-orbit-node { animation: ftOrbitTravel 22s cubic-bezier(0.455,0.03,0.515,0.955) infinite alternate; }
           .ft-orbit-glow { animation: ftOrbitTravel 22s cubic-bezier(0.455,0.03,0.515,0.955) infinite alternate; }
 
+          @keyframes ftCardNoteWobble {
+            0%,100% { transform: rotate(var(--note-deg, 3deg)); }
+            25%      { transform: rotate(calc(var(--note-deg, 3deg) + 4deg)) scale(1.04); }
+            75%      { transform: rotate(calc(var(--note-deg, 3deg) - 3deg)) scale(0.97); }
+          }
+
+          .ft-notebook-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+          }
+
           @media (max-width: 960px) {
-            .ft-hero-grid { grid-template-columns: 1fr !important; }
-            .ft-nav-grid  { grid-template-columns: 1fr 1fr !important; gap: 36px 24px !important; }
+            .ft-hero-grid      { grid-template-columns: 1fr !important; }
+            .ft-notebook-grid  { grid-template-columns: repeat(2, 1fr) !important; }
           }
           @media (max-width: 480px) {
-            .ft-nav-grid { grid-template-columns: 1fr !important; gap: 28px 0 !important; }
+            .ft-notebook-grid  { grid-template-columns: 1fr !important; }
           }
         `}</style>
       </footer>
