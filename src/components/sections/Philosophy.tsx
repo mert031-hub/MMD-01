@@ -523,10 +523,11 @@ export default function Philosophy() {
               })}
             </div>
 
-            {/* Orbit nodes (01, 02, 03) */}
+            {/* Orbit nodes (01, 02, 03)
+                Default: orange — active node (whose text is shown): ghost white
+                Non-active nodes keep spinning at full opacity (no dimming).    */}
             {beliefs.map((b, i) => {
               const isNodeActive = activeStep === i + 1;
-              const isDimmed     = isActive && !isNodeActive;
               return (
                 <div
                   key={b.num}
@@ -539,20 +540,30 @@ export default function Philosophy() {
                   <div
                     style={{
                       width: 52, height: 52, borderRadius: "50%",
-                      backgroundColor: "rgba(255,251,243,0.06)",
-                      border: "1px solid rgba(255,251,243,0.18)",
+                      backgroundColor: isNodeActive
+                        ? "rgba(255,251,243,0.04)"
+                        : "rgba(255,108,12,0.14)",
+                      border: isNodeActive
+                        ? "1px solid rgba(255,251,243,0.22)"
+                        : "1px solid rgba(255,108,12,0.60)",
+                      boxShadow: isNodeActive
+                        ? "none"
+                        : "0 0 12px rgba(255,108,12,0.18)",
                       display: "flex", alignItems: "center", justifyContent: "center",
-                      opacity:   isNodeActive ? 0 : isDimmed ? 0.11 : 1,
-                      transform: isDimmed ? "scale(0.76)" : "scale(1)",
+                      opacity:   isNodeActive ? 0.30 : 1,
+                      transform: isNodeActive ? "scale(0.82)" : "scale(1)",
                       transition:
-                        "opacity 320ms cubic-bezier(0,0,0.2,1), transform 320ms cubic-bezier(0,0,0.2,1)",
+                        "background-color 400ms cubic-bezier(0,0,0.2,1), border-color 400ms cubic-bezier(0,0,0.2,1), box-shadow 400ms cubic-bezier(0,0,0.2,1), opacity 400ms cubic-bezier(0,0,0.2,1), transform 400ms cubic-bezier(0,0,0.2,1)",
                     }}
                   >
                     <span
                       style={{
                         fontFamily: "var(--font-display)",
                         fontSize: 13, fontWeight: 700, letterSpacing: "0.04em",
-                        color: "rgba(255,251,243,0.80)",
+                        color: isNodeActive
+                          ? "rgba(255,251,243,0.45)"
+                          : "rgba(255,108,12,0.95)",
+                        transition: "color 400ms cubic-bezier(0,0,0.2,1)",
                       }}
                     >
                       {b.num}
@@ -635,13 +646,13 @@ export default function Philosophy() {
                   exit={{
                     scale:   0.18,
                     opacity: 0,
-                    transition: { duration: 0.16, ease: [0.4, 0, 1, 1] },
+                    transition: { duration: 0.22, ease: [0.4, 0, 1, 1] },
                   }}
                   transition={{
                     type: "spring",
-                    stiffness: 340,
-                    damping:   26,
-                    mass:      0.65,
+                    stiffness: 160,
+                    damping:   22,
+                    mass:      1.1,
                   }}
                 >
                   {/* Expanding pulse ring */}
