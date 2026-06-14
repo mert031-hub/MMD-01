@@ -66,8 +66,11 @@
   },
   "capabilities": {
     "sectionNumber": "02",
+    "sectionLabel": "Our Studio",
     "sectionTitle": "What We Build",
     "sectionDescriptor": "It starts with strategy. It ends with experience.",
+    "ctaLabel": "Explore Our Approach",
+    "panelLabel": "Studio Capabilities",
     "items": {
       "websiteDesign": {
         "number": "01",
@@ -105,8 +108,7 @@
         "descriptor": "Someone needs to show the direction. That's what we do."
       }
     },
-    "editorial": "Strategy-first digital experiences that turn attention into action.",
-    "panelLabel": "System Capabilities"
+    "editorial": "Strategy-first digital experiences that turn attention into action."
   },
   "process": {
     "sectionNumber": "03",

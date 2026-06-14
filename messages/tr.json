@@ -66,8 +66,11 @@
   },
   "capabilities": {
     "sectionNumber": "02",
+    "sectionLabel": "Stüdyomuz",
     "sectionTitle": "Ne Yapıyoruz",
     "sectionDescriptor": "Strateji ile başlar, deneyim ile tamamlanır.",
+    "ctaLabel": "Yaklaşımımızı Keşfedin",
+    "panelLabel": "Stüdyo Yetenekleri",
     "items": {
       "websiteDesign": {
         "number": "01",
@@ -105,8 +108,7 @@
         "descriptor": "Nereye gidileceğini birileri göstermelidir. Biz bu işi yapıyoruz."
       }
     },
-    "editorial": "Strateji odaklı dijital deneyimler. Dikkat aksiyona dönüşür.",
-    "panelLabel": "Sistem Yetenekleri"
+    "editorial": "Strateji odaklı dijital deneyimler. Dikkat aksiyona dönüşür."
   },
   "process": {
     "sectionNumber": "03",
