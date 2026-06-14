@@ -278,7 +278,7 @@ export default function Philosophy() {
       ref={sectionRef}
       id="felsefe"
       aria-label="Stüdyo felsefesi"
-      style={{ height: "400vh", position: "relative" }}
+      style={{ height: "340vh", position: "relative" }}
     >
       <div
         style={{
@@ -318,6 +318,61 @@ export default function Philosophy() {
           color: "rgba(255,251,243,0.018)",
           userSelect: "none", pointerEvents: "none", zIndex: 0,
         }}>MM</div>
+
+        {/* ── Top header strip ─────────────────────────────────────────── */}
+        <div
+          aria-hidden="true"
+          className="phil-top-strip"
+          style={{
+            position: "absolute",
+            top: "clamp(18px, 2.8vh, 32px)",
+            left: "clamp(24px, 6vw, 90px)",
+            right: "clamp(48px, 4vw, 72px)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            zIndex: 8,
+            pointerEvents: "none",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{ width: 16, height: 1, backgroundColor: "rgba(255,108,12,0.38)" }} />
+            <span style={{
+              fontFamily: "var(--font-body)",
+              fontSize: 9, fontWeight: 700, letterSpacing: "0.26em",
+              textTransform: "uppercase",
+              color: "rgba(255,251,243,0.18)",
+            }}>
+              STUDIO PHILOSOPHY
+            </span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+            {[
+              { label: "NODES", value: "03" },
+              { label: "CYCLE", value: "28s" },
+              { label: "ORBIT", value: "Ø370" },
+            ].map(({ label, value }) => (
+              <div key={label} style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                <span style={{
+                  fontFamily: "var(--font-body)", fontSize: 7, fontWeight: 700,
+                  letterSpacing: "0.14em", textTransform: "uppercase",
+                  color: "rgba(255,108,12,0.26)",
+                }}>{label}</span>
+                <span style={{
+                  fontFamily: "var(--font-display)", fontSize: 9, fontWeight: 700,
+                  letterSpacing: "0.08em", color: "rgba(255,251,243,0.14)",
+                }}>{value}</span>
+              </div>
+            ))}
+            <div style={{ width: 1, height: 14, backgroundColor: "rgba(255,251,243,0.06)" }} />
+            <span style={{
+              fontFamily: "var(--font-display)", fontSize: 9, fontWeight: 700,
+              letterSpacing: "0.12em", color: "rgba(255,251,243,0.10)",
+            }}>
+              {activeStep > 0 ? `${String(activeStep).padStart(2, "0")} / 03` : "— / 03"}
+            </span>
+          </div>
+        </div>
 
         {/*
           ══ LEFT COLUMN ═══════════════════════════════════════════════════
@@ -538,6 +593,7 @@ export default function Philosophy() {
                   }}
                 >
                   <div
+                    className={isNodeActive ? "phil-orbit-node-body phil-orbit-node-active" : "phil-orbit-node-body"}
                     style={{
                       width: 52, height: 52, borderRadius: "50%",
                       backgroundColor: isNodeActive
@@ -546,14 +602,11 @@ export default function Philosophy() {
                       border: isNodeActive
                         ? "1px solid rgba(255,251,243,0.22)"
                         : "1px solid rgba(255,108,12,0.60)",
-                      boxShadow: isNodeActive
-                        ? "none"
-                        : "0 0 12px rgba(255,108,12,0.18)",
                       display: "flex", alignItems: "center", justifyContent: "center",
                       opacity:   isNodeActive ? 0.30 : 1,
                       transform: isNodeActive ? "scale(0.82)" : "scale(1)",
                       transition:
-                        "background-color 400ms cubic-bezier(0,0,0.2,1), border-color 400ms cubic-bezier(0,0,0.2,1), box-shadow 400ms cubic-bezier(0,0,0.2,1), opacity 400ms cubic-bezier(0,0,0.2,1), transform 400ms cubic-bezier(0,0,0.2,1)",
+                        "background-color 400ms cubic-bezier(0,0,0.2,1), border-color 400ms cubic-bezier(0,0,0.2,1), opacity 400ms cubic-bezier(0,0,0.2,1), transform 400ms cubic-bezier(0,0,0.2,1)",
                     }}
                   >
                     <span
@@ -745,6 +798,58 @@ export default function Philosophy() {
           ))}
         </div>
 
+        {/* ── Bottom step-progress strip ───────────────────────────────── */}
+        <div
+          aria-hidden="true"
+          className="phil-bottom-strip"
+          style={{
+            position: "absolute",
+            bottom: "clamp(18px, 2.8vh, 32px)",
+            left: "clamp(24px, 6vw, 90px)",
+            right: "clamp(48px, 4vw, 72px)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            zIndex: 8,
+            pointerEvents: "none",
+          }}
+        >
+          {/* Step pills */}
+          <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+            {[1, 2, 3].map((s) => (
+              <div
+                key={s}
+                style={{
+                  display: "flex", alignItems: "center", gap: 7,
+                  opacity: activeStep === s ? 1 : activeStep > s ? 0.38 : 0.11,
+                  transition: "opacity 400ms ease",
+                }}
+              >
+                <div style={{
+                  width: activeStep === s ? 22 : 10, height: 1,
+                  backgroundColor: activeStep === s
+                    ? "rgba(255,108,12,0.80)" : "rgba(255,251,243,0.22)",
+                  transition: "width 420ms cubic-bezier(0,0,0.2,1), background-color 400ms ease",
+                }} />
+                <span style={{
+                  fontFamily: "var(--font-body)", fontSize: 9, fontWeight: 700,
+                  letterSpacing: "0.18em", textTransform: "uppercase",
+                  color: activeStep === s ? "rgba(255,108,12,0.88)" : "rgba(255,251,243,0.30)",
+                  transition: "color 400ms ease",
+                }}>
+                  {`0${s}`}
+                </span>
+              </div>
+            ))}
+          </div>
+          {/* Right accent rule */}
+          <div style={{
+            height: 1,
+            width: "clamp(48px, 7vw, 100px)",
+            background: "linear-gradient(to right, rgba(255,108,12,0.16), transparent)",
+          }} />
+        </div>
+
         {/* ── CSS ──────────────────────────────────────────────────────── */}
         <style>{`
           @keyframes orbit-go {
@@ -793,6 +898,23 @@ export default function Philosophy() {
             0%, 100% { opacity: 0.5;  transform: scale(1); }
             60%       { opacity: 0.06; transform: scale(1.8); }
           }
+          @keyframes phil-node-glow {
+            0%, 100% {
+              box-shadow:
+                0 0 6px  rgba(255,108,12,0.22),
+                0 0 0px  rgba(255,108,12,0);
+            }
+            45% {
+              box-shadow:
+                0 0 22px rgba(255,108,12,0.70),
+                0 0 44px rgba(255,108,12,0.28),
+                0 0 70px rgba(255,108,12,0.10);
+            }
+          }
+          @keyframes phil-node-scale-pulse {
+            0%, 100% { transform: scale(1); }
+            45%       { transform: scale(1.10); }
+          }
 
           .phil-mm-center     { animation: phil-mm-breathe     7.5s ease-in-out infinite; }
           .phil-mm-outer-ring { animation: phil-outer-pulse     7.5s ease-in-out infinite; }
@@ -807,13 +929,29 @@ export default function Philosophy() {
           .phil-orbit-n3 { animation: orbit-go 28s linear infinite; animation-delay: -18.667s; }
           .orbit-paused  { animation-play-state: paused !important; }
 
+          /* Orange glow breathe on non-active orbit nodes */
+          .phil-orbit-node-body {
+            animation:
+              phil-node-glow        2.6s ease-in-out infinite,
+              phil-node-scale-pulse 2.6s ease-in-out infinite;
+          }
+          /* Stagger each node's glow phase */
+          .phil-orbit-n1 .phil-orbit-node-body { animation-delay:     0s,    0s; }
+          .phil-orbit-n2 .phil-orbit-node-body { animation-delay: -0.87s, -0.87s; }
+          .phil-orbit-n3 .phil-orbit-node-body { animation-delay: -1.73s, -1.73s; }
+          .phil-orbit-node-active {
+            animation: none !important;
+          }
+
           @media (max-width: 1100px) {
             .phil-left-col { width: clamp(240px, 38%, 440px) !important; }
           }
 
           @media (max-width: 860px) {
-            .phil-left-col  { width: 42% !important; left: 16px !important; }
-            .phil-indicator { display: none !important; }
+            .phil-left-col   { width: 42% !important; left: 16px !important; }
+            .phil-indicator  { display: none !important; }
+            .phil-top-strip  { display: none !important; }
+            .phil-bottom-strip { display: none !important; }
           }
 
           @media (max-width: 640px) {
