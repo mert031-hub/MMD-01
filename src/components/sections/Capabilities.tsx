@@ -121,6 +121,11 @@ function CapabilityItem({
   const [displayNum, setDisplayNum] = useState(shouldReduce ? targetNum : 0);
   const countedRef = useRef(shouldReduce);
 
+  /* number reveal — staggered independently */
+  const numRevealedRef = useRef(shouldReduce);
+  const numTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [numberVisible, setNumberVisible] = useState(shouldReduce);
+
   useEffect(() => {
     if (shouldReduce) return;
     const el = ref.current;
@@ -138,15 +143,22 @@ function CapabilityItem({
               const steps = targetNum;
               if (steps <= 0) {
                 setDisplayNum(targetNum);
-                return;
+              } else {
+                const stepMs = Math.max(35, Math.floor(total / steps));
+                let current = 0;
+                const interval = setInterval(() => {
+                  current += 1;
+                  setDisplayNum(current);
+                  if (current >= targetNum) clearInterval(interval);
+                }, stepMs);
               }
-              const stepMs = Math.max(35, Math.floor(total / steps));
-              let current = 0;
-              const interval = setInterval(() => {
-                current += 1;
-                setDisplayNum(current);
-                if (current >= targetNum) clearInterval(interval);
-              }, stepMs);
+            }
+            if (!numRevealedRef.current) {
+              numRevealedRef.current = true;
+              numTimerRef.current = setTimeout(
+                () => setNumberVisible(true),
+                delay * 1000
+              );
             }
           } else {
             setActive(false);
@@ -158,16 +170,14 @@ function CapabilityItem({
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [shouldReduce, targetNum]);
+  }, [shouldReduce, targetNum, delay]);
 
   const handleMouseEnter = useCallback(() => {
     setHovered(true);
     if (!shouldReduce) {
       if (sweepTimer.current) clearTimeout(sweepTimer.current);
       setSweeping(true);
-      sweepTimer.current = setTimeout(() => {
-        setSweeping(false);
-      }, 700);
+      sweepTimer.current = setTimeout(() => setSweeping(false), 700);
     }
   }, [shouldReduce]);
 
@@ -178,15 +188,33 @@ function CapabilityItem({
   useEffect(() => {
     return () => {
       if (sweepTimer.current) clearTimeout(sweepTimer.current);
+      if (numTimerRef.current) clearTimeout(numTimerRef.current);
     };
   }, []);
 
   const itemOpacity = !entered ? 0 : active ? 1 : 0.55;
   const itemTranslateY = !entered ? "12px" : "0px";
+  const transitionStyle = entered ? "opacity 500ms ease, transform 500ms ease" : "none";
 
-  const transitionStyle = entered
-    ? "opacity 500ms ease, transform 500ms ease"
-    : "none";
+  /* number element transform */
+  let numTransform: string;
+  if (!numberVisible) {
+    numTransform = "translateY(10px) scale(0.92)";
+  } else if (active && !shouldReduce) {
+    numTransform = "translateY(0) scale(1.05)";
+  } else {
+    numTransform = "translateY(0) scale(1)";
+  }
+
+  /* number color */
+  const numColor = hovered
+    ? "#ff6c0c"
+    : active
+    ? "rgba(255,108,12,0.88)"
+    : "rgba(255,108,12,0.52)";
+
+  /* node fill + glow */
+  const nodeActive = active || hovered;
 
   const displayStr = formatNumber(displayNum, number);
 
@@ -199,13 +227,14 @@ function CapabilityItem({
         borderTop: "1px solid var(--color-border)",
         paddingTop: 24,
         paddingBottom: 24,
+        paddingLeft: 14,
         display: "grid",
-        gridTemplateColumns: "40px 1fr",
+        gridTemplateColumns: "54px 1fr",
         gap: "0 20px",
         alignItems: "start",
         cursor: "default",
         position: "relative",
-        overflow: "hidden",
+        /* no overflow:hidden here — moved to inner sweep wrapper */
         opacity: itemOpacity,
         transform: `translateY(${itemTranslateY})`,
         transition: transitionStyle,
@@ -226,37 +255,79 @@ function CapabilityItem({
         }}
       />
 
-      {/* Hover gradient sweep */}
+      {/* Hover gradient sweep — own overflow:hidden wrapper */}
       <div
         style={{
           position: "absolute",
           inset: 0,
-          background:
-            "linear-gradient(90deg, transparent 0%, rgba(255,108,12,0.06) 50%, transparent 100%)",
-          transform: sweeping ? "translateX(100%)" : "translateX(-100%)",
-          transition: sweeping
-            ? "transform 650ms cubic-bezier(0.0,0.0,0.2,1)"
-            : "none",
+          overflow: "hidden",
           pointerEvents: "none",
           zIndex: 1,
         }}
-      />
+      >
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(90deg, transparent 0%, rgba(255,108,12,0.06) 50%, transparent 100%)",
+            transform: sweeping ? "translateX(100%)" : "translateX(-100%)",
+            transition: sweeping
+              ? "transform 650ms cubic-bezier(0.0,0.0,0.2,1)"
+              : "none",
+          }}
+        />
+      </div>
 
-      {/* Number */}
-      <span
-        className="text-label"
+      {/* Number column — node + number in flex row */}
+      <div
         style={{
-          color: hovered ? "var(--color-action)" : "var(--color-text-tertiary)",
+          display: "flex",
+          alignItems: "center",
+          gap: 7,
           paddingTop: 3,
-          display: "block",
-          transition: "color 200ms ease",
-          userSelect: "none",
           position: "relative",
           zIndex: 2,
+          userSelect: "none",
         }}
       >
-        {displayStr}
-      </span>
+        {/* Timeline node */}
+        <div
+          aria-hidden="true"
+          style={{
+            width: 7,
+            height: 7,
+            borderRadius: "50%",
+            flexShrink: 0,
+            backgroundColor: nodeActive ? "#ff6c0c" : "transparent",
+            border: `1.5px solid ${nodeActive ? "#ff6c0c" : "rgba(255,108,12,0.32)"}`,
+            boxShadow: nodeActive && !shouldReduce
+              ? "0 0 0 3px rgba(255,108,12,0.12)"
+              : "none",
+            transition:
+              "background-color 280ms ease, border-color 280ms ease, box-shadow 280ms ease",
+          }}
+        />
+
+        {/* Number */}
+        <span
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: "12.5px",
+            fontWeight: 700,
+            letterSpacing: "0.04em",
+            lineHeight: 1,
+            color: numColor,
+            display: "block",
+            opacity: numberVisible ? 1 : 0,
+            transform: numTransform,
+            transition:
+              "color 220ms ease, opacity 300ms ease, transform 300ms cubic-bezier(0,0,0.2,1)",
+          }}
+        >
+          {displayStr}
+        </span>
+      </div>
 
       {/* Content */}
       <div
@@ -267,14 +338,7 @@ function CapabilityItem({
           zIndex: 2,
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            marginBottom: 6,
-          }}
-        >
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
           <span
             style={{
               color: hovered ? "var(--color-action)" : "rgba(6,7,113,0.35)",
