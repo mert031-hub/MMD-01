@@ -179,6 +179,12 @@
       "whatsapp": "Message on WhatsApp",
       "phone": "0534 962 66 27",
       "location": "Turkey"
+    },
+    "cards": {
+      "work":     { "title": "Work",     "desc": "Selected projects and all our work." },
+      "studio":   { "title": "Studio",   "desc": "About us, our approach and processes." },
+      "services": { "title": "Services", "desc": "Strategy, design and performance-focused services." },
+      "contact":  { "title": "Contact",  "desc": "Let's talk about your project. Let's build together." }
     }
   },
   "whatsapp": {

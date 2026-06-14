@@ -179,6 +179,12 @@
       "whatsapp": "WhatsApp'tan Yazın",
       "phone": "0534 962 66 27",
       "location": "Türkiye"
+    },
+    "cards": {
+      "work":     { "title": "Çalışmalar", "desc": "Seçili projeler ve tüm işlerimiz." },
+      "studio":   { "title": "Stüdyo",     "desc": "Hakkımızda, yaklaşımımız ve süreçlerimiz." },
+      "services": { "title": "Hizmetler",  "desc": "Strateji, tasarım ve performans odaklı hizmetlerimiz." },
+      "contact":  { "title": "İletişim",   "desc": "Projenizi konuşalım, beraber inşa edelim." }
     }
   },
   "whatsapp": {
