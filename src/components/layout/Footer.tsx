@@ -276,9 +276,10 @@ export default function Footer() {
   const fastestResp   = isTR ? "En hızlı yanıt" : "Fastest response";
   const locationSub   = isTR ? "Dünya genelinde" : "Available worldwide";
 
+  /* 3 lines max — tighter vertical footprint */
   const headlineLines = isTR
-    ? ["HATIRLANACAK", "BİR ŞEY", "İNŞA", "EDELİM."]
-    : ["READY TO BUILD", "SOMETHING", "PEOPLE", "REMEMBER?"];
+    ? ["HATIRLANACAK", "BİR ŞEY", "İNŞA EDELİM."]
+    : ["READY TO BUILD", "SOMETHING", "UNFORGETTABLE?"];
   const orangeIdx = headlineLines.length - 1;
 
   const navWorkLabel     = isTR ? "ÇALIŞMALAR" : "WORK";
@@ -393,7 +394,7 @@ export default function Footer() {
         {/* ═══════════════════════════════════════════════════════════════ */}
         <div
           className="container-site"
-          style={{ paddingTop: 100, paddingBottom: 0, position: "relative" }}
+          style={{ paddingTop: 48, paddingBottom: 0, position: "relative" }}
         >
           <div
             className="ft-hero-grid"
@@ -474,26 +475,25 @@ export default function Footer() {
                 {headlineLines.map((line, li) => {
                   const isOrange = li === orangeIdx;
                   return (
-                    <div key={li} style={{ overflow: "hidden" }}>
-                      <motion.div
-                        initial={shouldReduce ? {} : { y: "105%" }}
-                        whileInView={{ y: 0 }}
-                        viewport={{ once: true, margin: "-40px" }}
-                        transition={{ duration: 0.68, delay: 0.18 + li * 0.09, ease: EASE_OUT }}
-                        style={{
-                          fontFamily: "var(--font-display)",
-                          fontSize: "clamp(48px, 7.8vw, 112px)",
-                          fontWeight: 700,
-                          lineHeight: 0.92,
-                          letterSpacing: "-0.03em",
-                          color: isOrange ? "#ff6c0c" : "rgba(255,251,243,0.93)",
-                          fontStyle: isOrange ? "italic" : "normal",
-                          paddingBottom: 8,
-                        }}
-                      >
-                        {line}
-                      </motion.div>
-                    </div>
+                    <motion.div
+                      key={li}
+                      initial={shouldReduce ? {} : { opacity: 0, y: 16 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, amount: 0.1 }}
+                      transition={{ duration: 0.68, delay: 0.18 + li * 0.09, ease: EASE_OUT }}
+                      style={{
+                        fontFamily: "var(--font-display)",
+                        fontSize: "clamp(36px, 5.5vw, 80px)",
+                        fontWeight: 700,
+                        lineHeight: 0.92,
+                        letterSpacing: "-0.03em",
+                        color: isOrange ? "#ff6c0c" : "rgba(255,251,243,0.93)",
+                        fontStyle: isOrange ? "italic" : "normal",
+                        paddingBottom: 8,
+                      }}
+                    >
+                      {line}
+                    </motion.div>
                   );
                 })}
               </div>
