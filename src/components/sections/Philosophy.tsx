@@ -15,23 +15,28 @@ const EASE_OUT = [0.0, 0.0, 0.2, 1] as const;
 const ORBIT_R = 185;
 
 const RINGS: [number, string][] = [
-  [190, "rgba(255,251,243,0.07)"],
-  [280, "rgba(255,251,243,0.044)"],
-  [360, "rgba(255,251,243,0.022)"],
-  [420, "rgba(255,108,12,0.048)"],
+  [190, "rgba(255,251,243,0.10)"],
+  [280, "rgba(255,251,243,0.062)"],
+  [360, "rgba(255,251,243,0.032)"],
+  [440, "rgba(255,108,12,0.055)"],
+  [530, "rgba(255,251,243,0.014)"],
 ];
 
-/* Static glow particles: [angleDeg, radiusOffset, size, opacity] */
+/* Glow particles around the orbit: [angleDeg, radiusOffset, size, opacity] */
 const PARTICLES: [number, number, number, number][] = [
-  [22,  16, 2.5, 0.26],
-  [68,   8, 2,   0.16],
-  [115, 12, 3,   0.22],
-  [160,  6, 2,   0.14],
-  [205, 14, 2.5, 0.24],
-  [252,  8, 2,   0.14],
-  [298, 10, 3,   0.20],
-  [345,  6, 2,   0.17],
+  [18,  14, 3,   0.32],
+  [55,   8, 2,   0.18],
+  [97,  16, 2.5, 0.26],
+  [138,  6, 1.5, 0.16],
+  [174, 12, 3,   0.28],
+  [220,  9, 2,   0.16],
+  [262, 15, 2.5, 0.24],
+  [305,  7, 2,   0.18],
+  [342, 11, 3,   0.22],
 ];
+
+/* Tick marks on the orbit ring: angles */
+const TICKS = Array.from({ length: 24 }, (_, i) => i * 15);
 
 const DISPLAY_LINES: Record<string, Record<string, string[]>> = {
   "01": {
@@ -90,7 +95,7 @@ function GiantTextOverlay({ num, lines, support, shouldReduce }: GiantTextProps)
         PHILOSOPHY
       </span>
 
-      {/* Editorial lines — each reveals upward from clip */}
+      {/* Editorial lines — each reveals upward */}
       <div style={{ marginBottom: 22 }}>
         {lines.map((line, i) => {
           const isLast = i === lines.length - 1;
@@ -99,11 +104,7 @@ function GiantTextOverlay({ num, lines, support, shouldReduce }: GiantTextProps)
               <motion.div
                 initial={shouldReduce ? { opacity: 0 } : { y: "108%", opacity: 0 }}
                 animate={{ y: "0%", opacity: 1 }}
-                transition={{
-                  duration: 0.6,
-                  delay: 0.06 + i * 0.13,
-                  ease: EASE_OUT,
-                }}
+                transition={{ duration: 0.6, delay: 0.06 + i * 0.13, ease: EASE_OUT }}
               >
                 <div
                   style={{
@@ -220,10 +221,48 @@ export default function Philosophy() {
           overflow: "hidden",
           backgroundColor: "var(--color-authority)",
           backgroundImage:
-            "radial-gradient(circle, rgba(255,251,243,0.04) 1px, transparent 1px)",
-          backgroundSize: "28px 28px",
+            "radial-gradient(circle, rgba(255,251,243,0.035) 1px, transparent 1px)",
+          backgroundSize: "32px 32px",
         }}
       >
+
+        {/* ── CENTER ATMOSPHERIC DEPTH ──────────────────────────────── */}
+        {/* Large soft radial glow emanating from orbit center */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            width: 900,
+            height: 900,
+            marginTop: -450,
+            marginLeft: -450,
+            borderRadius: "50%",
+            background:
+              "radial-gradient(circle, rgba(8,10,130,0.55) 0%, rgba(6,7,113,0.28) 30%, transparent 68%)",
+            pointerEvents: "none",
+            zIndex: 1,
+          }}
+        />
+        {/* Subtle orange center pulse core */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            width: 320,
+            height: 320,
+            marginTop: -160,
+            marginLeft: -160,
+            borderRadius: "50%",
+            background:
+              "radial-gradient(circle, rgba(255,108,12,0.05) 0%, transparent 70%)",
+            pointerEvents: "none",
+            zIndex: 1,
+          }}
+        />
 
         {/* ── ARCHITECTURAL MM MONUMENT ────────────────────────────── */}
         <div
@@ -238,7 +277,7 @@ export default function Philosophy() {
             fontWeight: 700,
             letterSpacing: "-0.06em",
             lineHeight: 1,
-            color: "rgba(255,251,243,0.012)",
+            color: "rgba(255,251,243,0.022)",
             userSelect: "none",
             pointerEvents: "none",
             zIndex: 0,
@@ -246,20 +285,20 @@ export default function Philosophy() {
         >
           MM
         </div>
-        {/* Outline echo — offset for depth */}
+        {/* Outline echo — offset for parallax depth */}
         <div
           aria-hidden="true"
           style={{
             position: "absolute",
             top: "50%",
             left: "50%",
-            transform: "translate(calc(-50% + 20px), calc(-50% + 16px))",
+            transform: "translate(calc(-50% + 22px), calc(-50% + 18px))",
             fontFamily: "var(--font-display)",
             fontSize: "clamp(300px, 40vw, 640px)",
             fontWeight: 700,
             letterSpacing: "-0.06em",
             lineHeight: 1,
-            WebkitTextStroke: "1px rgba(255,251,243,0.016)",
+            WebkitTextStroke: "1px rgba(255,251,243,0.024)",
             color: "transparent",
             userSelect: "none",
             pointerEvents: "none",
@@ -371,11 +410,9 @@ export default function Philosophy() {
 
         {/* ── ORBIT SYSTEM ─────────────────────────────────────────── */}
         {/*
-          Two-wrapper approach:
-          1. Static centering shell (CSS transform only, no Framer Motion)
-          2. Inner motion.div — x/scale shifts when active
-          This way the CSS orbit-go animation on child nodes doesn't conflict
-          with Framer Motion managing the wrapper's transform.
+          Centering shell: static CSS positions orbit center at viewport center.
+          Inner motion.div: x/scale controlled by Framer Motion.
+          Orbit-go CSS animation on child nodes doesn't conflict — different elements.
         */}
         <div
           style={{
@@ -394,6 +431,7 @@ export default function Philosophy() {
             transition={{ duration: 0.74, ease: EASE_OUT }}
             style={{ position: "relative", width: 460, height: 460 }}
           >
+
             {/* Concentric rings */}
             {RINGS.map(([d, color]) => (
               <div
@@ -413,15 +451,53 @@ export default function Philosophy() {
               />
             ))}
 
-            {/* Glow particles — static dots at fixed angles */}
-            {PARTICLES.map(([angleDeg, radiusOffset, size, opacity], idx) => {
-              const rad = (angleDeg * Math.PI) / 180;
-              const r = ORBIT_R + radiusOffset + 24;
-              const px = Math.cos(rad) * r;
-              const py = Math.sin(rad) * r;
+            {/* Pulsing energy ring at 280px */}
+            <div
+              className="phil-energy-ring"
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                width: 280,
+                height: 280,
+                marginTop: -140,
+                marginLeft: -140,
+                borderRadius: "50%",
+                border: "1px solid rgba(255,108,12,0.09)",
+                pointerEvents: "none",
+              }}
+            />
+
+            {/* Orbit trail — rotating conic gradient sweep */}
+            {!shouldReduce && (
+              <div
+                className="phil-orbit-trail"
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  width: ORBIT_R * 2,
+                  height: ORBIT_R * 2,
+                  marginTop: -ORBIT_R,
+                  marginLeft: -ORBIT_R,
+                  borderRadius: "50%",
+                  background:
+                    "conic-gradient(from 0deg, transparent 0%, rgba(255,108,12,0.022) 20%, rgba(255,108,12,0.055) 42%, rgba(255,108,12,0.022) 62%, transparent 75%)",
+                  pointerEvents: "none",
+                }}
+              />
+            )}
+
+            {/* Orbit tick marks — 24 marks at 15° intervals on the ring */}
+            {TICKS.map((deg) => {
+              const rad = (deg * Math.PI) / 180;
+              const isMajor = deg % 90 === 0;
+              const isMid = deg % 30 === 0 && !isMajor;
+              const size = isMajor ? 4 : isMid ? 2.5 : 1.5;
+              const opacity = isMajor ? 0.18 : isMid ? 0.10 : 0.055;
               return (
                 <div
-                  key={idx}
+                  key={`tick-${deg}`}
                   style={{
                     position: "absolute",
                     top: "50%",
@@ -431,19 +507,55 @@ export default function Philosophy() {
                     borderRadius: "50%",
                     marginTop: -(size / 2),
                     marginLeft: -(size / 2),
-                    backgroundColor: `rgba(255,108,12,${opacity})`,
-                    boxShadow: `0 0 ${size * 5}px rgba(255,108,12,${opacity * 0.7})`,
-                    transform: `translate(${px}px, ${py}px)`,
+                    backgroundColor: `rgba(255,251,243,${opacity})`,
+                    transform: `translate(${Math.cos(rad) * ORBIT_R}px, ${Math.sin(rad) * ORBIT_R}px)`,
                     pointerEvents: "none",
                   }}
                 />
               );
             })}
 
+            {/* Glow particles — container rotates slowly opposite to orbit */}
+            <div
+              className={`phil-particles-wrap${shouldReduce ? " orbit-paused" : ""}`}
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                pointerEvents: "none",
+              }}
+            >
+              {PARTICLES.map(([angleDeg, radiusOffset, size, opacity], idx) => {
+                const rad = (angleDeg * Math.PI) / 180;
+                const r = ORBIT_R + radiusOffset + 26;
+                const px = Math.cos(rad) * r;
+                const py = Math.sin(rad) * r;
+                return (
+                  <div
+                    key={idx}
+                    style={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      width: size,
+                      height: size,
+                      borderRadius: "50%",
+                      marginTop: -(size / 2),
+                      marginLeft: -(size / 2),
+                      backgroundColor: `rgba(255,108,12,${opacity})`,
+                      boxShadow: `0 0 ${size * 6}px rgba(255,108,12,${opacity * 0.8})`,
+                      transform: `translate(${px}px, ${py}px)`,
+                    }}
+                  />
+                );
+              })}
+            </div>
+
             {/* Orbit nodes
-                Outer div: CSS orbit-go animation controls transform.
-                Inner div: CSS transition controls opacity + scale for dimming.
-                No motion.div here — avoids transform conflict with orbit CSS. */}
+                Outer div owns CSS orbit-go animation (transform).
+                Inner div owns opacity + scale via CSS transition. */}
             {beliefs.map((b, i) => {
               const isNodeActive = activeStep === i + 1;
               const isDimmed = isActive && !isNodeActive;
@@ -465,15 +577,18 @@ export default function Philosophy() {
                       width: 52,
                       height: 52,
                       borderRadius: "50%",
-                      backgroundColor: "rgba(255,251,243,0.055)",
-                      border: "1px solid rgba(255,251,243,0.16)",
+                      backgroundColor: "rgba(255,251,243,0.06)",
+                      border: "1px solid rgba(255,251,243,0.18)",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      opacity: isNodeActive ? 0 : isDimmed ? 0.13 : 1,
-                      transform: isDimmed ? "scale(0.8)" : "scale(1)",
+                      boxShadow: isDimmed || isNodeActive
+                        ? "none"
+                        : "0 0 18px rgba(255,251,243,0.06), inset 0 0 10px rgba(255,251,243,0.04)",
+                      opacity: isNodeActive ? 0 : isDimmed ? 0.12 : 1,
+                      transform: isDimmed ? "scale(0.78)" : "scale(1)",
                       transition:
-                        "opacity 480ms cubic-bezier(0,0,0.2,1), transform 480ms cubic-bezier(0,0,0.2,1)",
+                        "opacity 500ms cubic-bezier(0,0,0.2,1), transform 500ms cubic-bezier(0,0,0.2,1), box-shadow 500ms ease",
                     }}
                   >
                     <span
@@ -482,7 +597,7 @@ export default function Philosophy() {
                         fontSize: 13,
                         fontWeight: 700,
                         letterSpacing: "0.04em",
-                        color: "rgba(255,251,243,0.78)",
+                        color: "rgba(255,251,243,0.8)",
                       }}
                     >
                       {b.num}
@@ -505,7 +620,21 @@ export default function Philosophy() {
                 zIndex: 3,
               }}
             >
-              {/* Outer breathing ring */}
+              {/* Second outer ring — larger faint halo */}
+              <div
+                className="phil-mm-halo"
+                style={{
+                  position: "absolute",
+                  top: -22,
+                  left: -22,
+                  width: 140,
+                  height: 140,
+                  borderRadius: "50%",
+                  border: "1px solid rgba(255,108,12,0.04)",
+                  pointerEvents: "none",
+                }}
+              />
+              {/* First outer ring */}
               <div
                 className="phil-mm-outer-ring"
                 style={{
@@ -515,7 +644,7 @@ export default function Philosophy() {
                   width: 116,
                   height: 116,
                   borderRadius: "50%",
-                  border: "1px solid rgba(255,108,12,0.07)",
+                  border: "1px solid rgba(255,108,12,0.08)",
                   pointerEvents: "none",
                 }}
               />
@@ -527,7 +656,7 @@ export default function Philosophy() {
                   height: "100%",
                   borderRadius: "50%",
                   backgroundColor: "rgba(3,4,74,0.98)",
-                  border: "1px solid rgba(255,251,243,0.09)",
+                  border: "1px solid rgba(255,251,243,0.10)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -542,7 +671,7 @@ export default function Philosophy() {
                     inset: 0,
                     borderRadius: "50%",
                     background:
-                      "radial-gradient(circle at 38% 34%, rgba(255,108,12,0.08) 0%, transparent 62%)",
+                      "radial-gradient(circle at 38% 34%, rgba(255,108,12,0.10) 0%, transparent 60%)",
                     pointerEvents: "none",
                   }}
                 />
@@ -562,7 +691,7 @@ export default function Philosophy() {
               </div>
             </div>
 
-            {/* Hero node — springs from top of orbit to right edge */}
+            {/* Hero node — springs from orbit top to right edge on activate */}
             <AnimatePresence>
               {isActive && !shouldReduce && (
                 <motion.div
@@ -586,18 +715,32 @@ export default function Philosophy() {
                     mass: 0.95,
                   }}
                 >
+                  {/* Outer pulse ring on hero */}
+                  <div
+                    className="phil-hero-pulse"
+                    style={{
+                      position: "absolute",
+                      top: -8,
+                      left: -8,
+                      width: 92,
+                      height: 92,
+                      borderRadius: "50%",
+                      border: "1px solid rgba(255,108,12,0.3)",
+                      pointerEvents: "none",
+                    }}
+                  />
                   <div
                     style={{
                       width: 76,
                       height: 76,
                       borderRadius: "50%",
                       backgroundColor: "var(--color-action)",
-                      border: "2px solid rgba(255,130,40,0.55)",
+                      border: "2px solid rgba(255,140,50,0.5)",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
                       boxShadow:
-                        "0 0 36px rgba(255,108,12,0.58), 0 0 72px rgba(255,108,12,0.26), 0 0 120px rgba(255,108,12,0.10)",
+                        "0 0 32px rgba(255,108,12,0.6), 0 0 64px rgba(255,108,12,0.28), 0 0 100px rgba(255,108,12,0.12)",
                     }}
                   >
                     <span
@@ -695,34 +838,66 @@ export default function Philosophy() {
             to   { transform: rotate(360deg) translateX(${ORBIT_R}px) rotate(-360deg); }
           }
 
+          /* Orbit trail rotates in sync with nodes */
+          @keyframes phil-trail-spin {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+          }
+
+          /* Particles drift slowly counter-clockwise — creates depth */
+          @keyframes phil-particles-drift {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(-360deg); }
+          }
+
           @keyframes phil-mm-breathe {
             0%, 100% {
               box-shadow:
                 0 0 0 0px  rgba(255,108,12,0),
-                0 0 48px   rgba(6,7,113,0.88),
-                0 0 96px   rgba(3,4,74,0.52),
+                0 0 44px   rgba(6,7,113,0.88),
+                0 0 90px   rgba(3,4,74,0.52),
                 inset 0 0 22px rgba(3,4,74,0.8);
               transform: scale(1);
             }
             50% {
               box-shadow:
-                0 0 0 12px rgba(255,108,12,0.028),
-                0 0 68px   rgba(6,7,113,0.98),
-                0 0 128px  rgba(3,4,74,0.72),
+                0 0 0 10px rgba(255,108,12,0.03),
+                0 0 64px   rgba(6,7,113,0.98),
+                0 0 120px  rgba(3,4,74,0.72),
                 inset 0 0 26px rgba(3,4,74,0.92);
-              transform: scale(1.028);
+              transform: scale(1.03);
             }
           }
 
           @keyframes phil-outer-pulse {
-            0%, 100% { opacity: 0.45; transform: scale(1); }
-            50%       { opacity: 0.9;  transform: scale(1.05); }
+            0%, 100% { opacity: 0.4;  transform: scale(1); }
+            50%       { opacity: 0.85; transform: scale(1.055); }
           }
 
-          .phil-mm-center     { animation: phil-mm-breathe 7.5s ease-in-out infinite; }
-          .phil-mm-outer-ring { animation: phil-outer-pulse 7.5s ease-in-out infinite; }
+          @keyframes phil-halo-breathe {
+            0%, 100% { opacity: 0.3;  transform: scale(1); }
+            50%       { opacity: 0.65; transform: scale(1.04); }
+          }
 
-          /* 28s period — phase offsets at 120° intervals */
+          @keyframes phil-energy-pulse {
+            0%, 100% { opacity: 0.35; transform: scale(1); }
+            50%       { opacity: 0.8;  transform: scale(1.015); }
+          }
+
+          @keyframes phil-hero-pulse {
+            0%, 100% { opacity: 0.5;  transform: scale(1); }
+            60%       { opacity: 0.15; transform: scale(1.6); }
+          }
+
+          .phil-mm-center      { animation: phil-mm-breathe    7.5s ease-in-out infinite; }
+          .phil-mm-outer-ring  { animation: phil-outer-pulse    7.5s ease-in-out infinite; }
+          .phil-mm-halo        { animation: phil-halo-breathe   7.5s ease-in-out infinite 0.8s; }
+          .phil-energy-ring    { animation: phil-energy-pulse   4.2s ease-in-out infinite; }
+          .phil-orbit-trail    { animation: phil-trail-spin     28s  linear     infinite; }
+          .phil-particles-wrap { animation: phil-particles-drift 90s linear     infinite; }
+          .phil-hero-pulse     { animation: phil-hero-pulse     2.2s ease-out   infinite; }
+
+          /* 28s period — 120° phase offsets */
           .phil-orbit-n1 { animation: orbit-go 28s linear infinite; animation-delay:    0s; }
           .phil-orbit-n2 { animation: orbit-go 28s linear infinite; animation-delay:  -9.333s; }
           .phil-orbit-n3 { animation: orbit-go 28s linear infinite; animation-delay: -18.667s; }
@@ -743,7 +918,7 @@ export default function Philosophy() {
               width: 90% !important;
               margin: 0 auto !important;
               top: auto !important;
-              bottom: 10vh !important;
+              bottom: 8vh !important;
               transform: none !important;
             }
           }
