@@ -193,21 +193,25 @@ export default function Philosophy() {
 
   /*
     ── Scroll timeline (500 vh total) ──────────────────────────────────────
-    0.00 – 0.06   Idle entry: orbit visible, quote panel showing
-    0.06 – 0.14   Orbit shifts right, Step 1 fades in (full text immediately)
-    0.14 – 0.36   Step 1 readable  (~110 vh comfortable dwell)
-    0.36 – 0.44   Step 1 fades OUT
-    0.44 – 0.52   Step 2 fades IN  (clean, non-overlapping)
-    0.52 – 0.64   Step 2 readable  (~60 vh)
-    0.64 – 0.72   Step 2 fades OUT
-    0.72 – 0.80   Step 3 fades IN
-    0.80 – 1.00   Step 3 readable  (~100 vh)
+    0.00 – 0.07   Idle: orbit visible, quote panel fully shown
+    0.07 – 0.10   Quote fades OUT (fully gone at 0.10)
+    — GAP —       0.10 – 0.12 nothing visible (orbit-shift still happening)
+    0.12 – 0.20   Step 1 fades IN  (starts AFTER quote is 100% gone)
+    0.20 – 0.38   Step 1 readable  (~90 vh)
+    0.38 – 0.46   Step 1 fades OUT (fully gone at 0.46)
+    — GAP —       0.46 – 0.48
+    0.48 – 0.56   Step 2 fades IN  (starts AFTER step 1 is 100% gone)
+    0.56 – 0.68   Step 2 readable  (~60 vh)
+    0.68 – 0.76   Step 2 fades OUT (fully gone at 0.76)
+    — GAP —       0.76 – 0.78
+    0.78 – 0.86   Step 3 fades IN  (starts AFTER step 2 is 100% gone)
+    0.86 – 1.00   Step 3 readable  (~70 vh)
   */
 
   /* Discrete step drives orbit node dimming + hero node identity */
   const stepFloat = useTransform(
     scrollYProgress,
-    [0,   0.06, 0.10, 0.40, 0.44, 0.68, 0.72, 1.0],
+    [0,   0.08, 0.12, 0.42, 0.48, 0.72, 0.78, 1.0],
     [0,   0,    1,    1,    2,    2,    3,    3  ]
   );
   useMotionValueEvent(stepFloat, "change", (v) => {
@@ -215,25 +219,33 @@ export default function Philosophy() {
   });
 
   /* Orbit shift: +120 px right when active (creates left-column room) */
-  const rawOrbitX     = useTransform(scrollYProgress, [0.04, 0.16], [0, 120]);
-  const rawOrbitScale = useTransform(scrollYProgress, [0.04, 0.16], [1, 0.84]);
+  const rawOrbitX     = useTransform(scrollYProgress, [0.06, 0.20], [0, 120]);
+  const rawOrbitScale = useTransform(scrollYProgress, [0.06, 0.20], [1, 0.84]);
   const orbitX     = useSpring(rawOrbitX,     { stiffness: 90, damping: 22, mass: 1 });
   const orbitScale = useSpring(rawOrbitScale, { stiffness: 90, damping: 22, mass: 1 });
 
-  /* Quote fades out as Step 1 arrives */
-  const quotePanelOp = useTransform(scrollYProgress, [0.04, 0.13], [1, 0]);
+  /*
+    Quote fades completely to 0 at 0.10.
+    Step 1 does NOT start until 0.12. Gap guaranteed → zero overlap.
+  */
+  const quotePanelOp = useTransform(scrollYProgress, [0.04, 0.10], [1, 0]);
 
   /* Trail: only visible during transition windows */
   const trailOp = useTransform(
     scrollYProgress,
-    [0.04, 0.10, 0.15, 0.33, 0.36, 0.52, 0.56, 0.62, 0.64, 0.80, 0.84],
+    [0.04, 0.10, 0.14, 0.35, 0.38, 0.56, 0.60, 0.66, 0.68, 0.86, 0.90],
     [0,    0.9,  0,    0,    0.9,  0,    0,    0,    0.9,  0,    0   ]
   );
 
-  /* Panel opacity — non-overlapping: previous fully out before next in */
-  const s1Vis = useTransform(scrollYProgress, [0.06, 0.14, 0.36, 0.44], [0, 1, 1, 0]);
-  const s2Vis = useTransform(scrollYProgress, [0.44, 0.52, 0.64, 0.72], [0, 1, 1, 0]);
-  const s3Vis = useTransform(scrollYProgress, [0.72, 0.80, 0.98, 1.0 ], [0, 1, 1, 1]);
+  /*
+    Panel opacity ranges are strictly sequential — zero overlap guaranteed:
+    quote   exits  at 0.10  →  s1 enters at 0.12  (gap 0.10-0.12)
+    s1      exits  at 0.46  →  s2 enters at 0.48  (gap 0.46-0.48)
+    s2      exits  at 0.76  →  s3 enters at 0.78  (gap 0.76-0.78)
+  */
+  const s1Vis = useTransform(scrollYProgress, [0.12, 0.20, 0.38, 0.46], [0, 1, 1, 0]);
+  const s2Vis = useTransform(scrollYProgress, [0.48, 0.56, 0.68, 0.76], [0, 1, 1, 0]);
+  const s3Vis = useTransform(scrollYProgress, [0.78, 0.86, 0.98, 1.0 ], [0, 1, 1, 1]);
 
   const beliefs = [
     { num: "01", support: t("belief1Support") },
