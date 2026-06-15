@@ -456,7 +456,7 @@ export default function Footer() {
             fontSize: "clamp(160px, 20vw, 340px)",
             fontWeight: 700, color: "rgba(255,251,243,0.9)",
             lineHeight: 1, userSelect: "none", pointerEvents: "none",
-            letterSpacing: "-0.04em", opacity: 0.016,
+            letterSpacing: "-0.04em", opacity: 0.038,
             transform: `translate(${mmX}px, ${mmY}px)`,
             transition: shouldReduce ? "none" : "transform 90ms ease-out",
             willChange: "transform, opacity",
@@ -774,6 +774,24 @@ export default function Footer() {
               boxShadow: "0 0 14px rgba(255,108,12,0.75), 0 0 32px rgba(255,108,12,0.28)",
             }} />
           )}
+          {/* Traveling blue node */}
+          {!shouldReduce && (
+            <div aria-hidden className="ft-orbit-node-blue" style={{
+              position: "absolute", top: "50%", left: 0,
+              width: 7, height: 7, marginTop: -3.5, borderRadius: "50%",
+              backgroundColor: "#6BA7FF",
+              boxShadow: "0 0 10px rgba(107,167,255,0.80), 0 0 24px rgba(107,167,255,0.30)",
+            }} />
+          )}
+          {/* Traveling green node */}
+          {!shouldReduce && (
+            <div aria-hidden className="ft-orbit-node-green" style={{
+              position: "absolute", top: "50%", left: 0,
+              width: 6, height: 6, marginTop: -3, borderRadius: "50%",
+              backgroundColor: "#52C07A",
+              boxShadow: "0 0 9px rgba(82,192,122,0.80), 0 0 20px rgba(82,192,122,0.28)",
+            }} />
+          )}
           {/* Glow behind the node (wider, static) */}
           {!shouldReduce && (
             <div aria-hidden className="ft-orbit-glow" style={{
@@ -922,9 +940,11 @@ export default function Footer() {
             100% { left: calc(100% - 14px); }
           }
 
-          .ft-mm-breathe { animation: ftMMBreathe 8s ease-in-out infinite; }
-          .ft-orbit-node { animation: ftOrbitTravel 22s cubic-bezier(0.455,0.03,0.515,0.955) infinite alternate; }
-          .ft-orbit-glow { animation: ftOrbitTravel 22s cubic-bezier(0.455,0.03,0.515,0.955) infinite alternate; }
+          .ft-mm-breathe       { animation: ftMMBreathe 8s ease-in-out infinite; }
+          .ft-orbit-node       { animation: ftOrbitTravel 22s cubic-bezier(0.455,0.03,0.515,0.955) infinite alternate; }
+          .ft-orbit-node-blue  { animation: ftOrbitTravel 16s cubic-bezier(0.455,0.03,0.515,0.955) 4s infinite alternate-reverse; }
+          .ft-orbit-node-green { animation: ftOrbitTravel 29s cubic-bezier(0.455,0.03,0.515,0.955) 9s infinite alternate; }
+          .ft-orbit-glow       { animation: ftOrbitTravel 22s cubic-bezier(0.455,0.03,0.515,0.955) infinite alternate; }
 
           @keyframes ftCardNoteWobble {
             0%,100% { transform: rotate(var(--note-deg, 3deg)); }
